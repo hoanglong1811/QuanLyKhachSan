@@ -1,0 +1,174 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\hotel-project\\back-end\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\data\\ltbackendlocalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:data\\ltbackendlocalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\back-end.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:back-end.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|e:\\hotel-project\\back-end\\data\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74BF2691-B651-4B48-889B-F7B7AFB121BE}|back-end.csproj|solutionrelative:data\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 275,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "Services\\IUserService.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\Services\\IUserService.cs",
+              "RelativeToolTip": "Services\\IUserService.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAUwGUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-26T13:08:27.913Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Services\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\Services\\IAuthService.cs",
+              "RelativeToolTip": "Services\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-26T13:08:27.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "E:\\hotel-project\\back-end\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T04:00:59.932Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T01:55:24.536Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "back-end.http",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\back-end.http",
+              "RelativeDocumentMoniker": "back-end.http",
+              "ToolTip": "E:\\hotel-project\\back-end\\back-end.http",
+              "RelativeToolTip": "back-end.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-04-21T02:34:37.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LtbackendLocalContext.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Data\\LtbackendLocalContext.cs",
+              "RelativeDocumentMoniker": "Data\\LtbackendLocalContext.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\Data\\LtbackendLocalContext.cs",
+              "RelativeToolTip": "Data\\LtbackendLocalContext.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAiwBMAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T02:37:41.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "WeatherForecast.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\WeatherForecast.cs",
+              "RelativeToolTip": "WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T01:58:40.927Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "back-end.csproj",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\back-end.csproj",
+              "RelativeDocumentMoniker": "back-end.csproj",
+              "ToolTip": "E:\\hotel-project\\back-end\\back-end.csproj",
+              "RelativeToolTip": "back-end.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-21T03:23:38.162Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "E:\\hotel-project\\back-end\\Data\\Booking.cs",
+              "RelativeDocumentMoniker": "Data\\Booking.cs",
+              "ToolTip": "E:\\hotel-project\\back-end\\Data\\Booking.cs",
+              "RelativeToolTip": "Data\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T02:40:36.701Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

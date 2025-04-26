@@ -1,0 +1,35 @@
+﻿@page
+@model back_end.Pages.LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="container">
+    <h1 class="mb-4">Đăng nhập</h1>
+    <div class="form-container">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+        <form method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" asp-for="LoginInput.Email" required>
+                <span asp-validation-for="LoginInput.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" asp-for="LoginInput.Password" required>
+                <span asp-validation-for="LoginInput.Password" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            <a href="/Register" class="btn btn-link">Đăng ký</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
