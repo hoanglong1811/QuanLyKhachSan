@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\hotel-project\\back-end\\back-end.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\QuanLyKhachSan\\back-end\\back-end.csproj": {}
   },
   "projects": {
-    "E:\\hotel-project\\back-end\\back-end.csproj": {
+    "C:\\Users\\Admin\\Desktop\\QuanLyKhachSan\\back-end\\back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\hotel-project\\back-end\\back-end.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\QuanLyKhachSan\\back-end\\back-end.csproj",
         "projectName": "back-end",
-        "projectPath": "E:\\hotel-project\\back-end\\back-end.csproj",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\QuanLyKhachSan\\back-end\\back-end.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "E:\\hotel-project\\back-end\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\QuanLyKhachSan\\back-end\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
