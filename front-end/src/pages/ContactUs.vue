@@ -1,12 +1,13 @@
+
 <template>
   <div class="about-us">
     <!-- Main Image with Header -->
     <div class="main-image">
-      <img src="https://i.pinimg.com/736x/83/ff/cf/83ffcf75c3156cffd5bad60e9925a788.jpg" alt="About Us Image">
+      <img src="https://i.pinimg.com/736x/5f/43/4a/5f434a75f3d03ac0ce3778603a55c907.jpg" alt="About Us Image">
       <div class="image-text">
-        <h1>Chào mừng đến với</h1>
+        <h1>Welcome to</h1>
         <h1>Place Long Hai</h1>
-        <p>Sự hài lòng của bạn là hạnh phúc của chúng tôi</p>
+        <p>Your satisfaction, our happiness</p>
       </div>
     </div>
 
@@ -20,119 +21,83 @@
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
         </div>
-        <h3>CHẤT LƯỢNG DỊCH VỤ 4 SAO</h3>
-        <p>Bằng sự chuyên nghiệp và tận tâm của đội ngũ nhân viên cùng nhiều lợi thế nổi bật, Palace Long Hai Resort nhanh chóng trở thành điểm đến nghỉ dưỡng yêu thích của đông đảo du khách.</p>
+        <h3>4-STAR SERVICE QUALITY</h3>
+        <p>Palace Long Hai Resort quickly became a favourite resort location for many travellers due to the staff's expertise and attention, as well as its numerous wonderful amenities.</p>
       </div>
       <div class="image-content">
-        <img src="https://i.pinimg.com/736x/43/17/9f/43179f8785c5c0deed6605f71389f301.jpg" alt="Service Quality Image">
+        <img src="https://imgs.search.brave.com/zL3OrbDFviWM9rGKHcqEeE5MdvIo-5EpOnol1pfLsx8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8xOC8xNy8yMC9s/aXZpbmctcm9vbS0x/ODM1OTIzXzY0MC5q/cGc" alt="Service Quality Image">
+      </div>
+    </div>
+
+    <!-- Section 2: Image and Text Split -->
+    <div class="split-section">
+      <div class="image-content">
+        <img src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/502053834.jpg?k=d897aecabccf65b90c22c65f9c752c5960935f9228bcfebbbfcf6e34f5a1fe43&o=&hp=1" alt="Service Quality Image">
+      </div>
+      <div class="text-content">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <h3>4-STAR SERVICE QUALITY</h3>
+        <p>Palace Long Hai Resort quickly became a favourite resort location for many travellers due to the staff's expertise and attention, as well as its numerous wonderful amenities.</p>
       </div>
     </div>
 
     <!-- Section 3: Image and Text Split -->
     <div class="split-section">
+      <div class="text-content">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <h3>4-STAR SERVICE QUALITY</h3>
+        <p>Palace Long Hai Resort quickly became a favourite resort location for many travellers due to the staff's expertise and attention, as well as its numerous wonderful amenities.</p>
+      </div>
       <div class="image-content">
         <img src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/498977541.jpg?k=39564d6c4a0c2f5b49d512f4ba0b94b258448dcef50c0772f009bc33c683c2c7&o=&hp=1" alt="Service Quality Image">
       </div>
-      <div class="text-content">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <h3>62 Bungalow với 75 phòng</h3>
-        <p>Được thiết kế độc đáo và riêng tư, đa dạng hạng phòng diện tích 30m2 - 150m2. Đặc biệt, tất cả các phòng ngủ đều sở hữu view hướng biển hoặc hướng vườn xanh mướt.</p>
-      </div>
-      
     </div>
 
-
-     <div class="split-section">
-      <div class="text-content">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <h3>Giải thưởng “Sản phẩm – Dịch vụ chất lượng ASEAN 2024”</h3>
-        <p>tại ASEAN Strong Brands Award 2024 (Singapore) là bảo chứng cho chất lượng vượt trội của Palace Long Hai Resort, xứng đáng là lựa chọn hàng đầu của du khách.</p>
-      </div>
-      <div class="image-content">
-        <img src="https://apnews.vn/wp-content/uploads/2025/04/top-5-thuong-hieu-manh-asean-1366x910.jpg" alt="Service Quality Image">
-      </div>
-    </div>    
-  
+    <!-- Section 4: Image and Text Split -->
     <div class="split-section">
       <div class="image-content">
-        <img src="https://i.pinimg.com/736x/fa/13/fe/fa13fe9f3b125e63c072aed58164c544.jpg" alt="Service Quality Image">
+        <img src="https://vielimousine.com/wp-content/uploads/2023/07/13-bien-long-hai.jpg" alt="Service Quality Image">
       </div>
       <div class="text-content">
         <div class="stars">
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
         </div>
-        <h3>Vừa riêng tư, vừa sôi động</h3>
-        <p>Không gian nghỉ dưỡng với các bungalow tách biệt đảm bảo tính riêng tư nhưng cũng không kém phần sôi động với nhiều dịch vụ giải trí hấp dẫn</p>
-      </div>
-    </div>
-
-    <div class="split-section">
-      <div class="text-content">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <h3>An ninh đảm bảo</h3>
-        <p>Không chỉ được bảo vệ 24/24, Palace Long Hai Resort còn có bãi biển riêng với các nhân viên cứu hộ chuyên nghiệp và dày dặn kinh nghiệm.</p>
-      </div>
-      <div class="image-content">
-        <img src="https://i.pinimg.com/736x/5d/a3/e0/5da3e013774ae1bbad33f3930ea69971.jpg" alt="Service Quality Image">
-      </div>
-    </div> 
-    
-    <div class="split-section">
-      <div class="image-content">
-        <img src="https://i.pinimg.com/736x/9f/a2/da/9fa2da95208b9a8fe5037608455b478c.jpg" alt="Service Quality Image">
-      </div>
-      <div class="text-content">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <h3>Nhiều khuyến mãi hấp dẫn</h3>
-        <p>Thường xuyên có các chương trình ưu đãi cho nhóm gia đình, khách lẻ, khách hàng thân thiết, khách trải nghiệm trong ngày và hội nghị, tiệc cưới…</p>
+        <h3>4-STAR SERVICE QUALITY</h3>
+        <p>Palace Long Hai Resort quickly became a favourite resort location for many travellers due to the staff's expertise and attention, as well as its numerous wonderful amenities.</p>
       </div>
     </div>
 
     <!-- New Section: Service Highlights -->
     <div class="main-content">
-      <h2>Các điểm nổi bật của chúng tôi</h2>
+      <h2>Our Highlights</h2>
       <div class="service-item" @mouseover="showDescription(0)" @mouseleave="hideDescription(0)">
-        <img src="https://i.pinimg.com/736x/08/9d/94/089d94bf9610318138e58402f01e4c5c.jpg" alt="Green Place">
+        <img src="https://lanrung.com.vn/wp-content/uploads/2020/11/Lan-Rung-Resort-scaled.jpg" alt="Green Place">
         <div class="service-overlay" v-show="descriptions[0].show">
-          Bạn có thể tận hưởng môi trường thanh bình được bao quanh bởi cây xanh tươi tốt và không khí trong lành, lý tưởng để thư giãn.
+          Enjoy a serene environment surrounded by lush greenery and fresh air, perfect for relaxation.
         </div>
       </div>
       <div class="service-item" @mouseover="showDescription(1)" @mouseleave="hideDescription(1)">
-        <img src="https://i.pinimg.com/736x/49/b7/f2/49b7f2e9745a66cef581c4d03c4d7e88.jpg" alt="Service Heart">
+        <img src="https://lanrung.com.vn/wp-content/uploads/2020/11/Lan-Rung-Resort-scaled.jpg" alt="Service Heart">
         <div class="service-overlay" v-show="descriptions[1].show">
-          Trải nghiệm lòng hiếu khách chân thành với đội ngũ nhân viên tận tụy của chúng tôi, đảm bảo đáp ứng mọi nhu cầu của bạn.
+          Experience heartfelt hospitality with our dedicated staff ensuring your every need is met.
         </div>
       </div>
     
       <div class="service-item" @mouseover="showDescription(3)" @mouseleave="hideDescription(3)">
-        <img src="https://i.pinimg.com/736x/94/5b/93/945b93d607c108c5849738363a068faf.jpg" alt="International Friendly">
+        <img src="https://vielimousine.com/wp-content/uploads/2023/07/26-bien-long-hai.webp" alt="International Friendly">
         <div class="service-overlay" v-show="descriptions[3].show">
-          Chào đón du khách quốc tế với đội ngũ nhân viên nói tiếng Anh và những trải nghiệm được thiết kế riêng cho du khách từ Vương quốc Anh và nhiều nơi khác.
+          Welcoming international travelers with English-speaking staff and tailored experiences for guests from the UK and beyond.
         </div>
       </div>
     </div>
@@ -147,7 +112,7 @@ import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 
 export default {
-  name: "AboutUs",
+  name: "Contact",
   components: {
     Header,
     Footer,
@@ -264,7 +229,6 @@ export default {
   font-size: 16px;
   color: #666;
   line-height: 1.6;
-  padding: 30px 60px;
 }
 
 .image-content {
@@ -314,7 +278,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   display: flex;
