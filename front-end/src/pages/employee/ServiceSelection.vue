@@ -1,46 +1,46 @@
 <!-- File: ServiceSelection.vue -->
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl p-8">
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-8">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-6xl mx-auto p-10">
       <!-- Header -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Quản lý dịch vụ</h1>
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Quản lý dịch vụ</h1>
         <button class="text-gray-500 hover:text-gray-700">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
       </div>
 
       <!-- Service List with Expandable Tables -->
-      <div class="space-y-6 mb-8">
+      <div class="space-y-8 mb-10">
         <!-- Giặt ủi -->
         <div>
-          <button class="flex justify-between items-center w-full p-3 border rounded-md" @click="toggleSection('laundry')">
-            <span class="text-base font-medium text-gray-700">Giặt ủi</span>
-            <svg class="w-5 h-5 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.laundry }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <button class="flex justify-between items-center w-full p-4 border rounded-md" @click="toggleSection('laundry')">
+            <span class="text-lg font-medium text-gray-700">Giặt ủi</span>
+            <svg class="w-6 h-6 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.laundry }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
-          <div v-if="expandedSections.laundry" class="mt-3">
+          <div v-if="expandedSections.laundry" class="mt-4">
             <table class="w-full border-collapse">
               <thead>
                 <tr class="bg-gray-100">
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Tên dịch vụ</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Giá (VND)</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Số lượng</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Thao tác</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Tên dịch vụ</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Giá (VND)</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Số lượng</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) in laundryServices" :key="index">
-                  <td class="border p-3">{{ item.name }}</td>
-                  <td class="border p-3">{{ item.price }}</td>
-                  <td class="border p-3">
-                    <input v-model.number="laundryServices[index].quantity" type="number" min="0" class="w-full p-2 border rounded-md focus:outline-none" placeholder="0" />
+                  <td class="border p-4">{{ item.name }}</td>
+                  <td class="border p-4">{{ item.price }}</td>
+                  <td class="border p-4">
+                    <input v-model.number="laundryServices[index].quantity" type="number" min="0" class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="0" />
                   </td>
-                  <td class="border p-3">
-                    <button class="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600" @click="addService({ ...laundryServices[index] }, 'laundry', index, 'laundry')">Thêm</button>
+                  <td class="border p-4">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" @click="addService({ ...laundryServices[index] }, 'laundry', index)">Thêm</button>
                   </td>
                 </tr>
               </tbody>
@@ -50,31 +50,31 @@
 
         <!-- Ăn uống -->
         <div>
-          <button class="flex justify-between items-center w-full p-3 border rounded-md" @click="toggleSection('food')">
-            <span class="text-base font-medium text-gray-700">Ăn uống</span>
-            <svg class="w-5 h-5 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.food }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <button class="flex justify-between items-center w-full p-4 border rounded-md" @click="toggleSection('food')">
+            <span class="text-lg font-medium text-gray-700">Ăn uống</span>
+            <svg class="w-6 h-6 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.food }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
-          <div v-if="expandedSections.food" class="mt-3">
+          <div v-if="expandedSections.food" class="mt-4">
             <table class="w-full border-collapse">
               <thead>
                 <tr class="bg-gray-100">
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Tên dịch vụ</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Giá (VND)</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Số lượng</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Thao tác</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Tên dịch vụ</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Giá (VND)</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Số lượng</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) in foodServices" :key="index">
-                  <td class="border p-3">{{ item.name }}</td>
-                  <td class="border p-3">{{ item.price }}</td>
-                  <td class="border p-3">
-                    <input v-model.number="foodServices[index].quantity" type="number" min="0" class="w-full p-2 border rounded-md focus:outline-none" placeholder="0" />
+                  <td class="border p-4">{{ item.name }}</td>
+                  <td class="border p-4">{{ item.price }}</td>
+                  <td class="border p-4">
+                    <input v-model.number="foodServices[index].quantity" type="number" min="0" class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="0" />
                   </td>
-                  <td class="border p-3">
-                    <button class="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600" @click="addService({ ...foodServices[index] }, 'food', index, 'food')">Thêm</button>
+                  <td class="border p-4">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" @click="addService({ ...foodServices[index] }, 'food', index)">Thêm</button>
                   </td>
                 </tr>
               </tbody>
@@ -84,31 +84,31 @@
 
         <!-- Spa -->
         <div>
-          <button class="flex justify-between items-center w-full p-3 border rounded-md" @click="toggleSection('spa')">
-            <span class="text-base font-medium text-gray-700">Spa</span>
-            <svg class="w-5 h-5 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.spa }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <button class="flex justify-between items-center w-full p-4 border rounded-md" @click="toggleSection('spa')">
+            <span class="text-lg font-medium text-gray-700">Spa</span>
+            <svg class="w-6 h-6 text-gray-500 transform transition-transform" :class="{ 'rotate-180': expandedSections.spa }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
-          <div v-if="expandedSections.spa" class="mt-3">
+          <div v-if="expandedSections.spa" class="mt-4">
             <table class="w-full border-collapse">
               <thead>
                 <tr class="bg-gray-100">
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Tên dịch vụ</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Giá (VND)</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Số lượng</th>
-                  <th class="border p-3 text-left text-sm font-medium text-gray-700">Thao tác</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Tên dịch vụ</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Giá (VND)</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Số lượng</th>
+                  <th class="border p-4 text-left text-base font-medium text-gray-700">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) in spaServices" :key="index">
-                  <td class="border p-3">{{ item.name }}</td>
-                  <td class="border p-3">{{ item.price }}</td>
-                  <td class="border p-3">
-                    <input v-model.number="spaServices[index].quantity" type="number" min="0" class="w-full p-2 border rounded-md focus:outline-none" placeholder="0" />
+                  <td class="border p-4">{{ item.name }}</td>
+                  <td class="border p-4">{{ item.price }}</td>
+                  <td class="border p-4">
+                    <input v-model.number="spaServices[index].quantity" type="number" min="0" class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="0" />
                   </td>
-                  <td class="border p-3">
-                    <button class="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600" @click="addService({ ...spaServices[index] }, 'spa', index, 'spa')">Thêm</button>
+                  <td class="border p-4">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" @click="addService({ ...spaServices[index] }, 'spa', index)">Thêm</button>
                   </td>
                 </tr>
               </tbody>
@@ -118,37 +118,37 @@
       </div>
 
       <!-- Selected Services Section -->
-      <div class="mb-8">
-        <h2 class="text-base font-medium text-gray-700 mb-3">Dịch vụ đã chọn</h2>
+      <div class="mb-10">
+        <h2 class="text-lg font-medium text-gray-700 mb-4">Dịch vụ đã chọn</h2>
         <table v-if="selectedServices.length" class="w-full border-collapse">
           <thead>
             <tr class="bg-gray-100">
-              <th class="border p-3 text-left text-sm font-medium text-gray-700">Tên dịch vụ</th>
-              <th class="border p-3 text-left text-sm font-medium text-gray-700">Giá (VND)</th>
-              <th class="border p-3 text-left text-sm font-medium text-gray-700">Số lượng</th>
-              <th class="border p-3 text-left text-sm font-medium text-gray-700">Thành tiền (VND)</th>
-              <th class="border p-3 text-left text-sm font-medium text-gray-700">Thao tác</th>
+              <th class="border p-4 text-left text-base font-medium text-gray-700">Tên dịch vụ</th>
+              <th class="border p-4 text-left text-base font-medium text-gray-700">Giá (VND)</th>
+              <th class="border p-4 text-left text-base font-medium text-gray-700">Số lượng</th>
+              <th class="border p-4 text-left text-base font-medium text-gray-700">Thành tiền (VND)</th>
+              <th class="border p-4 text-left text-base font-medium text-gray-700">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(service, index) in selectedServices" :key="index">
-              <td class="border p-3">{{ service.name }}</td>
-              <td class="border p-3">{{ service.price }}</td>
-              <td class="border p-3">{{ service.quantity }}</td>
-              <td class="border p-3">{{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}</td>
-              <td class="border p-3">
-                <button class="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600" @click="removeService(index)">Xóa</button>
+              <td class="border p-4">{{ service.name }}</td>
+              <td class="border p-4">{{ service.price }}</td>
+              <td class="border p-4">{{ service.quantity }}</td>
+              <td class="border p-4">{{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}</td>
+              <td class="border p-4">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" @click="removeService(index)">Xóa</button>
               </td>
             </tr>
           </tbody>
         </table>
-        <p v-if="!selectedServices.length" class="text-sm text-gray-500">Chưa có dịch vụ nào được chọn.</p>
+        <p v-if="!selectedServices.length" class="text-base text-gray-500">Chưa có dịch vụ nào được chọn.</p>
       </div>
 
       <!-- Total and Button -->
       <div class="flex justify-between items-center">
-        <p class="text-base font-medium text-gray-700">Tổng tiền dự kiến: <span class="font-bold">{{ totalPrice }} VND</span></p>
-        <button class="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600">Xuất hóa đơn</button>
+        <p class="text-lg font-medium text-gray-700">Tổng tiền dự kiến: <span class="font-bold">{{ totalPrice }} VND</span></p>
+        <button class="bg-green-500 text-white px-8 py-3 rounded-md hover:bg-green-600">Xác nhận</button>
       </div>
     </div>
   </div>
@@ -186,8 +186,8 @@ export default {
     totalPrice() {
       let total = 0;
       this.selectedServices.forEach(service => {
-        const pricePerUnit = parseInt(service.price.replace(/[^0-9]/g, ''));
-        total += pricePerUnit * service.quantity;
+        const pricePerUnit = parseInt(service.price.replace(/[^0-9]/g, '')) || 0; // Thêm kiểm tra để tránh lỗi NaN
+        total += pricePerUnit * (service.quantity || 0); // Đảm bảo quantity không undefined
       });
       return total.toLocaleString();
     },
@@ -196,21 +196,22 @@ export default {
     toggleSection(section) {
       this.expandedSections[section] = !this.expandedSections[section];
     },
-    addService(item, section, index, serviceType) {
-      if (item.quantity <= 0) {
+    addService(item, section, index) {
+      // Kiểm tra nếu quantity không hợp lệ
+      if (!item.quantity || item.quantity <= 0) {
         alert('Chưa nhập số lượng');
         return;
       }
       const existingService = this.selectedServices.find(s => s.name === item.name);
       if (existingService) {
-        existingService.quantity = item.quantity;
+        existingService.quantity = Number(item.quantity); // Đảm bảo quantity là số
       } else {
-        this.selectedServices.push({ ...item });
+        this.selectedServices.push({ ...item, quantity: Number(item.quantity) });
       }
-      // Reset quantity after adding
-      if (serviceType === 'laundry') this.laundryServices[index].quantity = 0;
-      if (serviceType === 'food') this.foodServices[index].quantity = 0;
-      if (serviceType === 'spa') this.spaServices[index].quantity = 0;
+      // Reset quantity sau khi thêm
+      if (section === 'laundry') this.laundryServices[index].quantity = 0;
+      if (section === 'food') this.foodServices[index].quantity = 0;
+      if (section === 'spa') this.spaServices[index].quantity = 0;
     },
     removeService(index) {
       this.selectedServices.splice(index, 1);
@@ -244,32 +245,41 @@ export default {
   width: 100%;
 }
 
-.max-w-4xl {
-  max-width: 64rem; /* Tăng kích thước tối đa lên 64rem (1024px) */
+.max-w-6xl {
+  max-width: 80rem; /* Chiều rộng tối đa 1280px */
 }
 
-.p-6 {
-  padding: 1.5rem;
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .p-8 {
   padding: 2rem;
 }
 
-.mb-6 {
-  margin-bottom: 1.5rem;
+.p-10 {
+  padding: 2.5rem;
 }
 
 .mb-8 {
   margin-bottom: 2rem;
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 
-.text-2xl {
-  font-size: 1.5rem;
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
 }
 
 .text-base {
@@ -312,16 +322,12 @@ export default {
   align-items: center;
 }
 
-.space-y-6 > * + * {
-  margin-top: 1.5rem;
+.space-y-8 > * + * {
+  margin-top: 2rem;
 }
 
 .block {
   display: block;
-}
-
-.text-sm {
-  font-size: 0.875rem;
 }
 
 .font-medium {
@@ -340,12 +346,12 @@ export default {
   border-radius: 0.375rem;
 }
 
-.p-3 {
-  padding: 0.75rem;
+.p-4 {
+  padding: 1rem;
 }
 
-.p-2 {
-  padding: 0.5rem;
+.p-3 {
+  padding: 0.75rem;
 }
 
 .text-left {
@@ -364,6 +370,10 @@ export default {
   box-shadow: 0 0 0 2px #48bb78;
 }
 
+.focus\:ring-green-500:focus {
+  box-shadow: 0 0 0 2px #48bb78;
+}
+
 .bg-green-500 {
   background-color: #48bb78;
 }
@@ -376,9 +386,9 @@ export default {
   color: #ffffff;
 }
 
-.px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .py-3 {
@@ -386,9 +396,9 @@ export default {
   padding-bottom: 0.75rem;
 }
 
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .py-2 {
@@ -404,20 +414,20 @@ export default {
   background-color: #c53030;
 }
 
+.w-7 {
+  width: 1.75rem;
+}
+
+.h-7 {
+  height: 1.75rem;
+}
+
 .w-6 {
   width: 1.5rem;
 }
 
 .h-6 {
   height: 1.5rem;
-}
-
-.w-5 {
-  width: 1.25rem;
-}
-
-.h-5 {
-  height: 1.25rem;
 }
 
 .transform {
