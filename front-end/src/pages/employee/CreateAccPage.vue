@@ -2,10 +2,19 @@
   <div class="auth-container">
     <div class="form-section">
       <h2>Get Started Now</h2>
-      <input v-model="name" type="text" placeholder="Name" />
-      <input v-model="email" type="email" placeholder="Email address" />
-      <input v-model="password" type="password" placeholder="Password" />
-      <label>
+      <div class="form-group">
+        <label for="name" class="input-label">Name</label>
+        <input id="name" v-model="name" type="text" placeholder="Enter your name" />
+      </div>
+      <div class="form-group">
+        <label for="email" class="input-label">Email address</label>
+        <input id="email" v-model="email" type="email" placeholder="Enter your email" />
+      </div>
+      <div class="form-group">
+        <label for="password" class="input-label">Password</label>
+        <input id="password" v-model="password" type="password" placeholder="Enter your password" />
+      </div>
+      <label class="checkbox-label">
         <input v-model="agreeToTerms" type="checkbox" />
         I agree to the terms & policy
       </label>
@@ -16,7 +25,6 @@
       </p>
     </div>
     <div class="image-section">
-      <!-- Image placeholder: Add your image here -->
       <img src="https://i.pinimg.com/736x/c0/4f/fe/c04ffe886029e6b3702d9a07eec13a7c.jpg" alt="Sign Up Image" />
     </div>
   </div>
@@ -68,6 +76,23 @@ export default {
   font-weight: 700;
   color: #000;
 }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.form-section .input-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+.form-section .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
 .form-section input[type="text"],
 .form-section input[type="email"],
 .form-section input[type="password"] {
@@ -77,13 +102,11 @@ export default {
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
+  text-align: left;
 }
-.form-section label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #374151;
+.form-section input::placeholder {
+  color: #a0aec0;
+   /* Changed from center to right */
 }
 .form-section button {
   padding: 0.75rem;
