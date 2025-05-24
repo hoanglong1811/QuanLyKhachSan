@@ -2,7 +2,10 @@
   <div class="auth-container">
     <div class="form-section">
       <h2>Enter OTP</h2>
-      <input v-model="otp" type="text" placeholder="OTP Code" />
+      <div class="form-group">
+        <label for="otp" class="input-label">OTP Code</label>
+        <input id="otp" v-model="otp" type="text" placeholder="Enter your OTP" />
+      </div>
       <button @click="handleVerifyOTP">Verify OTP</button>
       <p>
         Back to
@@ -10,8 +13,7 @@
       </p>
     </div>
     <div class="image-section">
-        <!-- Image placeholder: Add your image here -->
-        <img src="https://i.pinimg.com/736x/c0/4f/fe/c04ffe886029e6b3702d9a07eec13a7c.jpg" alt="OTP Image" />
+      <img src="https://i.pinimg.com/736x/c0/4f/fe/c04ffe886029e6b3702d9a07eec13a7c.jpg" alt="OTP Image" />
     </div>
   </div>
 </template>
@@ -56,6 +58,16 @@ export default {
   font-weight: 700;
   color: #000;
 }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.form-section .input-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
 .form-section input[type="text"] {
   padding: 0.75rem;
   border: 1px solid #d1d5db;
@@ -63,6 +75,11 @@ export default {
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
+  text-align: center;
+}
+.form-section input::placeholder {
+  color: #a0aec0;
+  text-align: center;
 }
 .form-section button {
   padding: 0.75rem;
