@@ -5,11 +5,19 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900">Quản lý hóa đơn</h1>
-        <button class="text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110" @click="goBack">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
+        <div class="flex gap-4">
+          <button 
+            @click="openCustomerModal"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          >
+            Thêm hóa đơn mới
+          </button>
+          <button class="text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110" @click="goBack">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Invoice List Table -->

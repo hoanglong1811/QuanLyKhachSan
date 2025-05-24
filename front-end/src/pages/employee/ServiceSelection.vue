@@ -5,15 +5,53 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Quản lý dịch vụ</h1>
-        <button class="text-gray-500 hover:text-gray-700">
+        <button class="text-gray-500 hover:text-gray-700" @click="goBack">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
       </div>
 
+      <!-- Customer Selection Section -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-800">Thông tin khách hàng</h2>
+          <button
+            v-if="!selectedCustomer"
+            @click="showCustomerModal = true"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Chọn khách hàng
+          </button>
+        </div>
+
+        <!-- Selected Customer Info -->
+        <div v-if="selectedCustomer" class="bg-gray-50 p-6 rounded-lg">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900">{{ selectedCustomer.name }}</h3>
+              <p class="text-gray-600">SĐT: {{ selectedCustomer.phone }}</p>
+              <p class="text-gray-600">CCCD: {{ selectedCustomer.idNumber }}</p>
+            </div>
+            <button
+              @click="clearSelectedCustomer"
+              class="text-gray-500 hover:text-gray-700"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- No Customer Selected Message -->
+        <div v-else class="bg-gray-50 p-6 rounded-lg text-center">
+          <p class="text-gray-500">Vui lòng chọn khách hàng để thêm dịch vụ</p>
+        </div>
+      </div>
+
       <!-- Service List with Expandable Tables -->
-      <div class="space-y-8 mb-10">
+      <div v-if="selectedCustomer" class="space-y-8 mb-10">
         <!-- Giặt ủi -->
         <div>
           <button class="flex justify-between items-center w-full p-4 border rounded-md" @click="toggleSection('laundry')">
@@ -118,7 +156,7 @@
       </div>
 
       <!-- Selected Services Section -->
-      <div class="mb-10">
+      <div v-if="selectedCustomer" class="mb-10">
         <h2 class="text-lg font-medium text-gray-700 mb-4">Dịch vụ đã chọn</h2>
         <table v-if="selectedServices.length" class="w-full border-collapse">
           <thead>
@@ -137,7 +175,7 @@
               <td class="border p-4">{{ service.quantity }}</td>
               <td class="border p-4">{{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}</td>
               <td class="border p-4">
-                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" @click="removeService(index)">Xóa</button>
+                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" @click="removeService(service, index)">Xóa</button>
               </td>
             </tr>
           </tbody>
@@ -146,9 +184,82 @@
       </div>
 
       <!-- Total and Button -->
-      <div class="flex justify-between items-center">
+      <div v-if="selectedCustomer" class="flex justify-between items-center">
         <p class="text-lg font-medium text-gray-700">Tổng tiền dự kiến: <span class="font-bold">{{ totalPrice }} VND</span></p>
         <button class="bg-green-500 text-white px-8 py-3 rounded-md hover:bg-green-600">Xác nhận</button>
+      </div>
+
+      <!-- Customer Selection Modal -->
+      <div v-if="showCustomerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 w-full max-w-2xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Chọn khách hàng</h2>
+            <button @click="closeCustomerModal" class="text-gray-500 hover:text-gray-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="mb-6">
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Tìm kiếm khách hàng..."
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <!-- Customer List -->
+          <div class="max-h-96 overflow-y-auto">
+            <div
+              v-for="customer in filteredCustomers"
+              :key="customer.id"
+              @click="selectCustomer(customer)"
+              class="p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+            >
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="font-medium text-gray-900">{{ customer.name }}</h3>
+                  <p class="text-sm text-gray-500">{{ customer.phone }}</p>
+                </div>
+                <div class="text-sm text-gray-500">
+                  CCCD: {{ customer.idNumber }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md">
+          <div class="text-center mb-6">
+            <svg class="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Xác nhận xóa dịch vụ</h3>
+            <p class="text-gray-500 mt-2">
+              Bạn có chắc chắn muốn xóa dịch vụ "{{ serviceToDelete?.name }}" không?
+            </p>
+          </div>
+          <div class="flex justify-end gap-4">
+            <button
+              @click="cancelDelete"
+              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            >
+              Hủy
+            </button>
+            <button
+              @click="confirmDelete"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            >
+              Xóa
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -159,6 +270,17 @@ export default {
   name: 'ServiceSelection',
   data() {
     return {
+      // Customer selection
+      showCustomerModal: false,
+      searchQuery: '',
+      selectedCustomer: null,
+      customers: [
+        { id: 1, name: 'Nguyễn Văn A', phone: '0123456789', idNumber: '001234567890' },
+        { id: 2, name: 'Trần Thị B', phone: '0987654321', idNumber: '098765432100' },
+        { id: 3, name: 'Lê Văn C', phone: '0369852147', idNumber: '036985214700' },
+      ],
+
+      // Existing data
       expandedSections: {
         laundry: false,
         food: false,
@@ -180,41 +302,93 @@ export default {
         { name: 'Xông hơi', price: '150,000/lần', quantity: 0 },
       ],
       selectedServices: [],
+
+      // Delete confirmation
+      showDeleteModal: false,
+      serviceToDelete: null,
+      serviceIndexToDelete: -1,
     };
   },
   computed: {
+    filteredCustomers() {
+      const query = this.searchQuery.toLowerCase();
+      return this.customers.filter(customer => 
+        customer.name.toLowerCase().includes(query) ||
+        customer.phone.includes(query) ||
+        customer.idNumber.includes(query)
+      );
+    },
     totalPrice() {
       let total = 0;
       this.selectedServices.forEach(service => {
-        const pricePerUnit = parseInt(service.price.replace(/[^0-9]/g, '')) || 0; // Thêm kiểm tra để tránh lỗi NaN
-        total += pricePerUnit * (service.quantity || 0); // Đảm bảo quantity không undefined
+        const pricePerUnit = parseInt(service.price.replace(/[^0-9]/g, '')) || 0;
+        total += pricePerUnit * (service.quantity || 0);
       });
       return total.toLocaleString();
     },
   },
   methods: {
+    goBack() {
+      this.$router ? this.$router.go(-1) : window.history.back();
+    },
+    // Customer selection methods
+    closeCustomerModal() {
+      this.showCustomerModal = false;
+      this.searchQuery = '';
+    },
+    selectCustomer(customer) {
+      this.selectedCustomer = customer;
+      this.closeCustomerModal();
+    },
+    clearSelectedCustomer() {
+      this.selectedCustomer = null;
+      this.selectedServices = [];
+      this.expandedSections = {
+        laundry: false,
+        food: false,
+        spa: false,
+      };
+    },
+
+    // Existing methods
     toggleSection(section) {
       this.expandedSections[section] = !this.expandedSections[section];
     },
     addService(item, section, index) {
-      // Kiểm tra nếu quantity không hợp lệ
       if (!item.quantity || item.quantity <= 0) {
         alert('Chưa nhập số lượng');
         return;
       }
       const existingService = this.selectedServices.find(s => s.name === item.name);
       if (existingService) {
-        existingService.quantity = Number(item.quantity); // Đảm bảo quantity là số
+        existingService.quantity = Number(item.quantity);
       } else {
         this.selectedServices.push({ ...item, quantity: Number(item.quantity) });
       }
-      // Reset quantity sau khi thêm
       if (section === 'laundry') this.laundryServices[index].quantity = 0;
       if (section === 'food') this.foodServices[index].quantity = 0;
       if (section === 'spa') this.spaServices[index].quantity = 0;
     },
-    removeService(index) {
-      this.selectedServices.splice(index, 1);
+    removeService(service, index) {
+      this.serviceToDelete = service;
+      this.serviceIndexToDelete = index;
+      this.showDeleteModal = true;
+    },
+
+    // Add new methods for delete confirmation
+    cancelDelete() {
+      this.showDeleteModal = false;
+      this.serviceToDelete = null;
+      this.serviceIndexToDelete = -1;
+    },
+
+    confirmDelete() {
+      if (this.serviceIndexToDelete > -1) {
+        this.selectedServices.splice(this.serviceIndexToDelete, 1);
+        this.showDeleteModal = false;
+        this.serviceToDelete = null;
+        this.serviceIndexToDelete = -1;
+      }
     },
   },
 };
@@ -455,5 +629,43 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* New styles for customer selection */
+.bg-blue-600 {
+  background-color: #2563eb;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: #1d4ed8;
+}
+
+.bg-opacity-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.max-h-96 {
+  max-height: 24rem;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+/* Add new styles for delete confirmation modal */
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.hover\:bg-red-700:hover {
+  background-color: #b91c1c;
+}
+
+.bg-red-600 {
+  background-color: #dc2626;
 }
 </style>
