@@ -12,7 +12,7 @@
         <span>0938 156 069</span>
       </div>
       <div class="menu-dropdown" v-if="showMenu">
-        <router-link to="/home">Trang chủ</router-link>
+        <router-link to="/">Trang chủ</router-link>
         <router-link to="/about-us">Giới thiệu</router-link>
         <router-link to="/room-types">Các loại phòng</router-link>
         <router-link to="/services">Dịch vụ</router-link>
@@ -30,7 +30,6 @@
           <div class="language-dropdown" v-if="showLanguageDropdown">
             <span @click.stop="selectLanguage('Tiếng Việt')">Tiếng Việt</span>
             <span @click.stop="selectLanguage('English')">English</span>
-            <!-- Thêm các ngôn ngữ khác nếu cần -->
             <span @click.stop="selectLanguage('日本語')">日本語</span>
             <span @click.stop="selectLanguage('Français')">Français</span>
           </div>
@@ -140,7 +139,7 @@
         <div class="content-column">
           <div class="icon">❤️</div>
           <h2>CẢM NHẬN SỰ YÊU THƯƠNG</h2>
-          <p>Với những dịch vụ đến từ “trái tim”, đội ngũ Palace Long Hai Resort không chỉ níu chân du khách bằng sự chuyên nghiệp, tỉ mỉ trong công việc mà còn giúp du khách cảm nhận được sự quan tâm, chăm sóc, yêu thương như trở về với chính ngôi nhà của mình. Chúng tôi luôn nỗ lực để mang đến những trải nghiệm hoàn hảo cho bạn.</p>
+          <p>Với những dịch vụ đến từ "trái tim", đội ngũ Palace Long Hai Resort không chỉ níu chân du khách bằng sự chuyên nghiệp, tỉ mỉ trong công việc mà còn giúp du khách cảm nhận được sự quan tâm, chăm sóc, yêu thương như trở về với chính ngôi nhà của mình. Chúng tôi luôn nỗ lực để mang đến những trải nghiệm hoàn hảo cho bạn.</p>
           <button class="view-benefits-btn" @click="goToAbout">Về chúng tôi</button>
         </div>
         <div class="image-column">
@@ -158,11 +157,11 @@
           </div>
           <div class="footer-column">
             <h4>Liên kết nhanh</h4>
-            <a href="#" @click.prevent="goToHome">Trang chủ</a>
-            <a href="#" @click.prevent="goToAbout">Giới thiệu</a>
-            <a href="#" @click.prevent="goToRooms">Các loại phòng</a>
-            <a href="#" @click.prevent="goToServices">Dịch vụ</a>
-            <a href="#" @click.prevent="goToContact">Liên hệ</a>
+            <router-link to="/">Trang chủ</router-link>
+            <router-link to="/about-us">Giới thiệu</router-link>
+            <router-link to="/room-types">Các loại phòng</router-link>
+            <router-link to="/services">Dịch vụ</router-link>
+            <router-link to="/contact-us">Liên hệ</router-link>
           </div>
           <div class="footer-column">
             <h4>Liên hệ với chúng tôi</h4>
@@ -210,9 +209,7 @@ export default {
     },
     selectLanguage(language) {
       this.currentLanguage = language;
-      this.showLanguageDropdown = false; // Ẩn dropdown sau khi chọn
-      // Ở đây bạn có thể thêm logic để thay đổi ngôn ngữ giao diện nếu cần
-      console.log(`Ngôn ngữ đã chọn: ${language}`);
+      this.showLanguageDropdown = false;
     },
     showDescription(index) {
       this.descriptions[index].show = true;
@@ -233,16 +230,16 @@ export default {
       this.$router.push('/');
     },
     goToAbout() {
-      this.$router.push('/about');
+      this.$router.push('/about-us');
     },
     goToRooms() {
-      this.$router.push('/room');
+      this.$router.push('/room-types');
     },
     goToServices() {
-      this.$router.push('/ser');
+      this.$router.push('/services');
     },
     goToContact() {
-      this.$router.push('/contact');
+      this.$router.push('/contact-us');
     },
     goToBooking() {
       this.$router.push('/booking');

@@ -2,17 +2,17 @@
   <div class="nav-bar">
     <h1>Hệ thống quản lý khách sạn</h1>
     <div class="nav-tabs">
-      <router-link class="nav-tab" to="/personal-info">Thông tin cá nhân</router-link>
+      <router-link class="nav-tab" to="/employee/personal-info">Thông tin cá nhân</router-link>
       <router-link class="nav-tab" to="/dashboard">Quản lý phòng</router-link>
-      <router-link class="nav-tab" to="/user-manager">Quản lý khách hàng</router-link>
-      <router-link class="nav-tab" to="/booking">Đặt phòng</router-link>
-      <router-link class="nav-tab" to="/service-management">Quản lý dịch vụ</router-link>
+      <router-link class="nav-tab" to="/employee/user-manager">Quản lý khách hàng</router-link>
+      <router-link class="nav-tab" to="/employee/booking">Đặt phòng</router-link>
+      <router-link class="nav-tab" to="/employee/service-selection">Quản lý dịch vụ</router-link>
     </div>
     <div class="nav-tabs second-row">
-      <router-link class="nav-tab" to="/invoice-management">Quản lý hóa đơn</router-link>
-      <router-link class="nav-tab" to="/reports">Báo cáo</router-link>
-      <router-link class="nav-tab" to="/account-management">Quản lý tài khoản</router-link>
-      <router-link class="nav-tab" to="/room-layout-management">Quản lý bố trí phòng</router-link>
+      <router-link class="nav-tab" to="/employee/invoice-management">Quản lý hóa đơn</router-link>
+      <router-link class="nav-tab" to="/employee/reports">Báo cáo</router-link>
+      <router-link class="nav-tab" to="/employee/account-management">Quản lý tài khoản</router-link>
+      <router-link class="nav-tab" to="/employee/room-layout-management">Quản lý bố trí phòng</router-link>
     </div>
   </div>
 </template>
