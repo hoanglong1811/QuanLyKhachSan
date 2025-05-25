@@ -13,10 +13,10 @@
       </div>
       <div class="menu-dropdown" v-if="showMenu">
         <router-link to="/">Trang chủ</router-link>
-        <router-link to="/about">Giới thiệu</router-link>
-        <router-link to="/ser">Các loại phòng</router-link>
-        <router-link to="/ser">Dịch vụ</router-link>
-        <router-link to="/contact">Liên hệ</router-link>
+        <router-link to="/about-us">Giới thiệu</router-link>
+        <router-link to="/room-types">Các loại phòng</router-link>
+        <router-link to="/services">Dịch vụ</router-link>
+        <router-link to="/contact-us">Liên hệ</router-link>
       </div>
       <div class="logo">
         <span>PLACE </span>
@@ -30,7 +30,6 @@
           <div class="language-dropdown" v-if="showLanguageDropdown">
             <span @click.stop="selectLanguage('Tiếng Việt')">Tiếng Việt</span>
             <span @click.stop="selectLanguage('English')">English</span>
-            <!-- Thêm các ngôn ngữ khác nếu cần -->
             <span @click.stop="selectLanguage('日本語')">日本語</span>
             <span @click.stop="selectLanguage('Français')">Français</span>
           </div>
@@ -140,7 +139,7 @@
         <div class="content-column">
           <div class="icon">❤️</div>
           <h2>CẢM NHẬN SỰ YÊU THƯƠNG</h2>
-          <p>Với những dịch vụ đến từ “trái tim”, đội ngũ Palace Long Hai Resort không chỉ níu chân du khách bằng sự chuyên nghiệp, tỉ mỉ trong công việc mà còn giúp du khách cảm nhận được sự quan tâm, chăm sóc, yêu thương như trở về với chính ngôi nhà của mình. Chúng tôi luôn nỗ lực để mang đến những trải nghiệm hoàn hảo cho bạn.</p>
+          <p>Với những dịch vụ đến từ "trái tim", đội ngũ Palace Long Hai Resort không chỉ níu chân du khách bằng sự chuyên nghiệp, tỉ mỉ trong công việc mà còn giúp du khách cảm nhận được sự quan tâm, chăm sóc, yêu thương như trở về với chính ngôi nhà của mình. Chúng tôi luôn nỗ lực để mang đến những trải nghiệm hoàn hảo cho bạn.</p>
           <button class="view-benefits-btn" @click="goToAbout">Về chúng tôi</button>
         </div>
         <div class="image-column">
@@ -158,11 +157,11 @@
           </div>
           <div class="footer-column">
             <h4>Liên kết nhanh</h4>
-            <a href="#" @click.prevent="goToHome">Trang chủ</a>
-            <a href="#" @click.prevent="goToAbout">Giới thiệu</a>
-            <a href="#" @click.prevent="goToRooms">Các loại phòng</a>
-            <a href="#" @click.prevent="goToServices">Dịch vụ</a>
-            <a href="#" @click.prevent="goToContact">Liên hệ</a>
+            <router-link to="/">Trang chủ</router-link>
+            <router-link to="/about-us">Giới thiệu</router-link>
+            <router-link to="/room-types">Các loại phòng</router-link>
+            <router-link to="/services">Dịch vụ</router-link>
+            <router-link to="/contact-us">Liên hệ</router-link>
           </div>
           <div class="footer-column">
             <h4>Liên hệ với chúng tôi</h4>
@@ -210,9 +209,7 @@ export default {
     },
     selectLanguage(language) {
       this.currentLanguage = language;
-      this.showLanguageDropdown = false; // Ẩn dropdown sau khi chọn
-      // Ở đây bạn có thể thêm logic để thay đổi ngôn ngữ giao diện nếu cần
-      console.log(`Ngôn ngữ đã chọn: ${language}`);
+      this.showLanguageDropdown = false;
     },
     showDescription(index) {
       this.descriptions[index].show = true;
@@ -233,16 +230,16 @@ export default {
       this.$router.push('/');
     },
     goToAbout() {
-      this.$router.push('/about');
+      this.$router.push('/about-us');
     },
     goToRooms() {
-      this.$router.push('/room');
+      this.$router.push('/room-types');
     },
     goToServices() {
-      this.$router.push('/ser');
+      this.$router.push('/services');
     },
     goToContact() {
-      this.$router.push('/contact');
+      this.$router.push('/contact-us');
     },
     goToBooking() {
       this.$router.push('/booking');
@@ -267,8 +264,8 @@ export default {
 
 /* Header Styles */
 header {
-  background: transparent;
-  padding: 10px 20px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -277,135 +274,214 @@ header {
   width: 100%;
   height: 80px;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 header.sticky {
-  background-color: #CDB79E;
+  background: rgba(205, 183, 158, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  height: 70px;
 }
 
 .menu-toggle {
   font-size: 24px;
   cursor: pointer;
   color: white;
-  margin-left: 30px;
+  padding: 8px;
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .contact {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 22px;
+  gap: 12px;
+  font-size: 16px;
   color: white;
-  margin-right: 1200px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-right: auto;
+  margin-left: 30px;
+  padding: 8px 15px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.contact:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .contact i {
-  font-size: 22px;
+  font-size: 18px;
+  color: #CDB79E;
 }
 
 .menu-dropdown {
   position: absolute;
   top: 100%;
   left: 20px;
-  background-color: #CDB79E;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
+  background: rgba(205, 183, 158, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
   z-index: 1001;
+  min-width: 200px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform-origin: top left;
+  animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .menu-dropdown a,
 .menu-dropdown router-link {
   color: white;
   text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .menu-dropdown a:hover,
 .menu-dropdown router-link:hover {
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
 }
 
 .logo {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: translateX(-50%) translateY(-2px);
 }
 
 .logo span {
-  font-size: 22px;
-  font-weight: normal;
-  margin-top: -2px;
+  font-size: 28px;
+  font-weight: 800;
   color: white;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logo span:last-child {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  opacity: 0.9;
 }
 
 .right-section {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
 }
 
 .language {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 20px;
+  gap: 8px;
+  font-size: 15px;
   cursor: pointer;
   color: white;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  padding: 8px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+}
+
+.language:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .language i {
-  font-size: 22px;
+  font-size: 16px;
 }
 
 .language-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   right: 0;
-  background-color: #CDB79E;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  z-index: 1001;
-  min-width: 120px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-width: 150px;
+  transform-origin: top right;
+  animation: dropdownFade 0.2s ease;
 }
 
 .language-dropdown span {
-  font-size: 16px;
+  padding: 12px 20px;
+  display: block;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .language-dropdown span:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  background: #f8f9fa;
+  color: #CDB79E;
 }
 
 .booking-btn {
-  background-color: transparent;
-  background: white;
-  color: #CDB79E;
-  border: 2px solid #CDB79E;
-  padding: 8px 15px;
-  font-size: 20px;
-  font-weight: bold;
+  background: linear-gradient(45deg, #CDB79E, #E6C9A8);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(205, 183, 158, 0.2);
+}
+
+.booking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(205, 183, 158, 0.3);
+  background: linear-gradient(45deg, #E6C9A8, #CDB79E);
 }
 
 /* Main Image Styles */

@@ -5,51 +5,94 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/User": {
+    "/api/TaiKhoan": {
       "get": {
         "tags": [
-          "User"
+          "TaiKhoan"
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaiKhoanVM"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaiKhoanVM"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaiKhoanVM"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "tags": [
-          "User"
+          "TaiKhoan"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/AddTaiKhoan"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/AddTaiKhoan"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/AddTaiKhoan"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/User/{id}": {
+    "/api/TaiKhoan/{id}": {
       "get": {
         "tags": [
-          "User"
+          "TaiKhoan"
         ],
         "parameters": [
           {
@@ -64,13 +107,30 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              }
+            }
           }
         }
       },
       "put": {
         "tags": [
-          "User"
+          "TaiKhoan"
         ],
         "parameters": [
           {
@@ -87,17 +147,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/UpdateTaiKhoan"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/UpdateTaiKhoan"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserViewModel"
+                "$ref": "#/components/schemas/UpdateTaiKhoan"
               }
             }
           }
@@ -110,7 +170,7 @@
       },
       "delete": {
         "tags": [
-          "User"
+          "TaiKhoan"
         ],
         "parameters": [
           {
@@ -129,85 +189,204 @@
           }
         }
       }
+    },
+    "/api/TaiKhoan/login": {
+      "post": {
+        "tags": [
+          "TaiKhoan"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaiKhoanVM"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "UserViewModel": {
+      "AddTaiKhoan": {
+        "type": "object",
+        "properties": {
+          "tenDangNhap": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "matKhau": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginModel": {
         "required": [
-          "email",
-          "roleId"
+          "matKhau",
+          "tenDangNhap"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+          "tenDangNhap": {
+            "minLength": 1,
+            "type": "string"
           },
-          "email": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "format": "email"
-          },
-          "passwordHash": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "firstName": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "emailVerified": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "avatar": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "lastLogin": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "hotelId": {
+          "matKhau": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TaiKhoanVM": {
+        "type": "object",
+        "properties": {
+          "idTaiKhoan": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "roleId": {
+          "tenDangNhap": {
+            "type": "string",
+            "nullable": true
+          },
+          "matKhau": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "idVaiTro": {
             "type": "integer",
             "format": "int32"
           },
-          "createdAt": {
+          "tenVaiTro": {
             "type": "string",
-            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTaiKhoan": {
+        "type": "object",
+        "properties": {
+          "idTaiKhoan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tenDangNhap": {
+            "type": "string",
             "nullable": true
           },
-          "updatedAt": {
+          "email": {
             "type": "string",
-            "format": "date-time",
+            "nullable": true
+          },
+          "matKhau": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "summary": {
+            "type": "string",
             "nullable": true
           }
         },

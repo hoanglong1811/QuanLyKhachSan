@@ -8,10 +8,10 @@
       <div class="footer-column">
         <h4>Liên kết nhanh</h4>
         <router-link to="/">Trang chủ</router-link>
-        <router-link to="/about">Giới thiệu</router-link>
-        <router-link to="/ser">Các loại phòng</router-link>
-        <router-link to="/ser">Dịch vụ</router-link>
-        <router-link to="/contact">Liên hệ</router-link>
+        <router-link to="/about-us">Giới thiệu</router-link>
+        <router-link to="/room-types">Các loại phòng</router-link>
+        <router-link to="/services">Dịch vụ</router-link>
+        <router-link to="/contact-us">Liên hệ</router-link>
       </div>
       <div class="footer-column">
         <h4>Liên hệ với chúng tôi</h4>

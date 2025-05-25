@@ -1,37 +1,30 @@
 using back_end.Data;
-using back_end.Services;
 using Microsoft.EntityFrameworkCore;
-
+using back_end.Services;
+using back_end.ViewModels;
+using Microsoft.AspNetCore.Builder;
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRazorPages();
-builder.Services.AddDbContext<LtbackendLocalContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbContext"));
-});
+builder.Services.AddDbContext<DataQlks114Nhom3Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DbContext")));
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
+builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 
 
-builder.Services.AddLogging(logging =>
-{
-    logging.AddConsole();
-    logging.AddDebug();
-});
+
+
+
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -39,11 +32,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); 
-app.UseRouting();
-app.UseCors("AllowAll");
+
 app.UseAuthorization();
-app.MapRazorPages(); 
-app.MapControllers(); 
+
+app.MapControllers();
 
 app.Run();

@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import InvoiceDetail from './pages/employee/InvoiceDetail.vue';
+
 
 export default {
     name: "App"

@@ -17,7 +17,7 @@
       </p>
     </div>
     <div class="image-section">
-      <img src="https://i.pinimg.com/736x/c0/4f/fe/c04ffe886029e6b3702d9a07eec13a7c.jpg" alt="Reset Password Image" />
+      <img src="https://i.pinimg.com/736x/41/52/1a/41521a5841f178c2a0cc33e956f47f01.jpg" alt="Reset Password Image" />
     </div>
   </div>
 </template>

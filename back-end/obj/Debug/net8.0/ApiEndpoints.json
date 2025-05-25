@@ -1,34 +1,54 @@
 [
   {
-    "ContainingType": "back_end.Controllers.UserController",
-    "Method": "GetAll",
-    "RelativePath": "api/User",
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "GetTaiKhoans",
+    "RelativePath": "api/TaiKhoan",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[back_end.ViewModels.TaiKhoanVM, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
-    "ContainingType": "back_end.Controllers.UserController",
-    "Method": "Create",
-    "RelativePath": "api/User",
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "PostTaiKhoan",
+    "RelativePath": "api/TaiKhoan",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userViewModel",
-        "Type": "back_end.ViewModels.UserViewModel",
+        "Name": "addTaiKhoan",
+        "Type": "back_end.ViewModels.AddTaiKhoan",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "back_end.ViewModels.TaiKhoanVM",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
-    "ContainingType": "back_end.Controllers.UserController",
-    "Method": "GetById",
-    "RelativePath": "api/User/{id}",
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "GetTaiKhoan",
+    "RelativePath": "api/TaiKhoan/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -39,12 +59,22 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "back_end.ViewModels.TaiKhoanVM",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
-    "ContainingType": "back_end.Controllers.UserController",
-    "Method": "Update",
-    "RelativePath": "api/User/{id}",
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "PutTaiKhoan",
+    "RelativePath": "api/TaiKhoan/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -55,17 +85,17 @@
         "IsRequired": true
       },
       {
-        "Name": "userViewModel",
-        "Type": "back_end.ViewModels.UserViewModel",
+        "Name": "taiKhoanVM",
+        "Type": "back_end.ViewModels.UpdateTaiKhoan",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "back_end.Controllers.UserController",
-    "Method": "Delete",
-    "RelativePath": "api/User/{id}",
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "DeleteTaiKhoan",
+    "RelativePath": "api/TaiKhoan/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -77,5 +107,52 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "back_end.Controllers.TaiKhoanController",
+    "Method": "Login",
+    "RelativePath": "api/TaiKhoan/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginInfo",
+        "Type": "back_end.ViewModels.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "back_end.ViewModels.TaiKhoanVM",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "back_end.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[back_end.WeatherForecast, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
   }
 ]

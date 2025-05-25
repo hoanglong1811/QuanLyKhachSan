@@ -1,72 +1,99 @@
 <!-- File: InvoiceDetail.vue -->
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-10">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-7xl mx-auto p-12">
-      <!-- Header Section -->
-      <div class="flex justify-between items-start mb-10">
-        <div>
-          <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Chi tiết hóa đơn</h1>
-          <div class="space-y-3">
-            <p class="text-lg text-gray-700"><span class="font-semibold">Mã hóa đơn:</span> {{ invoice.invoiceId }}</p>
-            <p class="text-lg text-gray-700"><span class="font-semibold">Tên khách hàng:</span> {{ invoice.customerInfo }}</p>
-            <p class="text-lg text-gray-700">
-              <span class="font-semibold">Trạng thái:</span>
-              <span :class="invoice.status === 'ĐÃ THANH TOÁN' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
-                {{ invoice.status }}
-              </span>
-            </p>
+  <div class="page-container">
+    <NavBar/>
+    <div class="content-wrapper">
+      <div class="content-container">
+        <!-- Header Section -->
+        <div class="header-section">
+          <div class="info-section">
+            <h1 class="page-title">Chi tiết hóa đơn</h1>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Mã hóa đơn:</span>
+                <span class="info-value">{{ invoice.invoiceId }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Tên khách hàng:</span>
+                <span class="info-value">{{ invoice.customerInfo }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Trạng thái:</span>
+                <span :class="['status-badge', invoice.status === 'ĐÃ THANH TOÁN' ? 'status-paid' : 'status-unpaid']">
+                  {{ invoice.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="date-info">
+            <div class="info-item">
+              <span class="info-label">Ngày lập:</span>
+              <span class="info-value">{{ invoice.date }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Giờ lập:</span>
+              <span class="info-value">{{ invoice.time }}</span>
+            </div>
           </div>
         </div>
-        <div class="text-right">
-          <p class="text-lg text-gray-700"><span class="font-semibold">Ngày lập:</span> {{ invoice.date }}</p>
-          <p class="text-lg text-gray-700"><span class="font-semibold">Giờ lập:</span> {{ invoice.time }}</p>
+
+        <!-- Service/Room Table -->
+        <div class="table-container">
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>Tên dịch vụ/phòng</th>
+                <th>Giá (VND)</th>
+                <th>Số lượng</th>
+                <th>Thành tiền (VND)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in invoice.items" :key="index">
+                <td>{{ item.name }}</td>
+                <td>{{ item.price.toLocaleString() }}</td>
+                <td>{{ item.quantity }}</td>
+                <td class="amount-cell">{{ (item.price * item.quantity).toLocaleString() }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-if="!invoice.items.length" class="empty-message">
+            Chưa có dịch vụ/phòng nào.
+          </p>
         </div>
-      </div>
 
-      <!-- Service/Room Table -->
-      <div class="mb-12">
-        <table class="w-full border-collapse bg-white rounded-lg shadow-md">
-          <thead>
-            <tr class="bg-gray-200 text-gray-800">
-              <th class="border-b p-5 text-left text-lg font-semibold">Tên dịch vụ/phòng</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Giá (VND)</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Số lượng</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Thành tiền (VND)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in invoice.items" :key="index" class="hover:bg-gray-50 transition-colors duration-150">
-              <td class="border-b p-5 text-gray-700 text-lg">{{ item.name }}</td>
-              <td class="border-b p-5 text-gray-700 text-lg">{{ item.price.toLocaleString() }}</td>
-              <td class="border-b p-5 text-gray-700 text-lg">{{ item.quantity }}</td>
-              <td class="border-b p-5 text-gray-700 text-lg">{{ (item.price * item.quantity).toLocaleString() }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="!invoice.items.length" class="text-lg text-gray-500 mt-6 text-center">Chưa có dịch vụ/phòng nào.</p>
-      </div>
-
-      <!-- Total Section -->
-      <div class="flex justify-end">
-        <div class="bg-green-500 text-white rounded-lg shadow-md p-4 w-full max-w-xs">
-          <p class="text-xl font-semibold">Tổng tiền:</p>
-          <p class="text-3xl font-extrabold">{{ totalAmount.toLocaleString() }} VND</p>
+        <!-- Total Section -->
+        <div class="total-section">
+          <div class="total-card">
+            <p class="total-label">Tổng tiền:</p>
+            <p class="total-amount">{{ totalAmount.toLocaleString() }} VND</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Back Button -->
-      <div class="mt-10">
-        <button class="bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" @click="goBack">
-          Quay lại
-        </button>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button @click="goBack" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+          </button>
+          <button class="btn btn-print">
+            <i class="fas fa-print"></i>
+            In hóa đơn
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/navbar.vue';
+
 export default {
   name: 'InvoiceDetail',
+  components: {
+    NavBar,
+  },
   data() {
     return {
       invoice: {
@@ -90,7 +117,6 @@ export default {
   },
   methods: {
     goBack() {
-      // Logic để quay lại trang trước, có thể dùng router nếu bạn dùng Vue Router
       this.$router ? this.$router.go(-1) : window.history.back();
     },
   },
@@ -98,231 +124,256 @@ export default {
 </script>
 
 <style scoped>
-.min-h-screen {
+.page-container {
   min-height: 100vh;
-}
-
-.bg-gray-100 {
   background-color: #f7fafc;
+  position: relative;
+  padding-top: 64px;
 }
 
-.bg-white {
-  background-color: #ffffff;
+.content-wrapper {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-.shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.rounded-xl {
+.content-container {
+  background-color: white;
   border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
-.w-full {
-  width: 100%;
+.info-section {
+  flex: 1;
+  min-width: 300px;
 }
 
-.max-w-7xl {
-  max-width: 96rem; /* Chiều rộng tối đa 1536px */
-}
-
-.max-w-xs {
-  max-width: 20rem; /* Giảm kích thước hộp tổng tiền */
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.p-10 {
-  padding: 2.5rem;
-}
-
-.p-12 {
-  padding: 3rem;
-}
-
-.p-4 {
-  padding: 1rem;
-}
-
-.mb-6 {
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a202c;
   margin-bottom: 1.5rem;
 }
 
-.mb-10 {
-  margin-bottom: 2.5rem;
+.info-grid {
+  display: grid;
+  gap: 1rem;
 }
 
-.mb-12 {
-  margin-bottom: 3rem;
+.date-info {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  min-width: 250px;
 }
 
-.mt-6 {
-  margin-top: 1.5rem;
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.mt-10 {
-  margin-bottom: 2.5rem;
+.info-label {
+  font-weight: 600;
+  color: #4a5568;
+  min-width: 120px;
 }
 
-.space-y-3 > * + * {
-  margin-top: 0.75rem;
+.info-value {
+  color: #1a202c;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-}
-
-.text-xl {
-  font-size: 1.25rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.font-extrabold {
-  font-weight: 800;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
+.status-badge {
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
   font-weight: 600;
 }
 
-.text-gray-900 {
-  color: #1f2937;
+.status-paid {
+  background-color: #def7ec;
+  color: #046c4e;
 }
 
-.text-gray-500 {
-  color: #a0aec0;
+.status-unpaid {
+  background-color: #fde8e8;
+  color: #c81e1e;
 }
 
-.text-gray-700 {
+.table-container {
+  margin: 2rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.invoice-table th {
+  background-color: #f8fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.invoice-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
   color: #4a5568;
 }
 
-.text-gray-800 {
-  color: #2d3748;
+.amount-cell {
+  font-weight: 600;
 }
 
-.text-green-600 {
-  color: #16a34a;
+.invoice-table tr:hover {
+  background-color: #f8fafc;
 }
 
-.text-red-600 {
-  color: #dc2626;
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.bg-green-500 {
-  background-color: #22c55e;
-}
-
-.flex {
+.total-section {
   display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.justify-end {
   justify-content: flex-end;
+  margin: 2rem 0;
 }
 
-.items-start {
-  align-items: flex-start;
+.total-card {
+  background: linear-gradient(to right, #3182ce, #2c5282);
+  padding: 1.5rem 2rem;
+  border-radius: 0.5rem;
+  color: white;
+  min-width: 300px;
 }
 
-.text-right {
-  text-align: right;
+.total-label {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.text-center {
+.total-amount {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn i {
+  font-size: 1.25rem;
+}
+
+.btn-back {
+  background-color: #4a5568;
+  color: white;
+}
+
+.btn-back:hover {
+  background-color: #2d3748;
+}
+
+.btn-print {
+  background-color: #38a169;
+  color: white;
+}
+
+.btn-print:hover {
+  background-color: #2f855a;
+}
+
+.empty-message {
   text-align: center;
+  color: #718096;
+  padding: 2rem;
 }
 
-.border-b {
-  border-bottom-width: 1px;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-container {
+    padding-top: 56px;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .content-container {
+    padding: 1rem;
+  }
+
+  .header-section {
+    flex-direction: column;
+  }
+
+  .date-info {
+    width: 100%;
+  }
+
+  .table-container {
+    margin: 1rem -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
-.border-collapse {
-  border-collapse: collapse;
-}
+/* Print styles */
+@media print {
+  .page-container {
+    background-color: white;
+    padding: 0;
+  }
 
-.p-5 {
-  padding: 1.25rem;
-}
+  .content-wrapper {
+    padding: 0;
+  }
 
-.text-left {
-  text-align: left;
-}
+  .content-container {
+    box-shadow: none;
+    padding: 0;
+  }
 
-.bg-gray-200 {
-  background-color: #e5e7eb;
-}
-
-.bg-gray-50 {
-  background-color: #fafafa;
-}
-
-.bg-gray-600 {
-  background-color: #4b5563;
-}
-
-.transition-colors {
-  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-}
-
-.duration-150 {
-  transition-duration: 150ms;
-}
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.hover\:bg-gray-50:hover {
-  background-color: #fafafa;
-}
-
-.hover\:bg-gray-700:hover {
-  background-color: #374151;
-}
-
-table th,
-table td {
-  border-color: #e2e8f0;
-}
-
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.py-3 {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  .btn-back {
+    display: none;
+  }
 }
 </style>

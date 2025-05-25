@@ -1,60 +1,77 @@
 <!-- File: InvoiceManagement.vue -->
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-10">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-7xl mx-auto p-12">
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-10">
-        <h1 class="text-4xl font-extrabold text-gray-900">Quản lý hóa đơn</h1>
-        <div class="flex gap-4">
-          <button 
-            @click="openCustomerModal"
-            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
-          >
-            Thêm hóa đơn mới
-          </button>
-          <button class="text-gray-600 hover:text-gray-800 transition-colors duration-200 transform hover:scale-110" @click="goBack">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <div class="page-container">
+    <NavBar />
+    <div class="content-wrapper">
+      <div class="content-container">
+        <!-- Header Section -->
+        <div class="header-section">
+          <div class="header-left">
+            <h1 class="page-title">Quản lý hóa đơn</h1>
+            <p class="subtitle">Xem và quản lý tất cả hóa đơn</p>
+          </div>
+          <button class="back-button" @click="goBack">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
+            <span>Quay lại</span>
           </button>
         </div>
-      </div>
 
-      <!-- Invoice List Table -->
-      <div class="mb-12">
-        <table class="w-full border-collapse bg-white rounded-lg shadow-md">
-          <thead>
-            <tr class="bg-gray-200 text-gray-800">
-              <th class="border-b p-5 text-left text-lg font-semibold">Mã hóa đơn</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Thông tin khách hàng</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Trạng thái thanh toán</th>
-              <th class="border-b p-5 text-left text-lg font-semibold">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(invoice, index) in invoices" :key="index" class="hover:bg-gray-50 transition-colors duration-150">
-              <td class="border-b p-5 text-gray-700 text-lg">{{ invoice.invoiceId }}</td>
-              <td class="border-b p-5 text-gray-700 text-lg">{{ invoice.customerInfo }}</td>
-              <td class="border-b p-5">
-                <span :class="invoice.status === 'ĐÃ THANH TOÁN' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
-                  {{ invoice.status }}
-                </span>
-              </td>
-              <td class="border-b p-5">
-                <a href="#" class="text-blue-600 underline font-medium hover:text-blue-800 transition-colors duration-200" @click.prevent="viewDetails(invoice)">Xem chi tiết</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="!invoices.length" class="text-lg text-gray-500 mt-6 text-center">Chưa có hóa đơn nào.</p>
+        <!-- Table Section -->
+        <div class="table-container">
+          <div class="table-wrapper">
+            <table class="invoice-table">
+              <thead>
+                <tr>
+                  <th>Mã hóa đơn</th>
+                  <th>Thông tin khách hàng</th>
+                  <th>Trạng thái thanh toán</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(invoice, index) in invoices" :key="index" class="invoice-row">
+                  <td class="invoice-id">{{ invoice.invoiceId }}</td>
+                  <td class="customer-info">{{ invoice.customerInfo }}</td>
+                  <td>
+                    <span :class="getStatusClass(invoice.status)" class="status-badge">
+                      {{ invoice.status }}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="view-button" @click="viewDetails(invoice)">
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Xem chi tiết
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p v-if="!invoices.length" class="empty-message">
+            <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Chưa có hóa đơn nào.
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/navbar.vue';
+
 export default {
   name: 'InvoiceManagement',
+  components: {
+    NavBar
+  },
   data() {
     return {
       invoices: [
@@ -66,209 +83,266 @@ export default {
   },
   methods: {
     goBack() {
-      // Logic để quay lại trang trước, có thể dùng router nếu bạn dùng Vue Router
       this.$router ? this.$router.go(-1) : window.history.back();
     },
     viewDetails(invoice) {
-      // Logic để xem chi tiết hóa đơn, hiện tại chỉ hiển thị thông báo
-      alert(`Xem chi tiết hóa đơn: ${invoice.invoiceId} - Khách hàng: ${invoice.customerInfo}`);
+      this.$router.push(`/employee/invoice-detail/${invoice.invoiceId}`);
     },
+    getStatusClass(status) {
+      return status === 'ĐÃ THANH TOÁN' 
+        ? 'status-paid' 
+        : 'status-unpaid';
+    }
   },
 };
 </script>
 
 <style scoped>
-.min-h-screen {
+.page-container {
   min-height: 100vh;
+  background-color: #f3f4f6;
+  position: relative;
+  padding-top: 64px;
 }
 
-.bg-gray-100 {
-  background-color: #f7fafc;
+.content-wrapper {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-.bg-white {
-  background-color: #ffffff;
-}
-
-.shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-md {
+.content-container {
+  background-color: white;
+  border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
 }
 
-.rounded-xl {
-  border-radius: 0.75rem;
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.rounded-lg {
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.975rem;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #4b5563;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
+  transition: all 0.2s;
 }
 
-.w-full {
+.back-button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.table-container {
+  background-color: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin: 0 -1rem;
+}
+
+.invoice-table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 800px;
 }
 
-.max-w-7xl {
-  max-width: 96rem; /* Chiều rộng tối đa 1536px */
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.p-10 {
-  padding: 2.5rem;
-}
-
-.p-12 {
-  padding: 3rem;
-}
-
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
-}
-
-.text-4xl {
-  font-size: 2.25rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.font-extrabold {
-  font-weight: 800;
-}
-
-.font-semibold {
+.invoice-table th {
+  background-color: #f9fafb;
+  color: #374151;
   font-weight: 600;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
-.font-medium {
-  font-weight: 500;
+.invoice-table td {
+  padding: 1rem 1.5rem;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.text-gray-900 {
-  color: #1f2937;
+.invoice-row {
+  transition: background-color 0.2s;
 }
 
-.text-gray-500 {
-  color: #a0aec0;
+.invoice-row:hover {
+  background-color: #f9fafb;
 }
 
-.text-gray-700 {
-  color: #4a5568;
-}
-
-.text-gray-800 {
-  color: #2d3748;
-}
-
-.text-green-600 {
-  color: #16a34a;
-}
-
-.text-red-600 {
-  color: #dc2626;
-}
-
-.text-blue-600 {
+.invoice-id {
+  font-family: monospace;
+  font-weight: 600;
   color: #2563eb;
 }
 
-.text-blue-800 {
-  color: #1d4ed8;
+.customer-info {
+  font-weight: 500;
 }
 
-.hover\:text-gray-800:hover {
-  color: #2d3748;
-}
-
-.hover\:text-blue-800:hover {
-  color: #1d4ed8;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
+.status-badge {
+  display: inline-flex;
   align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-.text-center {
+.status-paid {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-unpaid {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.view-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background-color: #f3f4f6;
+  color: #3b82f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.view-button:hover {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.view-button svg {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.375rem;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
   text-align: center;
+  font-size: 1rem;
 }
 
-.border-b {
-  border-bottom-width: 1px;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-container {
+    padding-top: 56px;
+  }
+  
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .content-container {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .table-wrapper {
+    margin: 0;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    padding: 0.75rem 1rem;
+  }
 }
 
-.border-collapse {
-  border-collapse: collapse;
-}
+/* Print styles */
+@media print {
+  .page-container {
+    background-color: white;
+    padding-top: 0;
+  }
 
-.p-5 {
-  padding: 1.25rem;
-}
+  .content-wrapper {
+    padding: 0;
+  }
 
-.text-left {
-  text-align: left;
-}
+  .content-container {
+    box-shadow: none;
+    padding: 0;
+  }
 
-.bg-gray-200 {
-  background-color: #e5e7eb;
-}
+  .back-button,
+  .view-button svg {
+    display: none;
+  }
 
-.bg-gray-50 {
-  background-color: #fafafa;
-}
+  .header-section {
+    border-bottom: none;
+  }
 
-.underline {
-  text-decoration: underline;
-}
+  .invoice-table {
+    border: 1px solid #e5e7eb;
+  }
 
-.transition-colors {
-  transition: color 0.2s ease-in-out;
-}
-
-.duration-150 {
-  transition-duration: 150ms;
-}
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.hover\:scale-110:hover {
-  transform: scale(1.1);
-}
-
-table th,
-table td {
-  border-color: #e2e8f0;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
-.h-8 {
-  height: 2rem;
+  .status-badge {
+    border: 1px solid currentColor;
+  }
 }
 </style>
