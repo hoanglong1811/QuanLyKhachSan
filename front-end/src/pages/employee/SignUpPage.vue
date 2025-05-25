@@ -75,7 +75,7 @@ export default {
 .form-section .input-label {
   font-size: 1rem;
   font-weight: 600;
-  color: #333;
+  color: #333;  
 }
 .form-section input[type="email"],
 .form-section input[type="password"] {
@@ -89,7 +89,7 @@ export default {
 }
 .form-section input::placeholder {
   color: #a0aec0;
-  text-align: right;
+  text-align: left;
 }
 .form-section button {
   padding: 0.75rem;

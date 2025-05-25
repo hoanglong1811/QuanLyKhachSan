@@ -131,6 +131,7 @@ const routes = [
   {
     path: "/employee/invoice-detail/:id",
     name: "InvoiceDetail",
+    component: InvoiceDetail,
     props: true,
     meta: { requiresAuth: true, role: 'employee' }
   },
