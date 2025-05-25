@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\QuanLyKhachSan\\back-end\\back-end.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj": {}
   },
   "projects": {
-    "D:\\QuanLyKhachSan\\back-end\\back-end.csproj": {
+    "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj",
         "projectName": "back-end",
-        "projectPath": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\QuanLyKhachSan\\back-end\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,33 +50,25 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "BCrypt.Net-Next": {
-              "target": "Package",
-              "version": "[4.0.3, )"
-            },
-            "Microsoft.AspNetCore.Mvc.Razor": {
-              "target": "Package",
-              "version": "[2.3.0, )"
-            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[8.0.16, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[8.0.16, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[8.0.16, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[8.0.16, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
