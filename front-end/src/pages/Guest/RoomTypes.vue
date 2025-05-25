@@ -2,193 +2,99 @@
   <div>
     <Header />
     <div class="room-types-container">
-      <!-- Banner Section with Parallax -->
-      <div class="banner parallax">
-        <img src="https://i.pinimg.com/736x/c3/c9/cf/c3c9cf000c4bbe4e887f108d950c5179.jpg" alt="Room Types Banner">
-        <div class="banner-overlay"></div>
-        <div class="banner-content">
-          <h1>Các Loại Phòng</h1>
-          <p>Khám phá không gian nghỉ dưỡng tuyệt vời tại Palace Long Hai Resort</p>
+      <!-- Hero Section with Animation -->
+      <div class="hero-section">
+        <div class="hero-background">
+          <img src="https://i.pinimg.com/736x/c3/c9/cf/c3c9cf000c4bbe4e887f108d950c5179.jpg" alt="Hero Background">
+          <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+          <h1 class="hero-title">Khám Phá Các Loại Phòng</h1>
+          <p class="hero-subtitle">Nghỉ dưỡng thượng lưu tại Palace Long Hai Resort</p>
+          <button class="explore-btn" @click="scrollToRooms">Khám Phá Ngay</button>
         </div>
       </div>
 
-      <!-- Introduction Section -->
-      <div class="intro-section">
-        <div class="intro-content">
-          <h2>Trải Nghiệm Đẳng Cấp</h2>
-          <p>Tận hưởng kỳ nghỉ của bạn trong không gian sang trọng và đẳng cấp tại Palace Long Hai Resort. Chúng tôi mang đến cho bạn ba lựa chọn phòng độc đáo, mỗi loại đều được thiết kế tỉ mỉ để đáp ứng nhu cầu của những vị khách khó tính nhất.</p>
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <div class="welcome-content">
+          <h2 class="welcome-title">Chào Mừng Đến Với Đẳng Cấp</h2>
+          <p class="welcome-text">Palace Long Hai Resort mang đến không gian nghỉ dưỡng tinh tế với các loại phòng được thiết kế riêng biệt, đáp ứng mọi nhu cầu của bạn.</p>
         </div>
       </div>
 
       <!-- Room Types Section -->
-      <div class="room-types-section">
-        <!-- Deluxe Room -->
-        <div class="room-card" @mouseover="activeRoom = 'deluxe'" @mouseleave="activeRoom = null">
-          <div class="room-image">
-            <img src="https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg" alt="Deluxe Room">
-            <div class="image-overlay"></div>
-            <div class="room-price" :class="{ 'price-active': activeRoom === 'deluxe' }">
-              <span>Từ</span>
-              <h3>2,500,000 VND</h3>
-              <span>/đêm</span>
+      <div class="room-types-section" ref="roomsSection">
+        <div class="room-grid">
+          <!-- Deluxe Room -->
+          <div class="room-item" @mouseover="activeRoom = 'deluxe'" @mouseleave="activeRoom = null">
+            <div class="room-image">
+              <img src="https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg" alt="Deluxe Room">
+              <div class="room-label">Deluxe</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-name">Phòng Deluxe</h3>
+              <div class="room-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.5/5)</span>
+              </div>
+              <p class="room-price">Từ 2,500,000 VND/đêm</p>
+              <p class="room-desc">Thiết kế hiện đại, view đẹp, lý tưởng cho cặp đôi.</p>
+              <button class="room-btn" @click="viewDetails('deluxe')">Xem Thêm</button>
             </div>
           </div>
-          <div class="room-info">
-            <div class="room-header">
-              <h2>Phòng Deluxe</h2>
-              <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span>(4.5/5)</span>
-              </div>
+
+          <!-- Suite Room -->
+          <div class="room-item" @mouseover="activeRoom = 'suite'" @mouseleave="activeRoom = null">
+            <div class="room-image">
+              <img src="https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg" alt="Suite Room">
+              <div class="room-label">Suite</div>
             </div>
-            <div class="room-features">
-              <div class="feature">
-                <i class="fas fa-bed"></i>
-                <span>1 Giường đôi</span>
+            <div class="room-details">
+              <h3 class="room-name">Phòng Suite</h3>
+              <div class="room-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.8/5)</span>
               </div>
-              <div class="feature">
-                <i class="fas fa-user-friends"></i>
-                <span>2 Người</span>
-              </div>
-              <div class="feature">
-                <i class="fas fa-vector-square"></i>
-                <span>35m²</span>
-              </div>
+              <p class="room-price">Từ 3,500,000 VND/đêm</p>
+              <p class="room-desc">Rộng rãi, view biển, tiện nghi cao cấp.</p>
+              <button class="room-btn" @click="viewDetails('suite')">Xem Thêm</button>
             </div>
-            <p class="room-description">
-              Phòng Deluxe với thiết kế hiện đại, view đẹp, đầy đủ tiện nghi cao cấp, phù hợp cho cặp đôi hoặc gia đình nhỏ.
-            </p>
-            <div class="room-amenities">
-              <span><i class="fas fa-wifi"></i> Wifi miễn phí</span>
-              <span><i class="fas fa-snowflake"></i> Điều hòa</span>
-              <span><i class="fas fa-tv"></i> TV màn hình phẳng</span>
-              <span><i class="fas fa-coffee"></i> Mini bar</span>
+          </div>
+
+          <!-- Beach Villa -->
+          <div class="room-item" @mouseover="activeRoom = 'villa'" @mouseleave="activeRoom = null">
+            <div class="room-image">
+              <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Beach Villa">
+              <div class="room-label luxury">Villa</div>
             </div>
-            <div class="action-buttons">
-              <button class="view-details-btn" @click="viewDetails('deluxe')">Xem Chi Tiết</button>
-              <button class="book-now-btn" @click="bookRoom('deluxe')">Đặt Ngay</button>
+            <div class="room-details">
+              <h3 class="room-name">Beach Villa</h3>
+              <div class="room-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(5.0/5)</span>
+              </div>
+              <p class="room-price">Từ 5,500,000 VND/đêm</p>
+              <p class="room-desc">Hồ bơi riêng, view biển tuyệt đẹp.</p>
+              <button class="room-btn" @click="viewDetails('villa')">Xem Thêm</button>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Suite Room -->
-        <div class="room-card" @mouseover="activeRoom = 'suite'" @mouseleave="activeRoom = null">
-          <div class="room-image">
-            <img src="https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg" alt="Suite Room">
-            <div class="image-overlay"></div>
-            <div class="room-price" :class="{ 'price-active': activeRoom === 'suite' }">
-              <span>Từ</span>
-              <h3>3,500,000 VND</h3>
-              <span>/đêm</span>
-            </div>
-            <div class="room-badge">BEST SELLER</div>
-          </div>
-          <div class="room-info">
-            <div class="room-header">
-              <h2>Phòng Suite</h2>
-              <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span>(4.8/5)</span>
-              </div>
-            </div>
-            <div class="room-features">
-              <div class="feature">
-                <i class="fas fa-bed"></i>
-                <span>1 Giường đôi + 1 Giường đơn</span>
-              </div>
-              <div class="feature">
-                <i class="fas fa-user-friends"></i>
-                <span>3 Người</span>
-              </div>
-              <div class="feature">
-                <i class="fas fa-vector-square"></i>
-                <span>50m²</span>
-              </div>
-            </div>
-            <p class="room-description">
-              Phòng Suite rộng rãi với phòng khách riêng biệt, ban công view biển, thiết kế sang trọng và đầy đủ tiện nghi cao cấp.
-            </p>
-            <div class="room-amenities">
-              <span><i class="fas fa-wifi"></i> Wifi miễn phí</span>
-              <span><i class="fas fa-snowflake"></i> Điều hòa</span>
-              <span><i class="fas fa-tv"></i> TV màn hình phẳng</span>
-              <span><i class="fas fa-coffee"></i> Mini bar</span>
-              <span><i class="fas fa-hot-tub"></i> Bồn tắm</span>
-            </div>
-            <div class="action-buttons">
-              <button class="view-details-btn" @click="viewDetails('suite')">Xem Chi Tiết</button>
-              <button class="book-now-btn" @click="bookRoom('suite')">Đặt Ngay</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Villa -->
-        <div class="room-card" @mouseover="activeRoom = 'villa'" @mouseleave="activeRoom = null">
-          <div class="room-image">
-            <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Villa">
-            <div class="image-overlay"></div>
-            <div class="room-price" :class="{ 'price-active': activeRoom === 'villa' }">
-              <span>Từ</span>
-              <h3>5,500,000 VND</h3>
-              <span>/đêm</span>
-            </div>
-            <div class="room-badge luxury">LUXURY</div>
-          </div>
-          <div class="room-info">
-            <div class="room-header">
-              <h2>Beach Villa</h2>
-              <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span>(5.0/5)</span>
-              </div>
-            </div>
-            <div class="room-features">
-              <div class="feature">
-                <i class="fas fa-bed"></i>
-                <span>2 Giường đôi</span>
-              </div>
-              <div class="feature">
-                <i class="fas fa-user-friends"></i>
-                <span>4 Người</span>
-              </div>
-              <div class="feature">
-                <i class="fas fa-vector-square"></i>
-                <span>80m²</span>
-              </div>
-            </div>
-            <p class="room-description">
-              Villa sang trọng với hồ bơi riêng, view biển tuyệt đẹp, thiết kế độc đáo và đầy đủ tiện nghi cao cấp nhất.
-            </p>
-            <div class="room-amenities">
-              <span><i class="fas fa-wifi"></i> Wifi miễn phí</span>
-              <span><i class="fas fa-snowflake"></i> Điều hòa</span>
-              <span><i class="fas fa-tv"></i> Smart TV</span>
-              <span><i class="fas fa-coffee"></i> Mini bar</span>
-              <span><i class="fas fa-hot-tub"></i> Bồn tắm</span>
-              <span><i class="fas fa-swimming-pool"></i> Hồ bơi riêng</span>
-            </div>
-            <div class="action-buttons">
-              <button class="view-details-btn" @click="viewDetails('villa')">Xem Chi Tiết</button>
-              <button class="book-now-btn" @click="bookRoom('villa')">Đặt Ngay</button>
-            </div>
-          </div>
+      <!-- Amenities Section -->
+      <div class="amenities-section">
+        <h2 class="amenities-title">Tiện Nghi Nổi Bật</h2>
+        <div class="amenities-grid">
+          <div class="amenity-item"><i class="fas fa-wifi"></i> Wifi miễn phí</div>
+          <div class="amenity-item"><i class="fas fa-snowflake"></i> Điều hòa</div>
+          <div class="amenity-item"><i class="fas fa-tv"></i> Smart TV</div>
+          <div class="amenity-item"><i class="fas fa-hot-tub"></i> Bồn tắm</div>
+          <div class="amenity-item"><i class="fas fa-swimming-pool"></i> Hồ bơi riêng</div>
+          <div class="amenity-item"><i class="fas fa-coffee"></i> Mini bar</div>
         </div>
       </div>
 
       <!-- Compare Section -->
       <div class="compare-section">
-        <h2>So Sánh Các Loại Phòng</h2>
+        <h2 class="compare-title">So Sánh Các Loại Phòng</h2>
         <div class="compare-table">
           <table>
             <thead>
@@ -207,7 +113,7 @@
                 <td>80m²</td>
               </tr>
               <tr>
-                <td>Số người tối đa</td>
+                <td>Số người</td>
                 <td>2</td>
                 <td>3</td>
                 <td>4</td>
@@ -255,299 +161,279 @@ export default {
     }
   },
   methods: {
-    bookRoom(roomType) {
-      this.$router.push({
-        path: '/booking',
-        query: { type: roomType }
-      });
-    },
     viewDetails(roomType) {
       this.$router.push({
         path: `/room-types/${roomType}`,
         query: { type: roomType }
       });
+    },
+    scrollToRooms() {
+      this.$refs.roomsSection.scrollIntoView({ behavior: 'smooth' });
     }
   }
 };
 </script>
 
 <style scoped>
-/* Main Container */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .room-types-container {
-  padding-top: 80px; /* Height of the header */
   width: 100%;
-  min-height: calc(100vh - 80px); /* Subtract header height */
-  background-color: #f8f9fa;
-  position: relative;
-  z-index: 1;
+  background-color: #F5F1E9;
+  font-family: 'Roboto', sans-serif;
+  color: #1E3A5F;
 }
 
-/* Banner Styles */
-.banner {
+/* Hero Section */
+.hero-section {
   position: relative;
-  height: 500px;
+  height: 100vh;
   overflow: hidden;
-  margin-top: -80px; /* Offset the header padding */
 }
 
-.parallax {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.banner img {
+.hero-background img {
   width: 100%;
-  height: calc(100% + 80px); /* Add extra height to account for offset */
+  height: 100%;
   object-fit: cover;
-  margin-top: -80px; /* Pull image up to fill gap */
-}
-
-.banner-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 
-.banner-content {
+.hero-overlay {
   position: absolute;
-  top: 55%; /* Adjusted to account for header */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(30, 58, 95, 0.4), rgba(30, 58, 95, 0.7));
   z-index: 2;
 }
 
-.banner-content h1 {
-  font-size: 4em;
-  font-weight: 700;
-  margin-bottom: 0.5em;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.banner-content p {
-  font-size: 1.5em;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Introduction Section */
-.intro-section {
-  background: white;
-  padding: 60px 20px;
-  text-align: center;
+.hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
+  text-align: center;
+  padding-top: 20vh;
+  color: #fff;
 }
 
-.intro-content {
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.explore-btn {
+  background-color: #C9A66B;
+  color: #fff;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.explore-btn:hover {
+  background-color: #A87C3A;
+}
+
+/* Welcome Section */
+.welcome-section {
+  padding: 60px 20px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.welcome-content {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.intro-content h2 {
-  color: #333;
-  font-size: 2.5em;
-  margin-bottom: 20px;
+.welcome-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-.intro-content p {
-  color: #666;
-  font-size: 1.2em;
+.welcome-text {
+  font-size: 1.2rem;
   line-height: 1.6;
+  color: #4B5D67;
 }
 
 /* Room Types Section */
 .room-types-section {
+  padding: 60px 20px;
   max-width: 1200px;
-  margin: 50px auto;
-  padding: 0 20px;
+  margin: 0 auto;
 }
 
-.room-card {
-  background: white;
-  border-radius: 20px;
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.room-item {
+  background: #fff;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  margin-bottom: 40px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-.room-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+.room-item:hover {
+  transform: translateY(-5px);
 }
 
 .room-image {
-  flex: 1;
   position: relative;
-  min-height: 450px;
+  height: 300px;
+  overflow: hidden;
 }
 
-.image-overlay {
+.room-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.room-item:hover .room-image img {
+  transform: scale(1.1);
+}
+
+.room-label {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.room-card:hover .image-overlay {
-  opacity: 1;
-}
-
-.room-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #ff6b6b;
-  color: white;
+  top: 15px;
+  left: 15px;
+  background: #C9A66B;
+  color: #fff;
   padding: 8px 15px;
   border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.9em;
-  z-index: 2;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.room-badge.luxury {
-  background: #ffd700;
-  color: #333;
+.room-label.luxury {
+  background: #1E3A5F;
 }
 
-.room-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.room-details {
+  padding: 20px;
+  text-align: center;
 }
 
-.rating {
-  color: #ffd700;
-  font-size: 0.9em;
+.room-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #1E3A5F;
+  margin-bottom: 0.5rem;
 }
 
-.rating span {
-  color: #666;
+.room-rating {
+  color: #C9A66B;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.room-rating span {
+  color: #4B5D67;
   margin-left: 5px;
 }
 
-.room-features {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
+.room-price {
+  font-size: 1.2rem;
+  color: #1E3A5F;
+  margin-bottom: 1rem;
 }
 
-.feature {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #666;
+.room-desc {
+  font-size: 1rem;
+  color: #4B5D67;
+  margin-bottom: 1rem;
 }
 
-.feature i {
-  color: #CDB79E;
-  font-size: 1.2em;
-}
-
-.room-description {
-  color: #666;
-  line-height: 1.8;
-  margin-bottom: 25px;
-  font-size: 1.1em;
-}
-
-.room-amenities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.room-amenities span {
-  background: #f8f9fa;
+.room-btn {
+  background-color: #C9A66B;
+  color: #fff;
   padding: 10px 20px;
+  border: none;
   border-radius: 25px;
-  font-size: 0.95em;
-  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.room-btn:hover {
+  background-color: #A87C3A;
+}
+
+/* Amenities Section */
+.amenities-section {
+  padding: 60px 20px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.amenities-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #1E3A5F;
+  margin-bottom: 2rem;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.amenity-item {
+  font-size: 1.1rem;
+  color: #4B5D67;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  transition: background 0.3s ease;
 }
 
-.room-amenities span:hover {
-  background: #CDB79E;
-  color: white;
-}
-
-.room-amenities span:hover i {
-  color: white;
-}
-
-.room-amenities i {
-  color: #CDB79E;
-  transition: color 0.3s ease;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.view-details-btn, .book-now-btn {
-  flex: 1;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  font-weight: 600;
-}
-
-.view-details-btn {
-  background: transparent;
-  border: 2px solid #CDB79E;
-  color: #CDB79E;
-}
-
-.view-details-btn:hover {
-  background: #CDB79E;
-  color: white;
-}
-
-.book-now-btn {
-  background: #CDB79E;
-  color: white;
-}
-
-.book-now-btn:hover {
-  background: #8B7D6B;
-  transform: scale(1.05);
+.amenity-item i {
+  color: #C9A66B;
+  font-size: 1.2rem;
 }
 
 /* Compare Section */
 .compare-section {
-  background: white;
   padding: 60px 20px;
-  margin-top: 50px;
-  margin-bottom: 50px; /* Add space before footer */
+  background-color: #F5F1E9;
 }
 
-.compare-section h2 {
+.compare-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #1E3A5F;
   text-align: center;
-  color: #333;
-  font-size: 2.5em;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
 }
 
 .compare-table {
@@ -559,97 +445,93 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  overflow: hidden;
 }
 
 th, td {
-  padding: 20px;
+  padding: 15px;
   text-align: center;
   border-bottom: 1px solid #eee;
 }
 
 th {
-  background: #CDB79E;
-  color: white;
-  font-weight: 600;
+  background: #1E3A5F;
+  color: #fff;
+  font-weight: 500;
 }
 
 td {
-  color: #666;
+  color: #4B5D67;
 }
 
 tr:hover {
-  background: #f8f9fa;
+  background: #F5F1E9;
 }
 
 .fa-check {
-  color: #2ecc71;
+  color: #2ECC71;
 }
 
 .fa-times {
-  color: #e74c3c;
+  color: #E74C3C;
 }
 
 /* Responsive Design */
-@media (max-width: 992px) {
-  .room-types-container {
-    padding-top: 60px; /* Smaller header height on mobile */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
   }
 
-  .room-card {
-    flex-direction: column;
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .welcome-title, .amenities-title, .compare-title {
+    font-size: 2rem;
   }
 
   .room-image {
-    min-height: 300px;
+    height: 250px;
   }
 
-  .room-features {
-    flex-direction: column;
-    gap: 15px;
+  .room-name {
+    font-size: 1.5rem;
   }
 
-  .action-buttons {
-    flex-direction: column;
+  .room-price {
+    font-size: 1rem;
   }
 
-  .banner {
-    height: 400px;
-    margin-top: -60px;
-  }
-
-  .banner img {
-    height: calc(100% + 60px);
-    margin-top: -60px;
-  }
-
-  .banner-content {
-    top: 60%;
-  }
-
-  .banner-content h1 {
-    font-size: 3em;
-  }
-
-  .banner-content p {
-    font-size: 1.2em;
-  }
-}
-
-@media (max-width: 768px) {
-  .banner-content h1 {
-    font-size: 2.5em;
-  }
-
-  .compare-table {
-    font-size: 0.9em;
+  .room-btn {
+    padding: 8px 16px;
   }
 
   th, td {
-    padding: 15px 10px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-content {
+    padding-top: 15vh;
+  }
+
+  .room-image {
+    height: 200px;
+  }
+
+  .room-details {
+    padding: 15px;
+  }
+
+  .amenities-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

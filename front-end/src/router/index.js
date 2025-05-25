@@ -6,6 +6,8 @@ import ContactUs from "@/pages/Guest/ContactUs.vue";
 import HomePage from "@/pages/Guest/HomePage.vue";
 import Services from "@/pages/Guest/Services.vue";
 import RoomTypes from "@/pages/Guest/RoomTypes.vue";
+import RoomDetail from "@/pages/Guest/RoomDetail.vue";
+import RoomDetailExtended from "@/pages/Guest/RoomDetailExtended.vue";
 // import GuestBooking from "@/pages/Guest/Booking.vue";
 
 // Auth Pages
@@ -54,6 +56,18 @@ const routes = [
     path: "/room-types",
     name: "RoomTypes",
     component: RoomTypes,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: "/room-types/:type",
+    name: "RoomDetail",
+    component: RoomDetail,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: "/room-types/:type/extended/:roomId",
+    name: "RoomDetailExtended",
+    component: RoomDetailExtended,
     meta: { requiresAuth: false }
   },
   // {
