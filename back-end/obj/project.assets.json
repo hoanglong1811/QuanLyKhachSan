@@ -4449,11 +4449,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj",
+      "projectUniqueName": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "projectName": "back-end",
-      "projectPath": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.csproj",
+      "projectPath": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\obj\\",
+      "outputPath": "D:\\QuanLyKhachSan\\back-end\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

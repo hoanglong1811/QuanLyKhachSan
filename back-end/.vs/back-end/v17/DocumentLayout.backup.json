@@ -1,50 +1,50 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\",
+  "WorkspaceRootPath": "D:\\QuanLyKhachSan\\back-end\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\controllers\\taikhoancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:controllers\\taikhoancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Controllers\\TaiKhoanController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\TaiKhoanController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\viewmodels\\taikhoanvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:viewmodels\\taikhoanvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Data\\TaiKhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\TaiKhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\data\\dataqlks114nhom3context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:data\\dataqlks114nhom3context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Data\\Phong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\Phong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\data\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:data\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Controllers\\WeatherForecastController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\WeatherForecastController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\data\\phong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:data\\phong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\ViewModels\\TaiKhoanVM.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ViewModels\\TaiKhoanVM.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Data\\DataQlks114Nhom3Context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\DataQlks114Nhom3Context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Services\\ITaiKhoanRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\ITaiKhoanRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\services\\itaikhoanrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:services\\itaikhoanrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\appsettings.Development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:appsettings.Development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|c:\\users\\admin\\desktop\\hotel-management\\back-end\\back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{90CFD177-9A66-4D76-864C-9AC5C2EB1B4D}|back-end.csproj|solutionrelative:back-end.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\QuanLyKhachSan\\back-end\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,23 +54,19 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "TaiKhoan.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\TaiKhoan.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Data\\TaiKhoan.cs",
               "RelativeDocumentMoniker": "Data\\TaiKhoan.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\TaiKhoan.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Data\\TaiKhoan.cs",
               "RelativeToolTip": "Data\\TaiKhoan.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -78,11 +74,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Phong.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\Phong.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Data\\Phong.cs",
               "RelativeDocumentMoniker": "Data\\Phong.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\Phong.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Data\\Phong.cs",
               "RelativeToolTip": "Data\\Phong.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -90,11 +86,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "WeatherForecastController.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Controllers\\WeatherForecastController.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "Controllers\\WeatherForecastController.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Controllers\\WeatherForecastController.cs",
               "RelativeToolTip": "Controllers\\WeatherForecastController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -102,50 +98,48 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "TaiKhoanVM.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\ViewModels\\TaiKhoanVM.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\ViewModels\\TaiKhoanVM.cs",
               "RelativeDocumentMoniker": "ViewModels\\TaiKhoanVM.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\ViewModels\\TaiKhoanVM.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\ViewModels\\TaiKhoanVM.cs",
               "RelativeToolTip": "ViewModels\\TaiKhoanVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T07:29:05.142Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T07:29:05.142Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "TaiKhoanController.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Controllers\\TaiKhoanController.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Controllers\\TaiKhoanController.cs",
               "RelativeDocumentMoniker": "Controllers\\TaiKhoanController.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Controllers\\TaiKhoanController.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Controllers\\TaiKhoanController.cs",
               "RelativeToolTip": "Controllers\\TaiKhoanController.cs",
-              "ViewState": "AgIAADwAAAAAAAAAAAA4wEoAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAKEAAAAAAAAAAAAiwKQAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-23T07:28:50.116Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "DataQlks114Nhom3Context.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\DataQlks114Nhom3Context.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Data\\DataQlks114Nhom3Context.cs",
               "RelativeDocumentMoniker": "Data\\DataQlks114Nhom3Context.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Data\\DataQlks114Nhom3Context.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Data\\DataQlks114Nhom3Context.cs",
               "RelativeToolTip": "Data\\DataQlks114Nhom3Context.cs",
               "ViewState": "AgIAANQAAAAAAAAAAAAewO4AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T04:01:30.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T04:01:30.259Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "ITaiKhoanRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Services\\ITaiKhoanRepository.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Services\\ITaiKhoanRepository.cs",
               "RelativeDocumentMoniker": "Services\\ITaiKhoanRepository.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Services\\ITaiKhoanRepository.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Services\\ITaiKhoanRepository.cs",
               "RelativeToolTip": "Services\\ITaiKhoanRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -153,11 +147,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Program.cs",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\Program.cs",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\Program.cs",
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -165,11 +159,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\appsettings.Development.json",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\appsettings.Development.json",
               "RelativeDocumentMoniker": "appsettings.Development.json",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\appsettings.Development.json",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\appsettings.Development.json",
               "RelativeToolTip": "appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -177,11 +171,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 9,
               "Title": "back-end.http",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.http",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\back-end.http",
               "RelativeDocumentMoniker": "back-end.http",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\back-end.http",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\back-end.http",
               "RelativeToolTip": "back-end.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
@@ -189,11 +183,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\appsettings.json",
+              "DocumentMoniker": "D:\\QuanLyKhachSan\\back-end\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\hotel-management\\back-end\\appsettings.json",
+              "ToolTip": "D:\\QuanLyKhachSan\\back-end\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
