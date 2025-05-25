@@ -8,10 +8,10 @@
     </div>
     <nav class="menu">
       <router-link to="/">Trang chủ</router-link>
-      <router-link to="/about">Giới thiệu</router-link>
-      <router-link to="/ser">Các loại phòng</router-link>
-      <router-link to="/ser">Dịch vụ</router-link>
-      <router-link to="/contact">Liên hệ</router-link>
+        <router-link to="/about-us">Giới thiệu</router-link>
+        <router-link to="/room-types">Các loại phòng</router-link>
+        <router-link to="/services">Dịch vụ</router-link>
+        <router-link to="/contact-us">Liên hệ</router-link>
     </nav>
     <div class="right-section">
       <button class="booking-btn">Đặt phòng ngay</button>
