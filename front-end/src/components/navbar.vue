@@ -1,26 +1,29 @@
 <template>
-  <div class="nav-bar">
-    <div class="nav-header">
-      <h1>Hệ thống quản lý khách sạn</h1>
-      <button @click="toggleMenu" class="menu-button">
-        <span class="menu-icon"></span>
-      </button>
-    </div>
-    <div class="nav-content" :class="{ 'show': isMenuOpen }">
-      <div class="nav-tabs">
-        <router-link class="nav-tab" to="/employee/personal-info">Thông tin cá nhân</router-link>
-        <router-link class="nav-tab" to="/dashboard">Quản lý phòng</router-link>
-        <router-link class="nav-tab" to="/employee/user-manager">Quản lý khách hàng</router-link>
-        <router-link class="nav-tab" to="/employee/booking">Đặt phòng</router-link>
-        <router-link class="nav-tab" to="/employee/service-selection">Quản lý dịch vụ</router-link>
+  <div class="nav-wrapper">
+    <div class="nav-bar">
+      <div class="nav-header">
+        <h1>Hệ thống quản lý khách sạn</h1>
+        <button @click="toggleMenu" class="menu-button">
+          <span class="menu-icon"></span>
+        </button>
       </div>
-      <div class="nav-tabs second-row">
-        <router-link class="nav-tab" to="/employee/invoice-management">Quản lý hóa đơn</router-link>
-        <router-link class="nav-tab" to="/employee/reports">Báo cáo</router-link>
-        <router-link class="nav-tab" to="/employee/account-management">Quản lý tài khoản</router-link>
-        <router-link class="nav-tab" to="/employee/room-layout-management">Quản lý bố trí phòng</router-link>
+      <div class="nav-content" :class="{ 'show': isMenuOpen }">
+        <div class="nav-tabs">
+          <router-link class="nav-tab" to="/employee/personal-info">Thông tin cá nhân</router-link>
+          <router-link class="nav-tab" to="/dashboard">Quản lý phòng</router-link>
+          <router-link class="nav-tab" to="/employee/user-manager">Quản lý khách hàng</router-link>
+          <router-link class="nav-tab" to="/employee/booking">Đặt phòng</router-link>
+          <router-link class="nav-tab" to="/employee/service-selection">Quản lý dịch vụ</router-link>
+        </div>
+        <div class="nav-tabs second-row">
+          <router-link class="nav-tab" to="/employee/invoice-management">Quản lý hóa đơn</router-link>
+          <router-link class="nav-tab" to="/employee/reports">Báo cáo</router-link>
+          <router-link class="nav-tab" to="/employee/account-management">Quản lý tài khoản</router-link>
+          <router-link class="nav-tab" to="/employee/room-layout-management">Quản lý bố trí phòng</router-link>
+        </div>
       </div>
     </div>
+    <div class="nav-spacer"></div>
   </div>
 </template>
 
@@ -40,6 +43,14 @@ export default {
 </script>
 
 <style scoped>
+.nav-wrapper {
+  width: 100%;
+}
+
+.nav-spacer {
+  height: 150px;
+}
+
 .nav-bar {
   background-color: #5bb790;
   padding: 1rem;
@@ -140,6 +151,10 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .nav-spacer {
+    height: 300px;
+  }
+
   .nav-header {
     padding: 0.5rem;
   }
