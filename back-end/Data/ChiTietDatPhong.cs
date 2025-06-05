@@ -21,9 +21,11 @@ public partial class ChiTietDatPhong
 
     public int? SoLuongNguoi { get; set; }
 
-    public int IdChiTietDichVu { get; set; }
-
     public int? ThanhTien { get; set; }
 
+    public virtual DatPhong IdDatPhongNavigation { get; set; } = null!;
+
     public virtual KhachHang IdKhachHangNavigation { get; set; } = null!;
+
+    public virtual Phong IdPhongNavigation { get; set; } = null!;
 }

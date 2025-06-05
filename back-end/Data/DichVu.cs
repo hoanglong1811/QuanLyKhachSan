@@ -13,5 +13,7 @@ public partial class DichVu
 
     public int? Gia { get; set; }
 
+    public string? DonViTinh { get; set; }
+
     public virtual ICollection<ChiTietDichVu> ChiTietDichVus { get; set; } = new List<ChiTietDichVu>();
 }

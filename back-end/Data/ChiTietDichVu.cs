@@ -13,5 +13,7 @@ public partial class ChiTietDichVu
 
     public int? TongTien { get; set; }
 
+    public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
+
     public virtual DichVu IdDichVuNavigation { get; set; } = null!;
 }

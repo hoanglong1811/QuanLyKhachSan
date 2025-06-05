@@ -18,4 +18,6 @@ public partial class NhanVien
     public int IdTaiKhoan { get; set; }
 
     public virtual TaiKhoan IdTaiKhoanNavigation { get; set; } = null!;
+
+    public virtual ICollection<PhieuBaoTri> PhieuBaoTris { get; set; } = new List<PhieuBaoTri>();
 }

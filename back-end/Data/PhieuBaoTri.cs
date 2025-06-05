@@ -9,9 +9,13 @@ public partial class PhieuBaoTri
 
     public string? MoTaVanDe { get; set; }
 
+    public DateTime? NgayTao { get; set; }
+
+    public string? TrangThai { get; set; }
+
     public int IdNhanVien { get; set; }
 
-    public int IdChiTietBaoTri { get; set; }
+    public virtual ICollection<ChiTietBaoTri> ChiTietBaoTris { get; set; } = new List<ChiTietBaoTri>();
 
-    public virtual ChiTietBaoTri IdChiTietBaoTriNavigation { get; set; } = null!;
+    public virtual NhanVien IdNhanVienNavigation { get; set; } = null!;
 }

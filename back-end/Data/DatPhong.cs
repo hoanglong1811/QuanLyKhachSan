@@ -11,7 +11,15 @@ public partial class DatPhong
 
     public DateTime? NgayTraPhong { get; set; }
 
+    public string? TrangThaiDatPhong { get; set; }
+
+    public string? GhiChu { get; set; }
+
     public int IdKhachHang { get; set; }
+
+    public virtual ICollection<ChiTietDatPhong> ChiTietDatPhongs { get; set; } = new List<ChiTietDatPhong>();
+
+    public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
 
     public virtual KhachHang IdKhachHangNavigation { get; set; } = null!;
 }

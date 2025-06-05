@@ -16,8 +16,32 @@ builder.Services.AddDbContext<DataQlks114Nhom3Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbContext")));
 
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<IKhachHangRepository, KhachHangRepository>();
+builder.Services.AddScoped<IHoaDonRepository, HoaDonRepository>();
+builder.Services.AddScoped<ILoaiPhongRepository, LoaiPhongRepository>();
+builder.Services.AddScoped<IPhanQuyenRepository, PhanQuyenRepository>();
+builder.Services.AddScoped<IPhieuBaoTriRepository, PhieuBaoTriRepository>();
+builder.Services.AddScoped<IPhongRepository, PhongRepository>();
+builder.Services.AddScoped<IThietBiRepository, ThietBiRepository>();
+builder.Services.AddScoped<IVaiTroRepository, VaiTroRepository>();
+builder.Services.AddScoped<IPhieuBaoTriRepository, PhieuBaoTriRepository>();
+builder.Services.AddScoped<IChiTietBaoTriRepository, ChiTietBaoTriRepository>();
+builder.Services.AddScoped<IChiTietDatPhongRepository, ChiTietDatPhongRepository>();
+builder.Services.AddScoped<IChiTietDichVuRepository, ChiTietDichVuRepository>();
 
 
+
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 
 
@@ -32,9 +56,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowVueApp");
 app.UseAuthorization();
 
 app.MapControllers();
+
+
 
 app.Run();

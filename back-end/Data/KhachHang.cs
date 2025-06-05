@@ -11,7 +11,7 @@ public partial class KhachHang
 
     public int? DienThoai { get; set; }
 
-    public int? Cccd { get; set; }
+    public string? Cccd { get; set; }
 
     public virtual ICollection<ChiTietDatPhong> ChiTietDatPhongs { get; set; } = new List<ChiTietDatPhong>();
 
