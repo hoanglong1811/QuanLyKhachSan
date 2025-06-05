@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <!-- Thanh điều hướng -->
-    <NavBar />
+    <Navbar/>
     <!-- Nội dung chính -->
     <div class="content-section">
       <div class="status-header">
@@ -38,42 +38,19 @@
 </template>
 
 <script>
-import NavBar from '@/components/navbar.vue';
-
+import Navbar from '../../components/navbar.vue';
+import apiClient from '@/services/api';
 
 export default {
-    components: {
-      NavBar,
-    },
+  components: {
+    Navbar,
+  },
   data() {
     return {
       selectedRoomType: 'all',
-      rooms: [
-        { id: 'P101', type: 'Phòng đơn', status: 'Phòng đặt', statusIcon: '✓', time: '5 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P102', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P103', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✗', time: '0 giờ', cleanStatus: 'chưa dọn dẹp', cleanStatusIcon: '✗' },
-        { id: 'P104', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P105', type: 'Phòng đôi', status: 'Nguyễn Văn An', statusIcon: '✓', time: '5 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P106', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P107', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P108', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P109', type: 'Phòng VIP', status: 'Phòng đặt', statusIcon: '✓', time: '3 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P110', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P111', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P112', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P113', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P114', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P115', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P116', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P117', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P118', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P119', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P120', type: 'Phòng VIP', status: 'Phòng đặt', statusIcon: '✓', time: '3 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P121', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P122', type: 'Phòng đôi', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P123', type: 'Phòng VIP', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-        { id: 'P124', type: 'Phòng đơn', status: 'Phòng trống', statusIcon: '✓', time: '0 giờ', cleanStatus: 'đã dọn dẹp', cleanStatusIcon: '✓' },
-      ],
+      rooms: [],
+      loading: false,
+      error: '',
     };
   },
   computed: {
@@ -83,6 +60,36 @@ export default {
       }
       return this.rooms.filter(room => room.type === this.selectedRoomType);
     },
+  },
+  methods: {
+    async fetchRooms() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await apiClient.get('/api/Phong'); // Đổi endpoint phù hợp backend
+        // Giả sử response.data là mảng phòng, bạn có thể cần map lại dữ liệu cho đúng định dạng
+        this.rooms = response.data.map(item => ({
+          id: item.idPhong || item.id,
+          type: item.loaiPhong || item.type,
+          status: item.trangThai || item.status,
+          statusIcon: item.trangThai === 'Phòng trống' ? '✓' : '✗',
+          time: item.thoiGian || '0 giờ',
+          cleanStatus: item.tinhTrangDonDep || 'đã dọn dẹp',
+          cleanStatusIcon: item.tinhTrangDonDep === 'đã dọn dẹp' ? '✓' : '✗',
+        }));
+      } catch (err) {
+        this.error = 'Không thể tải danh sách phòng';
+        console.error(err);
+      } finally {
+        this.loading = false;
+      }
+    },
+    filterRooms() {
+      // Hàm này để trigger computed filteredRooms
+    },
+  },
+  mounted() {
+    this.fetchRooms();
   },
 };
 </script>

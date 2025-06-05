@@ -12,6 +12,7 @@ import RoomDetailExtended from "@/pages/Guest/RoomDetailExtended.vue";
 
 // Auth Pages
 import SignupPage from "../pages/employee/SignUpPage.vue";
+import LoginPage from "../components/Login.vue";
 import CreateAccPage from "../pages/employee/CreateAccPage.vue";
 import ForgotPassPage from "../pages/employee/ForgotPassPage.vue";
 import OTPPage from "../pages/employee/OTPPage.vue";
@@ -79,9 +80,15 @@ const routes = [
 
   // Authentication Routes
   {
+    path: "/signup",
+    name: "Signup",
+    component: SignupPage,
+    meta: { requiresAuth: false }
+  },
+  {
     path: "/login",
     name: "Login",
-    component: SignupPage,
+    component: LoginPage,
     meta: { requiresAuth: false }
   },
   {

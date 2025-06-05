@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import apiClient from '@/services/api';
+
 export default {
   data() {
     return {
@@ -35,13 +37,26 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       if (!this.email || !this.password) {
         alert('Please fill in all fields');
         return;
       }
-      alert('Login successful! (Simulated)');
-      this.$router.push('/dashboard'); // Redirect to dashboard after successful login
+      try {
+        const response = await apiClient.post('/api/TaiKhoan/login', {
+          tenDangNhap: this.email,
+          matKhau: this.password,
+        });
+         console.log('Login response:', response.data); 
+        // Lưu token nếu có
+        if (response.data && response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
+        alert('Login successful!');
+        this.$router.push('/dashboard');
+      } catch (error) {
+        alert('Login failed: ' + (error.response?.data?.message || error.message));
+      }
     },
   },
 };
