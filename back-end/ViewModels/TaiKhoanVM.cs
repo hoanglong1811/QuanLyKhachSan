@@ -19,7 +19,7 @@
     }
     public class UpdateTaiKhoan
     {
-        public int IdTaiKhoan { get; set; }
+        
         public string? TenDangNhap { get; set; }
         public string? Email { get; set; }
         public string? MatKhau { get; set; }

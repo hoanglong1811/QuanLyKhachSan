@@ -1,4 +1,5 @@
 ﻿using back_end.Data;
+using back_end.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,10 +10,16 @@ namespace back_end.Services
     {
         Task<IEnumerable<TaiKhoan>> GetAllAsync();
         Task<TaiKhoan?> GetByIdAsync(int id);
+        Task<TaiKhoan?> GetByUsernameAsync(string username);
+        Task<TaiKhoan?> GetByEmailAsync(string email);
         Task<TaiKhoan> AddAsync(TaiKhoan taiKhoan);
         Task<bool> UpdateAsync(TaiKhoan taiKhoan);
         Task<bool> DeleteAsync(int id);
+        Task<bool> ExistsAsync(int id);
+        Task<bool> IsUsernameUniqueAsync(string username, int? excludeId = null);
+        Task<bool> IsEmailUniqueAsync(string email, int? excludeId = null);
     }
+
     public class TaiKhoanRepository : ITaiKhoanRepository
     {
         private readonly DataQlks114Nhom3Context _context;
@@ -38,6 +45,22 @@ namespace back_end.Services
                 .FirstOrDefaultAsync(tk => tk.IdTaiKhoan == id);
         }
 
+        public async Task<TaiKhoan?> GetByUsernameAsync(string username)
+        {
+            return await _context.TaiKhoans
+                .Include(tk => tk.IdVaiTroNavigation)
+                .Include(tk => tk.NhanViens)
+                .FirstOrDefaultAsync(tk => tk.TenDangNhap == username);
+        }
+
+        public async Task<TaiKhoan?> GetByEmailAsync(string email)
+        {
+            return await _context.TaiKhoans
+                .Include(tk => tk.IdVaiTroNavigation)
+                .Include(tk => tk.NhanViens)
+                .FirstOrDefaultAsync(tk => tk.Email == email);
+        }
+
         public async Task<TaiKhoan> AddAsync(TaiKhoan taiKhoan)
         {
             _context.TaiKhoans.Add(taiKhoan);
@@ -55,14 +78,11 @@ namespace back_end.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _context.TaiKhoans.AnyAsync(e => e.IdTaiKhoan == taiKhoan.IdTaiKhoan))
+                if (!await ExistsAsync(taiKhoan.IdTaiKhoan))
                 {
                     return false;
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 
@@ -77,6 +97,25 @@ namespace back_end.Services
             _context.TaiKhoans.Remove(taiKhoan);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.TaiKhoans.AnyAsync(e => e.IdTaiKhoan == id);
+        }
+
+        public async Task<bool> IsUsernameUniqueAsync(string username, int? excludeId = null)
+        {
+            return !await _context.TaiKhoans
+                .AnyAsync(tk => tk.TenDangNhap == username && 
+                               (!excludeId.HasValue || tk.IdTaiKhoan != excludeId.Value));
+        }
+
+        public async Task<bool> IsEmailUniqueAsync(string email, int? excludeId = null)
+        {
+            return !await _context.TaiKhoans
+                .AnyAsync(tk => tk.Email == email && 
+                               (!excludeId.HasValue || tk.IdTaiKhoan != excludeId.Value));
         }
     }
 }

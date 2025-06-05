@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
 using back_end.ViewModels;
-using back_end.Services; // Thêm dòng này
+using back_end.Services;
 using System.Security.Cryptography;
 using System.Text;
+
 namespace back_end.Controllers
 {
     [Route("api/[controller]")]
@@ -27,7 +28,6 @@ namespace back_end.Controllers
             {
                 IdTaiKhoan = tk.IdTaiKhoan,
                 TenDangNhap = tk.TenDangNhap,
-                MatKhau = tk.MatKhau,
                 Email = tk.Email,
                 IdVaiTro = tk.IdVaiTro,
                 TenVaiTro = tk.IdVaiTroNavigation?.TenVaiTro
@@ -48,7 +48,6 @@ namespace back_end.Controllers
             {
                 IdTaiKhoan = tk.IdTaiKhoan,
                 TenDangNhap = tk.TenDangNhap,
-
                 Email = tk.Email,
                 IdVaiTro = tk.IdVaiTro,
                 TenVaiTro = tk.IdVaiTroNavigation?.TenVaiTro
@@ -60,23 +59,21 @@ namespace back_end.Controllers
         [HttpPost]
         public async Task<ActionResult<TaiKhoanVM>> PostTaiKhoan([FromBody] AddTaiKhoan addTaiKhoan)
         {
-            // Mã hóa mật khẩu trước khi lưu
-            string hashedPassword = "";
-            if (!string.IsNullOrEmpty(addTaiKhoan.MatKhau))
-            {
-                using (var sha256 = SHA256.Create())
-                {
-                    var bytes = Encoding.UTF8.GetBytes(addTaiKhoan.MatKhau);
-                    var hash = sha256.ComputeHash(bytes);
-                    hashedPassword = BitConverter.ToString(hash).Replace("-", "").ToLower();
-                }
-            }
+            // Kiểm tra tính duy nhất của tên đăng nhập và email
+            if (!await _taiKhoanRepository.IsUsernameUniqueAsync(addTaiKhoan.TenDangNhap))
+                return BadRequest(new { message = "Tên đăng nhập đã tồn tại" });
+
+            if (!await _taiKhoanRepository.IsEmailUniqueAsync(addTaiKhoan.Email))
+                return BadRequest(new { message = "Email đã tồn tại" });
+
+            // Mã hóa mật khẩu
+            string hashedPassword = HashPassword(addTaiKhoan.MatKhau);
 
             var taiKhoan = new TaiKhoan
             {
                 TenDangNhap = addTaiKhoan.TenDangNhap,
                 Email = addTaiKhoan.Email,
-                IdVaiTro = 2, // Gắn mặc định
+                IdVaiTro = 2, // Gắn mặc định là vai trò người dùng
                 MatKhau = hashedPassword
             };
 
@@ -90,109 +87,63 @@ namespace back_end.Controllers
                 IdVaiTro = tk.IdVaiTro,
                 TenVaiTro = tk.IdVaiTroNavigation?.TenVaiTro
             };
+
             return CreatedAtAction(nameof(GetTaiKhoan), new { id = tk.IdTaiKhoan }, result);
         }
 
-
-        // ...existing code...
-
+        // PUT: api/TaiKhoan/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTaiKhoan(int id, [FromBody] UpdateTaiKhoan taiKhoanVM)
+        public async Task<IActionResult> PutTaiKhoan(int id, [FromBody] UpdateTaiKhoan updateModel)
         {
-            if (id != taiKhoanVM.IdTaiKhoan)
-                return BadRequest();
-
-            // Lấy tài khoản hiện tại từ DB
             var existingTaiKhoan = await _taiKhoanRepository.GetByIdAsync(id);
             if (existingTaiKhoan == null)
                 return NotFound();
 
-            // Cập nhật các trường cần thiết
-            if (!string.IsNullOrEmpty(taiKhoanVM.TenDangNhap))
-                existingTaiKhoan.TenDangNhap = taiKhoanVM.TenDangNhap;
-            if (!string.IsNullOrEmpty(taiKhoanVM.Email))
-                existingTaiKhoan.Email = taiKhoanVM.Email;
-
-            // Nếu muốn cập nhật mật khẩu, hãy mã hóa lại:
-            if (!string.IsNullOrEmpty(taiKhoanVM.MatKhau))
+            // Kiểm tra tính duy nhất của tên đăng nhập và email nếu được cập nhật
+            if (!string.IsNullOrEmpty(updateModel.TenDangNhap) && 
+                updateModel.TenDangNhap != existingTaiKhoan.TenDangNhap)
             {
-                using (var sha256 = SHA256.Create())
-                {
-                    var bytes = Encoding.UTF8.GetBytes(taiKhoanVM.MatKhau);
-                    var hash = sha256.ComputeHash(bytes);
-                    existingTaiKhoan.MatKhau = BitConverter.ToString(hash).Replace("-", "").ToLower();
-                }
+                if (!await _taiKhoanRepository.IsUsernameUniqueAsync(updateModel.TenDangNhap, id))
+                    return BadRequest(new { message = "Tên đăng nhập đã tồn tại" });
+                existingTaiKhoan.TenDangNhap = updateModel.TenDangNhap;
             }
 
-            var updated = await _taiKhoanRepository.UpdateAsync(existingTaiKhoan);
-            if (!updated)
+            if (!string.IsNullOrEmpty(updateModel.Email) && 
+                updateModel.Email != existingTaiKhoan.Email)
+            {
+                if (!await _taiKhoanRepository.IsEmailUniqueAsync(updateModel.Email, id))
+                    return BadRequest(new { message = "Email đã tồn tại" });
+                existingTaiKhoan.Email = updateModel.Email;
+            }
+
+            // Cập nhật mật khẩu nếu được cung cấp
+            if (!string.IsNullOrEmpty(updateModel.MatKhau))
+            {
+                existingTaiKhoan.MatKhau = HashPassword(updateModel.MatKhau);
+            }
+
+            if (!await _taiKhoanRepository.UpdateAsync(existingTaiKhoan))
                 return NotFound();
 
             return NoContent();
         }
-        // ...existing code...
+
         // DELETE: api/TaiKhoan/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaiKhoan(int id)
         {
-            var deleted = await _taiKhoanRepository.DeleteAsync(id);
-            if (!deleted)
+            if (!await _taiKhoanRepository.DeleteAsync(id))
                 return NotFound();
 
             return NoContent();
         }
 
-
-
-        // POST: api/TaiKhoan/login
-        [HttpPost("login")]
-        public async Task<ActionResult<TaiKhoanVM>> Login([FromBody] LoginModel loginInfo)
+        private static string HashPassword(string password)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (string.IsNullOrEmpty(loginInfo.TenDangNhap) || string.IsNullOrEmpty(loginInfo.MatKhau))
-            {
-                return BadRequest("Tên đăng nhập và mật khẩu không được để trống");
-            }
-
-            // Mã hóa mật khẩu nhập vào để so sánh
-            string hashedPassword;
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = Encoding.UTF8.GetBytes(loginInfo.MatKhau);
-                var hash = sha256.ComputeHash(bytes);
-                hashedPassword = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
-
-            // Tìm tài khoản theo tên đăng nhập
-            var taiKhoan = (await _taiKhoanRepository.GetAllAsync())
-                .FirstOrDefault(t => t.TenDangNhap.ToLower() == loginInfo.TenDangNhap.ToLower());
-
-            if (taiKhoan == null)
-            {
-                return NotFound("Tài khoản không tồn tại");
-            }
-
-            // Kiểm tra mật khẩu
-            if (taiKhoan.MatKhau != hashedPassword)
-            {
-                return Unauthorized("Mật khẩu không chính xác");
-            }
-
-            var result = new TaiKhoanVM
-            {
-                IdTaiKhoan = taiKhoan.IdTaiKhoan,
-                TenDangNhap = taiKhoan.TenDangNhap,
-                Email = taiKhoan.Email,
-                IdVaiTro = taiKhoan.IdVaiTro,
-                TenVaiTro = taiKhoan.IdVaiTroNavigation?.TenVaiTro
-            };
-
-            return Ok(result);
+            using var sha256 = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha256.ComputeHash(bytes);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
-        // ...existing code...
     }
 }

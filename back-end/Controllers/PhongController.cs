@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
 
 namespace back_end.Controllers
 {
@@ -8,75 +9,68 @@ namespace back_end.Controllers
     [ApiController]
     public class PhongController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IPhongRepository _phongRepository;
+        private readonly ILoaiPhongRepository _loaiPhongRepository;
 
-        public PhongController(DataQlks114Nhom3Context context)
+        public PhongController(IPhongRepository phongRepository, ILoaiPhongRepository loaiPhongRepository)
         {
-            _context = context;
+            _phongRepository = phongRepository;
+            _loaiPhongRepository = loaiPhongRepository;
         }
 
         // GET: api/Phong
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Phong>>> GetPhongs()
+        public async Task<ActionResult<IEnumerable<PhongVM>>> GetPhongs()
         {
-            return await _context.Phongs
-                .Include(p => p.IdLoaiPhongNavigation)
-                .Include(p => p.ThietBis)
-                .ToListAsync();
+            var phongs = await _phongRepository.GetAllAsync();
+            return Ok(phongs);
         }
 
         // GET: api/Phong/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Phong>> GetPhong(int id)
+        public async Task<ActionResult<PhongVM>> GetPhong(int id)
         {
-            var phong = await _context.Phongs
-                .Include(p => p.IdLoaiPhongNavigation)
-                .Include(p => p.ThietBis)
-                .FirstOrDefaultAsync(p => p.IdPhong == id);
+            var phong = await _phongRepository.GetByIdAsync(id);
 
             if (phong == null)
             {
                 return NotFound();
             }
 
-            return phong;
+            return Ok(phong);
         }
 
         // POST: api/Phong
         [HttpPost]
-        public async Task<ActionResult<Phong>> PostPhong(Phong phong)
+        public async Task<ActionResult<PhongVM>> PostPhong(AddPhong model)
         {
-            _context.Phongs.Add(phong);
-            await _context.SaveChangesAsync();
+            // Kiểm tra sự tồn tại của IdLoaiPhong
+            var loaiPhong = await _loaiPhongRepository.GetByIdAsync(model.IdLoaiPhong);
+            if (loaiPhong == null)
+            {
+                return BadRequest($"Loại phòng với ID {model.IdLoaiPhong} không tồn tại");
+            }
 
+            var phong = await _phongRepository.AddAsync(model);
             return CreatedAtAction(nameof(GetPhong), new { id = phong.IdPhong }, phong);
         }
 
         // PUT: api/Phong/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPhong(int id, Phong phong)
+        public async Task<IActionResult> PutPhong(int id, UpdatePhong model)
         {
-            if (id != phong.IdPhong)
+            // Kiểm tra sự tồn tại của IdLoaiPhong
+            var loaiPhong = await _loaiPhongRepository.GetByIdAsync(model.IdLoaiPhong);
+            if (loaiPhong == null)
             {
-                return BadRequest();
+                return BadRequest($"Loại phòng với ID {model.IdLoaiPhong} không tồn tại");
             }
 
-            _context.Entry(phong).State = EntityState.Modified;
-
-            try
+            var result = await _phongRepository.UpdateAsync(id, model);
+            
+            if (!result)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PhongExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -86,21 +80,14 @@ namespace back_end.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhong(int id)
         {
-            var phong = await _context.Phongs.FindAsync(id);
-            if (phong == null)
+            var result = await _phongRepository.DeleteAsync(id);
+            
+            if (!result)
             {
                 return NotFound();
             }
 
-            _context.Phongs.Remove(phong);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool PhongExists(int id)
-        {
-            return _context.Phongs.Any(e => e.IdPhong == id);
         }
     }
 }

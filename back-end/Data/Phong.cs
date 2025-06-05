@@ -21,3 +21,5 @@ public partial class Phong
 
     public virtual ICollection<ThietBi> ThietBis { get; set; } = new List<ThietBi>();
 }
+
+
