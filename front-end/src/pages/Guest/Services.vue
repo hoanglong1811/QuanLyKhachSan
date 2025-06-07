@@ -27,21 +27,29 @@
     <!-- Intro Section -->
     <section class="intro-section">   
       <div class="container">
-        <span class="section-tag">Dịch vụ của chúng tôi</span>
-        <h1 class="underlined-title">Trải nghiệm đẳng cấp mỗi ngày</h1>
-        <p class="intro-text">Long Hai Resort mang đến cho bạn một loạt các dịch vụ đẳng cấp, đáp ứng mọi nhu cầu từ nghỉ dưỡng đến tổ chức sự kiện</p>
-        <div class="service-stats">
-          <div class="stat-item">
-            <span class="stat-number">700+</span>
-            <span class="stat-label">Khách/Sự kiện</span>
+        <div class="intro-content">
+          <div class="intro-header">
+            <span class="section-tag">Dịch vụ đẳng cấp</span>
+            <h1 class="main-title">Trải nghiệm hoàn hảo</h1>
+            <div class="title-underline"></div>
           </div>
-          <div class="stat-item">
-            <span class="stat-number">50+</span>
-            <span class="stat-label">Nhân viên</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">100%</span>
-            <span class="stat-label">Hài lòng</span>
+          <p class="intro-text">
+            Palace Long Hai Resort tự hào mang đến những trải nghiệm nghỉ dưỡng và tổ chức sự kiện đẳng cấp 4 sao. 
+            Với đội ngũ chuyên nghiệp và cơ sở vật chất hiện đại, chúng tôi cam kết mang đến những khoảnh khắc đáng nhớ cho mọi du khách.
+          </p>
+          <div class="service-stats">
+            <div class="stat-item">
+              <span class="stat-number">700+</span>
+              <span class="stat-label">Khách/Sự kiện</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Nhân viên</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">Hài lòng</span>
+            </div>
           </div>
         </div>
       </div>
@@ -397,7 +405,7 @@ export default {
 
 /* Intro Section Styles */
 .intro-section {
-  padding: 100px 0;
+  padding: 120px 0;
   background-color: #fff;
   position: relative;
 }
@@ -408,42 +416,54 @@ export default {
   padding: 0 20px;
 }
 
+.intro-content {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.intro-header {
+  margin-bottom: 40px;
+}
+
 .section-tag {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 12px 24px;
   background: rgba(212, 160, 23, 0.1);
   color: #d4a017;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  border-radius: 30px;
+  font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
 }
 
-.underlined-title {
-  font-size: 3rem;
+.main-title {
+  font-size: 3.5rem;
   color: #333;
-  margin-bottom: 2rem;
-  position: relative;
-  display: inline-block;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.underlined-title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -10px;
-  width: 80px;
+.title-underline {
+  width: 100px;
   height: 4px;
   background: #d4a017;
+  margin: 0 auto;
+  margin-top: 1rem;
 }
 
 .intro-text {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #666;
-  max-width: 800px;
   line-height: 1.8;
   margin-bottom: 4rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .service-stats {
@@ -456,30 +476,35 @@ export default {
 .stat-item {
   flex: 1;
   text-align: center;
-  padding: 2rem;
+  padding: 2.5rem;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(212, 160, 23, 0.1);
 }
 
 .stat-item:hover {
   transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(212, 160, 23, 0.15);
+  border-color: #d4a017;
 }
 
 .stat-number {
   display: block;
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 700;
   color: #d4a017;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  line-height: 1;
 }
 
 .stat-label {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: 500;
 }
 
 @keyframes scroll {
@@ -765,24 +790,39 @@ export default {
   }
 
   .intro-section {
-    padding: 60px 0;
+    padding: 80px 0;
   }
 
-  .underlined-title {
+  .section-tag {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+
+  .main-title {
     font-size: 2.5rem;
+  }
+
+  .intro-text {
+    font-size: 1.2rem;
+    padding: 0 20px;
   }
 
   .service-stats {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    padding: 0 20px;
   }
 
   .stat-item {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
   .stat-number {
-    font-size: 2.5rem;
+    font-size: 3rem;
+  }
+
+  .stat-label {
+    font-size: 1.1rem;
   }
 
   .sunset-section {

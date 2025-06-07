@@ -44,21 +44,21 @@
           <img src="https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg" alt="Green Place">
           <div class="service-overlay">Không gian xanh mát</div>
           <div class="service-description" v-show="descriptions[0].show">
-            Khu nghỉ dưỡng sở hữu các bungalow riêng tư yên bình, ẩn mình dưới những hàng dương xanh, những cây phượng vĩ rợp bóng mát, ven các lối đi ngập tràn sắc hoa, hòa chung sắc xanh của đại dương sẽ giúp du khách thư giãn và hòa mình trọn vẹn với thiên nhiên.
+            Khu nghỉ dưỡng với các bungalow riêng tư, hòa cùng thiên nhiên xanh mát.
           </div>
         </div>
         <div class="service-item" @mouseover="showDescription(1)" @mouseleave="hideDescription(1)">
           <img src="https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg" alt="Service Heart">
           <div class="service-overlay">DỊCH VỤ TỪ TRÁI TIM</div>
           <div class="service-description" v-show="descriptions[1].show">
-            Bên cạnh sự chuyên nghiệp cùng chất lượng dịch vụ chuẩn 4 sao, Chúng tôi mang đến những hoạt động trải nghiệm phong phú cùng sự tận tâm và chu đáo của đội ngũ nhân viên, chăm chút tỉ mỉ từng chi tiết nhỏ để đảm bảo bạn có một trải nghiệm trọn vẹn.
+            Dịch vụ chuẩn 4 sao, đội ngũ tận tâm, chăm chút từng chi tiết.
           </div>
         </div>
         <div class="service-item" @mouseover="showDescription(2)" @mouseleave="hideDescription(2)">
           <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Private Vibrant">
           <div class="service-overlay">VỪA RIÊNG TƯ VỪA SÔI ĐỘNG</div>
           <div class="service-description" v-show="descriptions[2].show">
-            Nhờ vị trí đắc địa ngay trung tâm thị trấn Long Hải, Palace Long Hai Resort không chỉ giúp khách hàng tận hưởng một kỳ nghỉ riêng tư, an yên bên người thân yêu mà còn dễ dàng kết nối với bên ngoài, khám phá những điểm đến hấp dẫn và trải nghiệm nhịp sống sôi động Long Hải.
+            Tọa lạc tại trung tâm Long Hải, mang đến kỳ nghỉ riêng tư và thuận tiện.
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@
         <div class="content-column">
           <div class="sun-icon">⭐</div>
           <h2>Lắng nghe âm thanh của biển</h2>
-          <p>Sở hữu 62 căn bungalow với 75 phòng được thiết kế độc đáo và riêng tư nép mình dưới những hàng dương xanh mát ngay sát bờ biển, Palace Long Hai Resort sẽ ru hồn du khách bằng những khúc hát dịu êm của sóng biển hòa cùng tiếng rì rào trong gió của những hàng dương đệm thêm cho bản hòa ca thiên nhiên thêm bất tận</p>
+          <p>Sở hữu 62 căn bungalow với 75 phòng được thiết kế độc đáo, Palace Long Hai Resort mang đến không gian nghỉ dưỡng tuyệt vời bên bờ biển.</p>
           <button class="view-benefits-btn" @click="goToRooms">Xem các loại phòng</button>
         </div>
         <div class="image-column">
@@ -114,7 +114,10 @@
           <button class="arrow-btn prev-btn" @click="prevImage">❮</button>
           <button class="arrow-btn next-btn" @click="nextImage">❯</button>
           <div class="pagination">
-            <span v-for="(image, index) in sunsetImages" :key="index" :class="{ active: index === currentImageIndex }">
+            <span v-for="(image, index) in sunsetImages" 
+                  :key="index" 
+                  :class="{ active: index === currentImageIndex }"
+                  @click="goToImage(index)">
               {{ String(index + 1).padStart(2, '0') }}
             </span>
           </div>
@@ -129,7 +132,7 @@
         <div class="content-column">
           <div class="icon">🌞</div>
           <h2>NGẮM HOÀNG HÔN TẠI BÀ RỊA – VŨNG TÀU </h2>
-          <p>Nhờ nằm sát bờ biển, Palace Long Hai Resort sẵn sàng làm nức lòng du khách bởi khung cảnh hoàng hôn đầy lãng mạn. Đây cũng chính là nơi ngắm hoàng hôn đẹp nhất tại Bà Rịa – Vũng Tàu. Không những thế, đến đây, du khách còn được thỏa sức chiêm ngắm những khung cảnh thiên nhiên thanh bình và nhiều điểm check-in độc đáo.</p>
+          <p>Nhờ nằm sát bờ biển, Palace Long Hai Resort là nơi ngắm hoàng hôn đẹp nhất tại Bà Rịa – Vũng Tàu.</p>
           <button class="view-benefits-btn" @click="goToServices">Xem các dịch vụ</button>
         </div>
       </section>
@@ -139,7 +142,7 @@
         <div class="content-column">
           <div class="icon">❤️</div>
           <h2>CẢM NHẬN SỰ YÊU THƯƠNG</h2>
-          <p>Với những dịch vụ đến từ "trái tim", đội ngũ Palace Long Hai Resort không chỉ níu chân du khách bằng sự chuyên nghiệp, tỉ mỉ trong công việc mà còn giúp du khách cảm nhận được sự quan tâm, chăm sóc, yêu thương như trở về với chính ngôi nhà của mình. Chúng tôi luôn nỗ lực để mang đến những trải nghiệm hoàn hảo cho bạn.</p>
+          <p>Với dịch vụ đến từ "trái tim", đội ngũ Palace Long Hai Resort mang đến trải nghiệm hoàn hảo cho bạn.</p>
           <button class="view-benefits-btn" @click="goToAbout">Về chúng tôi</button>
         </div>
         <div class="image-column">
@@ -153,7 +156,7 @@
             <div class="h4">
               <h4>PLACE Long Hai Resort</h4>
             </div>
-            <p>Palace Long Hai Resort là khu nghỉ dưỡng 4 sao sang trọng tọa lạc tại trung tâm thị trấn Long Hải, mang đến sự kết hợp hoàn hảo giữa sự riêng tư và những trải nghiệm sôi động.</p>
+            <p>Palace Long Hai Resort là khu nghỉ dưỡng 4 sao sang trọng tại trung tâm Long Hải, kết hợp hoàn hảo giữa sự riêng tư và trải nghiệm sôi động.</p>
           </div>
           <div class="footer-column">
             <h4>Liên kết nhanh</h4>
@@ -243,6 +246,9 @@ export default {
     },
     goToBooking() {
       this.$router.push('/booking');
+    },
+    goToImage(index) {
+      this.currentImageIndex = index;
     }
   },
   mounted() {
@@ -260,6 +266,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;
+  font-size: 22px;
 }
 
 /* Header Styles */
@@ -275,6 +282,7 @@ header {
   height: 80px;
   z-index: 1000;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 24px;
 }
 
 header.sticky {
@@ -306,7 +314,7 @@ header.sticky {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 16px;
+  font-size: 22px;
   color: white;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -361,7 +369,7 @@ header.sticky {
 .menu-dropdown router-link {
   color: white;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 600;
   padding: 10px 15px;
   border-radius: 8px;
@@ -391,7 +399,7 @@ header.sticky {
 }
 
 .logo span {
-  font-size: 28px;
+  font-size: 42px;
   font-weight: 800;
   color: white;
   letter-spacing: 2px;
@@ -400,7 +408,7 @@ header.sticky {
 }
 
 .logo span:last-child {
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 500;
   letter-spacing: 3px;
   opacity: 0.9;
@@ -417,7 +425,7 @@ header.sticky {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 22px;
   cursor: pointer;
   color: white;
   padding: 8px 15px;
@@ -452,7 +460,7 @@ header.sticky {
   padding: 12px 20px;
   display: block;
   color: #333;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -469,7 +477,7 @@ header.sticky {
   border: none;
   padding: 12px 28px;
   border-radius: 30px;
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -541,7 +549,7 @@ header.sticky {
   background: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 10px;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
   text-align: center;
 }
@@ -554,7 +562,7 @@ header.sticky {
   background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 20px;
-  font-size: 16px;
+  font-size: 22px;
   text-align: center;
   transform: translateY(-50%);
   display: none;
@@ -588,7 +596,7 @@ header.sticky {
 .form-item label {
   display: block;
   color: white;
-  font-size: 12px;
+  font-size: 20px;
   margin-bottom: 8px;
   text-transform: uppercase;
 }
@@ -606,7 +614,7 @@ header.sticky {
   padding: 8px;
   border: none;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 20px;
   background-color: white;
   width: 100%;
   text-align: left;
@@ -637,7 +645,7 @@ header.sticky {
   border: 2px solid #CDB79E;
   padding: 8px 16px;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 700;
   cursor: pointer;
   width: 100px;
@@ -668,14 +676,14 @@ header.sticky {
 }
 
 .content-column h2 {
-  font-size: 36px;
+  font-size: 48px;
   font-weight: bold;
   margin-bottom: 20px;
   text-transform: uppercase;
 }
 
 .content-column p {
-  font-size: 16px;
+  font-size: 22px;
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -694,7 +702,7 @@ header.sticky {
   color: white;
   border: none;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 22px;
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
@@ -740,7 +748,7 @@ header.sticky {
 
 .pagination {
   color: #d4a017;
-  font-size: 16px;
+  font-size: 22px;
   text-align: center;
   margin-top: 10px;
 }
@@ -748,11 +756,19 @@ header.sticky {
 .pagination span {
   margin: 0 5px;
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.pagination span:hover {
+  background-color: rgba(212, 160, 23, 0.1);
 }
 
 .pagination .active {
   font-weight: bold;
   text-decoration: underline;
+  background-color: rgba(212, 160, 23, 0.2);
 }
 
 /* Style cho section: About Sections */
@@ -775,14 +791,14 @@ header.sticky {
 }
 
 .content-column h2 {
-  font-size: 36px;
+  font-size: 48px;
   font-weight: bold;
   margin-bottom: 20px;
   text-transform: uppercase;
 }
 
 .content-column p {
-  font-size: 16px;
+  font-size: 22px;
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -810,7 +826,7 @@ footer {
 }
 
 .footer-column h4 {
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 600;
   margin-bottom: 20px;
   color: #fff;
@@ -818,7 +834,7 @@ footer {
 
 .footer-column p,
 .footer-column a {
-  font-size: 14px;
+  font-size: 20px;
   color: #d1d1d1;
   text-decoration: none;
   margin-bottom: 4px;
@@ -859,7 +875,7 @@ footer {
 }
 
 .footer-bottom p {
-  font-size: 14px;
+  font-size: 20px;
   color: #d1d1d1;
   font-weight: 300;
 }
@@ -869,6 +885,7 @@ footer {
   header {
     padding: 10px 15px;
     height: 60px;
+    font-size: 20px;
   }
 
   .menu-toggle {
@@ -876,7 +893,7 @@ footer {
   }
 
   .contact {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .contact i {
@@ -884,12 +901,16 @@ footer {
   }
 
   .logo span {
-    font-size: 18px;
+    font-size: 24px;
+  }
+
+  .logo span:last-child {
+    font-size: 16px;
   }
 
   .language,
   .booking-btn {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .language i {
@@ -983,6 +1004,65 @@ footer {
 
   .footer-column {
     margin-bottom: 20px;
+  }
+
+  * {
+    font-size: 18px;
+  }
+
+  .menu-dropdown a,
+  .menu-dropdown router-link {
+    font-size: 18px;
+  }
+
+  .service-overlay {
+    font-size: 20px;
+  }
+
+  .service-description {
+    font-size: 16px;
+  }
+
+  .form-item label {
+    font-size: 16px;
+  }
+
+  .form-item input,
+  .form-item select {
+    font-size: 16px;
+  }
+
+  .check-availability {
+    font-size: 16px;
+  }
+
+  .content-column h2 {
+    font-size: 28px;
+  }
+
+  .content-column p {
+    font-size: 16px;
+  }
+
+  .view-benefits-btn {
+    font-size: 16px;
+  }
+
+  .pagination {
+    font-size: 16px;
+  }
+
+  .footer-column h4 {
+    font-size: 20px;
+  }
+
+  .footer-column p,
+  .footer-column a {
+    font-size: 16px;
+  }
+
+  .footer-bottom p {
+    font-size: 16px;
   }
 }
 </style>

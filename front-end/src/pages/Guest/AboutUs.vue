@@ -57,7 +57,7 @@
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
         </div>
-        <h3>Giải thưởng “Sản phẩm – Dịch vụ chất lượng ASEAN 2024”</h3>
+        <h3>Giải thưởng "Sản phẩm – Dịch vụ chất lượng ASEAN 2024"</h3>
         <p>tại ASEAN Strong Brands Award 2024 (Singapore) là bảo chứng cho chất lượng vượt trội của Palace Long Hai Resort, xứng đáng là lựa chọn hàng đầu của du khách.</p>
       </div>
       <div class="image-content">
@@ -216,12 +216,13 @@ export default {
 }
 
 .image-text h1 {
-  font-size: 36px;
+  font-size: 56px;
   margin: 5px 0;
+  font-weight: bold;
 }
 
 .image-text p {
-  font-size: 20px;
+  font-size: 32px;
   margin-top: 10px;
 }
 
@@ -250,18 +251,18 @@ export default {
 
 .stars i {
   color: #d4a017;
-  font-size: 16px;
+  font-size: 28px;
 }
 
 .text-content h3 {
-  font-size: 24px;
+  font-size: 38px;
   color: #d4a017;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
 .text-content p {
-  font-size: 16px;
+  font-size: 26px;
   color: #666;
   line-height: 1.6;
   padding: 30px 60px;
@@ -288,11 +289,12 @@ export default {
 }
 
 .main-content h2 {
-  font-size: 32px;
+  font-size: 48px;
   color: #3b7097;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   width: 100%;
+  font-weight: bold;
 }
 
 .service-item {
@@ -321,10 +323,11 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  padding: 30px;
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 26px;
 }
 
 .service-item:hover .service-overlay {
@@ -338,11 +341,11 @@ export default {
   }
 
   .image-text h1 {
-    font-size: 24px;
+    font-size: 36px;
   }
 
   .image-text p {
-    font-size: 16px;
+    font-size: 24px;
   }
 
   .split-section {
@@ -355,11 +358,12 @@ export default {
   }
 
   .text-content h3 {
-    font-size: 20px;
+    font-size: 30px;
   }
 
   .text-content p {
-    font-size: 14px;
+    font-size: 22px;
+    padding: 20px 30px;
   }
 
   .image-content img {
@@ -372,13 +376,18 @@ export default {
   }
 
   .main-content h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 30px;
   }
 
   .service-item {
     width: 100%;
     min-width: 0;
+  }
+
+  .service-overlay {
+    font-size: 22px;
+    padding: 20px;
   }
 }
 </style>
