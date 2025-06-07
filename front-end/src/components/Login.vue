@@ -1,47 +1,80 @@
 <template>
   <div class="login-container">
-    <form @submit.prevent="handleLogin" class="login-form">
-      <h2>Đăng nhập</h2>
-      <div class="form-group">
-        <label for="username">Tên đăng nhập:</label>
-        <input
-          type="text"
-          id="username"
-          v-model="credentials.tenDangNhap"
-          required
-          autocomplete="username"
-          :disabled="loading"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Mật khẩu:</label>
-        <div class="password-input">
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            id="password"
-            v-model="credentials.matKhau"
-            required
-            autocomplete="current-password"
-            :disabled="loading"
-          />
-          <button 
-            type="button" 
-            class="toggle-password"
-            @click="togglePassword"
-            :disabled="loading"
-          >
-            {{ showPassword ? '🔒' : '👁️' }}
-          </button>
+    <div class="background-overlay"></div>
+    <div class="login-wrapper">
+      <div class="login-content">
+        <div class="login-header">
+          <img src="https://palacelonghairesort.vn/wp-content/uploads/2024/12/logo-palace-long-hai-resort.png" alt="Palace Long Hai Resort" class="logo">
+          <h2>Đăng nhập hệ thống</h2>
+          <p class="welcome-text">Chào mừng bạn đến với Palace Long Hai Resort</p>
         </div>
+        <form @submit.prevent="handleLogin" class="login-form">
+          <div class="form-group">
+            <label for="username">
+              <i class="fas fa-user"></i>
+              Tên đăng nhập
+            </label>
+            <input
+              type="text"
+              id="username"
+              v-model="credentials.tenDangNhap"
+              required
+              autocomplete="username"
+              :disabled="loading"
+              placeholder="Nhập tên đăng nhập của bạn"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">
+              <i class="fas fa-lock"></i>
+              Mật khẩu
+            </label>
+            <div class="password-input">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="credentials.matKhau"
+                required
+                autocomplete="current-password"
+                :disabled="loading"
+                placeholder="Nhập mật khẩu của bạn"
+              />
+              <button 
+                type="button" 
+                class="toggle-password"
+                @click="togglePassword"
+                :disabled="loading"
+                :title="showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
+              >
+                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-options">
+            <label class="remember-me">
+              <input 
+                type="checkbox" 
+                v-model="rememberMe"
+                :disabled="loading"
+              >
+              <span>Ghi nhớ đăng nhập</span>
+            </label>
+            <router-link to="/forgot-password" class="forgot-password">
+              Quên mật khẩu?
+            </router-link>
+          </div>
+          <button type="submit" class="login-button" :disabled="loading || !isFormValid">
+            <span v-if="loading" class="loading-spinner"></span>
+            <span v-else>Đăng nhập</span>
+          </button>
+          <div v-if="error" class="error-container">
+            <i class="fas fa-exclamation-circle"></i>
+            <p class="error">{{ error }}</p>
+            <p class="error-detail" v-if="errorDetail">{{ errorDetail }}</p>
+          </div>
+        </form>
       </div>
-      <button type="submit" :disabled="loading || !isFormValid">
-        {{ loading ? 'Đang đăng nhập...' : 'Đăng nhập' }}
-      </button>
-      <div v-if="error" class="error-container">
-        <p class="error">{{ error }}</p>
-        <p class="error-detail" v-if="errorDetail">{{ errorDetail }}</p>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -62,6 +95,7 @@ export default {
     const error = ref('');
     const errorDetail = ref('');
     const showPassword = ref(false);
+    const rememberMe = ref(false);
 
     const isFormValid = computed(() => {
       return credentials.value.tenDangNhap.length > 0 && 
@@ -75,6 +109,10 @@ export default {
     const clearErrors = () => {
       error.value = '';
       errorDetail.value = '';
+    };
+
+    const handleForgotPassword = () => {
+      router.push('/forgot-password');
     };
 
     const handleLogin = async () => {
@@ -96,7 +134,16 @@ export default {
           // Lưu thông tin user
           localStorage.setItem('user', JSON.stringify(response));
           
-          // Chuyển hướng dựa vào role của user (nếu có)
+          // Nếu remember me được chọn, lưu thông tin đăng nhập
+          if (rememberMe.value) {
+            localStorage.setItem('rememberedUser', JSON.stringify({
+              tenDangNhap: credentials.value.tenDangNhap
+            }));
+          } else {
+            localStorage.removeItem('rememberedUser');
+          }
+          
+          // Chuyển hướng dựa vào role của user
           const redirectPath = response.role === 'admin' ? '/admin/dashboard' : '/dashboard';
           router.push(redirectPath);
         } else {
@@ -140,6 +187,19 @@ export default {
       }
     };
 
+    // Kiểm tra remembered user khi component được mount
+    const checkRememberedUser = () => {
+      const rememberedUser = localStorage.getItem('rememberedUser');
+      if (rememberedUser) {
+        const { tenDangNhap } = JSON.parse(rememberedUser);
+        credentials.value.tenDangNhap = tenDangNhap;
+        rememberMe.value = true;
+      }
+    };
+
+    // Gọi hàm kiểm tra khi component được mount
+    checkRememberedUser();
+
     return {
       credentials,
       loading,
@@ -148,7 +208,9 @@ export default {
       handleLogin,
       showPassword,
       togglePassword,
-      isFormValid
+      isFormValid,
+      rememberMe,
+      handleForgotPassword
     };
   }
 };
@@ -160,108 +222,270 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: url('https://palacelonghairesort.vn/wp-content/uploads/2024/12/palace-long-hai-resort-to-chuc-su-kien-8.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+  padding: 20px;
 }
 
-.login-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+  backdrop-filter: blur(5px);
+}
+
+.login-wrapper {
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  animation: slideUp 0.5s ease-out;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-content {
+  padding: 40px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.login-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-text {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.form-group label i {
+  margin-right: 8px;
+  color: #d4a017;
 }
 
 .password-input {
   position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 1.2rem;
-}
-
-.toggle-password:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #333;
 }
 
 input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+  padding: 12px 15px;
+  border: 2px solid #e1e1e1;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 input:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  border-color: #d4a017;
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.1);
+  background: #fff;
 }
 
-input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
+input::placeholder {
+  color: #999;
 }
 
-button[type="submit"] {
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #d4a017;
+}
+
+.login-button {
   width: 100%;
-  padding: 0.75rem;
-  background-color: #4CAF50;
+  padding: 14px;
+  background: linear-gradient(135deg, #d4a017 0%, #b88a15 100%);
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(212, 160, 23, 0.2);
 }
 
-button[type="submit"]:hover:not(:disabled) {
-  background-color: #45a049;
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 160, 23, 0.3);
+  background: linear-gradient(135deg, #b88a15 0%, #d4a017 100%);
 }
 
-button[type="submit"]:disabled {
-  background-color: #cccccc;
+.login-button:disabled {
+  background: #ccc;
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
 }
 
 .error-container {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 4px;
-  background-color: #ffebee;
-  border: 1px solid #ffcdd2;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(255, 245, 245, 0.9);
+  border: 1px solid #fed7d7;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  backdrop-filter: blur(5px);
+}
+
+.error-container i {
+  color: #e53e3e;
+  font-size: 20px;
+  margin-top: 2px;
 }
 
 .error {
-  color: #c62828;
+  color: #e53e3e;
   margin: 0;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 .error-detail {
-  color: #ef5350;
-  margin: 0.5rem 0 0;
-  font-size: 0.9rem;
+  color: #c53030;
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-content {
+    padding: 30px 20px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+
+  .login-header h2 {
+    font-size: 24px;
+  }
+
+  input {
+    font-size: 15px;
+  }
+
+  .login-button {
+    padding: 12px;
+  }
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #d4a017;
+}
+
+.forgot-password {
+  color: #d4a017;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.forgot-password:hover {
+  color: #b88a15;
+  background-color: rgba(212, 160, 23, 0.1);
+  text-decoration: none;
 }
 </style> 
