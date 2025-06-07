@@ -17,17 +17,22 @@
       <div class="container">
         <div class="emergency-content">
           <div class="emergency-item">
-            <i class="fas fa-phone-alt"></i>
+            <div class="icon-wrapper">
+              <i class="fas fa-phone-alt"></i>
+            </div>
             <div class="emergency-text">
-              <h3>Hotline 24/7</h3>
-              <p>1800 1234</p>
+              <span class="label">Hotline 24/7</span>
+              <a href="tel:1800 1234" class="contact-number">1800 1234</a>
             </div>
           </div>
+          <div class="emergency-divider"></div>
           <div class="emergency-item">
-            <i class="fas fa-calendar-alt"></i>
+            <div class="icon-wrapper">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
             <div class="emergency-text">
-              <h3>Đặt Phòng</h3>
-              <p>0254 3789 789</p>
+              <span class="label">Đặt Phòng</span>
+              <a href="tel:0254 3789 789" class="contact-number">0254 3789 789</a>
             </div>
           </div>
         </div>
@@ -342,35 +347,85 @@ export default {
 
 /* Emergency Contact */
 .emergency-contact {
-  background: #d4a017;
-  padding: 20px 0;
+  background: linear-gradient(135deg, #d4a017 0%, #b88a14 100%);
+  padding: 30px 0;
   color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .emergency-content {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  align-items: center;
+  gap: 60px;
+  position: relative;
 }
 
 .emergency-item {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
+  padding: 10px 20px;
+  transition: transform 0.3s ease;
+}
+
+.emergency-item:hover {
+  transform: translateY(-3px);
+}
+
+.icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.emergency-item:hover .icon-wrapper {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(15deg);
 }
 
 .emergency-item i {
-  font-size: 2rem;
+  font-size: 24px;
+  color: #ffffff;
 }
 
-.emergency-text h3 {
-  font-size: 1.2rem;
-  margin-bottom: 5px;
+.emergency-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.emergency-text p {
-  font-size: 1.5rem;
+.emergency-text .label {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.emergency-text .contact-number {
+  font-size: 1.8rem;
   font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.emergency-text .contact-number:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.emergency-divider {
+  width: 2px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1px;
 }
 
 /* Container */
@@ -690,8 +745,12 @@ section {
 
   .emergency-content {
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    gap: 30px;
+  }
+
+  .emergency-divider {
+    width: 80%;
+    height: 2px;
   }
 }
 
@@ -735,7 +794,7 @@ section {
   .emergency-item {
     flex-direction: column;
     text-align: center;
-    gap: 10px;
+    gap: 15px;
   }
 
   .social-links {
@@ -749,6 +808,19 @@ section {
 
   .method-icon i {
     font-size: 24px;
+  }
+
+  .emergency-text .contact-number {
+    font-size: 1.5rem;
+  }
+
+  .icon-wrapper {
+    width: 50px;
+    height: 50px;
+  }
+
+  .emergency-item i {
+    font-size: 20px;
   }
 }
 </style>

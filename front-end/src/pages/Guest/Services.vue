@@ -3,9 +3,21 @@
     <!-- Main Image with Header -->
     <div class="main-image">
       <img src="https://i.pinimg.com/736x/5f/43/4a/5f434a75f3d03ac0ce3778603a55c907.jpg" alt="About Us Image">
+      <div class="hero-overlay"></div>
       <div class="image-text">
+        <span class="subtitle">Palace Long Hai Resort</span>
         <h1>Dịch vụ</h1>
         <p>Sự hài lòng của bạn là hạnh phúc của chúng tôi</p>
+        <div class="scroll-indicator">
+          <div class="mouse">
+            <div class="wheel"></div>
+          </div>
+          <div class="arrows">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -14,9 +26,24 @@
 
     <!-- Intro Section -->
     <section class="intro-section">   
-      <div>
+      <div class="container">
+        <span class="section-tag">Dịch vụ của chúng tôi</span>
         <h1 class="underlined-title">Trải nghiệm đẳng cấp mỗi ngày</h1>
-        <p>Long Hai Resort mang đến cho bạn một loạt các dịch vụ đẳng cấp, đáp ứng mọi nhu cầu từ nghỉ dưỡng đến tổ chức sự kiện</p>
+        <p class="intro-text">Long Hai Resort mang đến cho bạn một loạt các dịch vụ đẳng cấp, đáp ứng mọi nhu cầu từ nghỉ dưỡng đến tổ chức sự kiện</p>
+        <div class="service-stats">
+          <div class="stat-item">
+            <span class="stat-number">700+</span>
+            <span class="stat-label">Khách/Sự kiện</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Nhân viên</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Hài lòng</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -24,17 +51,26 @@
     <section class="sunset-section">
       <div class="content-column">
         <h1>Tổ chức sự kiện</h1>
-        <h2>Nơi mỗi sự kiện đều mang một dấu ấn khác biệt và đáng nhớ trong lòng du khách</h2>
-        <p>Sở hữu không gian rộng rãi sát biển, Palace Long Hai Resort còn là điểm đến vô cùng ấn tượng dành cho những sự kiện như sinh nhật, tiệc công ty, sự kiện âm nhạc hay các cuộc thi thời trang, thi hoa hậu… Với các sự kiện nhỏ mang tính ấm cúng như tiệc sum họp gia đình, sinh nhật, lễ kỷ niệm của vợ chồng hay các cặp đôi, họp mặt nhóm bạn… thì không gian của Nhà hàng Đại Dương chính là một lựa chọn cực kỳ phù hợp.</p>
-        <p>Trong khi đó, Palace Long Hai Resort cũng hứa hẹn gây bùng nổ với các sự kiện âm nhạc, biểu diễn nghệ thuật hoành tráng hay các sự kiện công ty quy mô lớn tại khu vực hồ bơi với sức chứa lên đến 700 chỗ. Bãi cát dài và bằng phẳng ngay sát biển với không gian rộng thoáng sẽ là địa điểm lý tưởng cho các chương trình lễ hội, hội chợ, triển lãm…</p>
-        <p>Đội ngũ tổ chức sự kiện trẻ trung, năng động, nhiều ý tưởng sáng tạo với tác phong chuyên nghiệp của Palace Long Hai Resort luôn sẵn sàng hỗ trợ các đơn vị đối tác hoặc các đoàn khách làm nên những big-event đầy ấn tượng</p>
+        <h2>Nơi tạo nên những khoảnh khắc đáng nhớ</h2>
+        <p>Palace Long Hai Resort là điểm đến hoàn hảo cho mọi sự kiện từ quy mô nhỏ đến lớn:</p>
+        <ul class="feature-list">
+          <li>Không gian rộng rãi sát biển</li>
+          <li>Sức chứa lên đến 700 khách</li>
+          <li>Đội ngũ tổ chức chuyên nghiệp</li>
+          <li>Trang thiết bị hiện đại</li>
+        </ul>
       </div>
       <div class="image-column">
         <img :src="eventImages[currentImageIndices[0]]" alt="Event Image" class="sunset-image">
         <button class="arrow-btn prev-btn" @click="prevImage(0)"></button>
         <button class="arrow-btn next-btn" @click="nextImage(0)"></button>
         <div class="pagination">
-          <span v-for="(image, index) in eventImages" :key="index" :class="{ 'active': index === currentImageIndices[0] }">
+          <span 
+            v-for="(image, index) in eventImages" 
+            :key="index" 
+            :class="{ 'active': index === currentImageIndices[0] }"
+            @click="goToImage(0, index)"
+          >
             {{ (index + 1).toString().padStart(2, '0') }}
           </span>
         </div>
@@ -48,17 +84,26 @@
         <button class="arrow-btn prev-btn" @click="prevImage(1)"></button>
         <button class="arrow-btn next-btn" @click="nextImage(1)"></button>
         <div class="pagination">
-          <span v-for="(image, index) in weddingImages" :key="index" :class="{ 'active': index === currentImageIndices[1] }">
+          <span 
+            v-for="(image, index) in weddingImages" 
+            :key="index" 
+            :class="{ 'active': index === currentImageIndices[1] }"
+            @click="goToImage(1, index)"
+          >
             {{ (index + 1).toString().padStart(2, '0') }}
           </span>
         </div>
       </div>
       <div class="content-column">
         <h1>Tiệc cưới</h1>
-        <h2>Nơi lưu dấu những khoảnh khắc đáng nhớ của hạnh phúc lứa đôi</h2>
-        <p>Có sức chứa lên đến 700 chỗ vô cùng lãng mạn xung quanh hồ bơi sát biển sẽ là lựa chọn hoàn hảo để những cặp đôi trao lời hẹn ước trăm năm. Hoặc không gian bãi cát dọc bờ biển cũng rất thích hợp để tổ chức các lễ cưới theo phong cách địa trung hải vô cùng ấn tượng và đặc sắc. Đội ngũ giàu kinh nghiệm của Palace Long Hai Resort sẽ hỗ trợ tổ chức tiệc cho các cặp đôi với những concept mới lạ, độc đáo và chuyên nghiệp.</p>
-        <p>Thực đơn được chế biến công phu từ những đầu bếp chuyên nghiệp của Nhà hàng Đại Dương sẽ khiến lễ cưới của các cặp đôi thêm đậm đà hương vị.</p>
-        <p>Không chỉ gây ấn tượng với không gian tổ chức tiệc cưới, Palace Long Hai Resort còn là nơi lý tưởng để chụp ảnh cưới với cảnh sắc thiên nhiên tươi đẹp đầy sức sống, bãi biển nên thơ với hàng triệu con sóng cùng hòa chung giai điệu của tình yêu đôi lứa hay những góc check-in cực xịn sò lưu dấu kỷ niệm đáng nhớ của những đôi tình nhân. Một bộ ảnh cưới lung linh chắc chắn sẽ khiến cho ngày vui của cặp đôi thêm trọn vẹn ý nghĩa.</p>
+        <h2>Nơi ghi dấu hạnh phúc trọn vẹn</h2>
+        <p>Không gian cưới đẳng cấp tại Palace Long Hai Resort:</p>
+        <ul class="feature-list">
+          <li>Sảnh tiệc sang trọng sức chứa 700 khách</li>
+          <li>Bãi biển lãng mạn cho tiệc cưới ngoài trời</li>
+          <li>Dịch vụ trang trí tiệc cưới theo yêu cầu</li>
+          <li>Đội ngũ đầu bếp chuyên nghiệp</li>
+        </ul>
       </div>
     </section>
 
@@ -66,16 +111,26 @@
     <section class="sunset-section">
       <div class="content-column">
         <h1>Team Building</h1>
-        <h2>Palace Long Hai Resort tiếp lửa hành trình sẻ chia, kết nối và mở lối thành công</h2>
-        <p>Đã nhắc đến du lịch MICE thì không thể bỏ qua các hoạt động teambuilding gắn kết đội ngũ đầy vui nhộn. Sở hữu bãi biển cát trắng chạy dài thoai thoải, Palace Long Hai Resort rất phù hợp cho các hoạt động team building, cắm trại, đốt lửa trại của khách đoàn.</p>
-        <p>Tham gia teambuilding, các thành viên không chỉ có những phút giây thư giãn giải trí, bung xõa năng lượng mà còn được gắn kết hơn nhờ các hoạt động trải nghiệm, những môn thể thao đồng đội hay có thêm thời gian bên nhau để cùng khám phá thiên nhiên, tham quan các điểm du lịch nổi tiếng hay quay quần cùng nhau và chia sẻ những câu chuyện bên lửa trại… Có thể nói, đây chính là cơ hội để các thành viên phát huy tinh thần làm việc nhóm, sự gắn kết và chia sẻ.</p>
+        <h2>Nơi kết nối - Nơi thành công</h2>
+        <p>Địa điểm lý tưởng cho các hoạt động team building:</p>
+        <ul class="feature-list">
+          <li>Bãi biển riêng tư rộng rãi</li>
+          <li>Khu vực tổ chức trò chơi đa dạng</li>
+          <li>Trang thiết bị hoạt động ngoài trời</li>
+          <li>Đội ngũ hỗ trợ chuyên nghiệp</li>
+        </ul>
       </div>
       <div class="image-column">
         <img :src="teamBuildingImages[currentImageIndices[2]]" alt="Team Building Image" class="sunset-image">
         <button class="arrow-btn prev-btn" @click="prevImage(2)"></button>
         <button class="arrow-btn next-btn" @click="nextImage(2)"></button>
         <div class="pagination">
-          <span v-for="(image, index) in teamBuildingImages" :key="index" :class="{ 'active': index === currentImageIndices[2] }">
+          <span 
+            v-for="(image, index) in teamBuildingImages" 
+            :key="index" 
+            :class="{ 'active': index === currentImageIndices[2] }"
+            @click="goToImage(2, index)"
+          >
             {{ (index + 1).toString().padStart(2, '0') }}
           </span>
         </div>
@@ -89,21 +144,26 @@
         <button class="arrow-btn prev-btn" @click="prevImage(3)"></button>
         <button class="arrow-btn next-btn" @click="nextImage(3)"></button>
         <div class="pagination">
-          <span v-for="(image, index) in nearbyImages" :key="index" :class="{ 'active': index === currentImageIndices[3] }">
+          <span 
+            v-for="(image, index) in nearbyImages" 
+            :key="index" 
+            :class="{ 'active': index === currentImageIndices[3] }"
+            @click="goToImage(3, index)"
+          >
             {{ (index + 1).toString().padStart(2, '0') }}
           </span>
         </div>
       </div>
       <div class="content-column">
-        <h1>Điểm tham quan lân cận</h1>
-        <h2>Những địa điểm tham quan mà bạn nên ghé đến khi tới Long Hải</h2>
-        <p>Những ai đến du lịch Long Hải sẽ không khỏi ngạc nhiên bởi cảnh biển đẹp một cách tự nhiên. Nước biển sạch và mát mẻ, cùng với đồi núi xanh thơ mộng.</p>
-        <ul class="attraction-list">
-          <li>Bãi biển du lịch Long Hải</li>
+        <h1>Điểm tham quan</h1>
+        <h2>Khám phá vẻ đẹp Long Hải</h2>
+        <p>Những địa điểm không thể bỏ qua khi đến Long Hải:</p>
+        <ul class="feature-list highlight">
+          <li>Bãi biển Long Hải</li>
           <li>Khu di tích Minh Đạm</li>
           <li>Đèo Nước Ngọt</li>
-          <li>Đền Dinh Cô, Mộ Cô</li>
-          <li>Thiền viện trúc lâm chân nguyên</li>
+          <li>Đền Dinh Cô</li>
+          <li>Thiền viện Trúc Lâm</li>
           <li>Làng chài Long Hải</li>
         </ul>
       </div>
@@ -191,6 +251,9 @@ export default {
       const imageArrays = [this.eventImages, this.weddingImages, this.teamBuildingImages, this.nearbyImages];
       this.currentImageIndices[sectionIndex] = (this.currentImageIndices[sectionIndex] < imageArrays[sectionIndex].length - 1) ? this.currentImageIndices[sectionIndex] + 1 : 0;
     },
+    goToImage(sectionIndex, imageIndex) {
+      this.currentImageIndices[sectionIndex] = imageIndex;
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
@@ -211,7 +274,7 @@ export default {
 /* Main Image Styles */
 .main-image {
   width: 100%;
-  height: 66.67vh;
+  height: 100vh;
   overflow: hidden;
   position: relative;
   z-index: 1;
@@ -221,6 +284,21 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 0.3s ease-out;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
 }
 
 .image-text {
@@ -230,51 +308,201 @@ export default {
   transform: translate(-50%, -50%);
   text-align: center;
   color: white;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  width: 90%;
+  max-width: 1200px;
+}
+
+.image-text .subtitle {
+  display: block;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 1rem;
+  opacity: 0.9;
 }
 
 .image-text h1 {
-  font-size: 36px;
-  margin: 5px 0;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: fadeInUp 1s ease-out;
 }
 
 .image-text p {
-  font-size: 20px;
-  margin-top: 10px;
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  opacity: 0.9;
+  font-weight: 300;
+  animation: fadeInUp 1s ease-out 0.2s;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mouse {
+  width: 26px;
+  height: 42px;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  position: relative;
+}
+
+.wheel {
+  width: 4px;
+  height: 8px;
+  background: #fff;
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  animation: scroll 2s infinite;
+}
+
+.arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.arrows span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg);
+  animation: arrows 2s infinite;
+}
+
+.arrows span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.arrows span:nth-child(3) {
+  animation-delay: 0.4s;
 }
 
 /* Intro Section Styles */
 .intro-section {
-  padding: 40px 20px;
-  background-color: #f5f0e1;
-  text-align: center; /* Căn giữa nội dung */
+  padding: 100px 0;
+  background-color: #fff;
+  position: relative;
 }
 
-.intro-section h1 {
-  font-size: 32px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  background: rgba(212, 160, 23, 0.1);
   color: #d4a017;
-  margin-bottom: 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
   text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+}
+
+.underlined-title {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 2rem;
   position: relative;
-  display: inline-block; /* Để gạch chân chỉ áp dụng cho độ dài của tiêu đề */
+  display: inline-block;
 }
 
 .underlined-title::after {
   content: '';
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: -5px;
-  width: 100%; /* Độ dài gạch chân */
-  height: 2px; /* Độ dày gạch chân */
-  background-color: #d4a017; /* Màu gạch chân */
+  left: 0;
+  bottom: -10px;
+  width: 80px;
+  height: 4px;
+  background: #d4a017;
 }
 
-.intro-section p {
-  font-size: 16px;
+.intro-text {
+  font-size: 1.2rem;
   color: #666;
-  margin: 0 auto;
-  max-width: 800px; /* Giới hạn chiều rộng đoạn văn để dễ đọc */
+  max-width: 800px;
+  line-height: 1.8;
+  margin-bottom: 4rem;
+}
+
+.service-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-10px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #d4a017;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes scroll {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes arrows {
+  0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Sunset Section Styles */
@@ -288,43 +516,64 @@ export default {
 
 .content-column {
   flex: 1;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Căn giữa nội dung theo chiều dọc */
+  justify-content: center;
 }
 
 .content-column h1 {
-  font-size: 28px;
+  font-size: 3.2rem;
   color: #d4a017;
   text-transform: uppercase;
-  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-align: left;
 }
 
 .content-column h2 {
-  font-size: 18px;
-  color: #d4a017;
-  margin-bottom: 15px;
-  text-align: center;
-  text-transform: uppercase;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  text-align: left;
 }
 
 .content-column p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 0px;
+  font-size: 1.4rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
-.attraction-list {
-  list-style-type: none;
+.feature-list {
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.attraction-list li {
-  font-size: 16px;
+.feature-list li {
+  font-size: 1.3rem;
   color: #666;
-  margin: 5px 0;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+  line-height: 1.4;
+}
+
+.feature-list li::before {
+  content: "•";
+  color: #d4a017;
+  font-size: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+.feature-list.highlight li {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #555;
 }
 
 .image-column {
@@ -360,23 +609,40 @@ export default {
 
 .pagination {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .pagination span {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  background-color: #ddd;
-  margin: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 0 2px;
   cursor: pointer;
   border-radius: 50%;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.pagination span:hover {
+  background-color: rgba(212, 160, 23, 0.1);
+  color: #d4a017;
+  border-color: #d4a017;
+  transform: translateY(-2px);
 }
 
 .pagination span.active {
   background-color: #d4a017;
   color: white;
+  border-color: #d4a017;
 }
 
 /* Split Section Styles */
@@ -484,25 +750,39 @@ export default {
   transform: translateY(0);
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .main-image {
-    height: 50vh;
+    height: 80vh;
   }
 
   .image-text h1 {
-    font-size: 24px;
+    font-size: 3rem;
   }
 
   .image-text p {
-    font-size: 16px;
+    font-size: 1.2rem;
   }
 
-  .intro-section h1 {
-    font-size: 24px;
+  .intro-section {
+    padding: 60px 0;
   }
 
-  .intro-section p {
-    font-size: 14px;
+  .underlined-title {
+    font-size: 2.5rem;
+  }
+
+  .service-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-item {
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
   }
 
   .sunset-section {
@@ -552,6 +832,30 @@ export default {
   .service-item {
     width: 100%;
     min-width: 0;
+  }
+
+  .content-column {
+    padding: 30px 20px;
+  }
+
+  .content-column h1 {
+    font-size: 2.5rem;
+  }
+
+  .content-column h2 {
+    font-size: 1.5rem;
+  }
+
+  .content-column p {
+    font-size: 1.2rem;
+  }
+
+  .feature-list li {
+    font-size: 1.1rem;
+  }
+
+  .feature-list.highlight li {
+    font-size: 1.2rem;
   }
 }
 </style>
