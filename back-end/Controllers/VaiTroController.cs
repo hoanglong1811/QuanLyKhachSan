@@ -10,10 +10,12 @@ namespace back_end.Controllers
     public class VaiTroController : ControllerBase
     {
         private readonly IVaiTroRepository _vaiTroRepository;
+        private readonly IPhanQuyenRepository _phanQuyenRepository;
 
-        public VaiTroController(IVaiTroRepository vaiTroRepository)
+        public VaiTroController(IVaiTroRepository vaiTroRepository, IPhanQuyenRepository phanQuyenRepository)
         {
             _vaiTroRepository = vaiTroRepository;
+            _phanQuyenRepository = phanQuyenRepository;
         }
 
         // GET: api/VaiTro
@@ -38,7 +40,7 @@ namespace back_end.Controllers
             var vaiTro = await _vaiTroRepository.GetByIdAsync(id);
             if (vaiTro == null)
             {
-                return NotFound();
+                return NotFound($"Không tìm thấy vai trò với ID: {id}");
             }
 
             var result = new VaiTroVM
@@ -50,6 +52,32 @@ namespace back_end.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/VaiTro/PhanQuyen/{idVaiTro}
+        [HttpGet("PhanQuyen/{idVaiTro}")]
+        public async Task<ActionResult<IEnumerable<PhanQuyenVM>>> GetPhanQuyenByVaiTro(int idVaiTro)
+        {
+            var phanQuyens = await _phanQuyenRepository.GetPhanQuyenByVaiTroIdAsync(idVaiTro);
+            if (phanQuyens == null || !phanQuyens.Any())
+            {
+                return NotFound($"Không tìm thấy quyền nào cho vai trò với ID: {idVaiTro}");
+            }
+
+            var result = phanQuyens.Select(pq => new PhanQuyenVM
+            {
+                IdPhanQuyen = pq.IdPhanQuyen,
+                IdVaiTro = pq.IdVaiTro,
+                TenQuyen = pq.TenQuyen ?? string.Empty,
+                QuyenHan = pq.QuyenHan,
+                TenVaiTro = pq.IdVaiTroNavigation?.TenVaiTro ?? string.Empty
+            }).ToList();
+
+            return Ok(result);
+        }
+
+
+       
+
 
         // POST: api/VaiTro
         [HttpPost]
@@ -98,10 +126,10 @@ namespace back_end.Controllers
             var success = await _vaiTroRepository.UpdateAsync(vaiTro);
             if (!success)
             {
-                return NotFound();
+                return NotFound($"Không tìm thấy vai trò với ID: {id}");
             }
 
-            return NoContent();
+            return Ok($"Cập nhật vai trò thành công");
         }
 
         // DELETE: api/VaiTro/5
@@ -111,10 +139,10 @@ namespace back_end.Controllers
             var success = await _vaiTroRepository.DeleteAsync(id);
             if (!success)
             {
-                return NotFound();
+                return NotFound($"Không tìm thấy vai trò với ID: {id}");
             }
 
-            return NoContent();
+            return Ok($"Xóa vai trò thành công");
         }
     }
 }

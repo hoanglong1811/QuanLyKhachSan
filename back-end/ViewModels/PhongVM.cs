@@ -7,7 +7,8 @@
         public int? SoPhong { get; set; }
         public int? SucChua { get; set; }
         public string? TrangThai { get; set; }
-        
+        public string? TenLoaiPhong { get; set; }
+
     }
     
     public class AddPhong
@@ -17,6 +18,7 @@
         public int? SoPhong { get; set; }
         public int? SucChua { get; set; }
         public string? TrangThai { get; set; }
+        
              
     }
     public class UpdatePhong

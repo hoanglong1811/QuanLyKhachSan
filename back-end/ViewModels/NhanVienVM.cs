@@ -3,14 +3,32 @@
     public class NhanVienVM
     {
         public int IdNhanVien { get; set; }
-        public string? TenNhanVien { get; set; }
-        public string? ChucVu { get; set; }
-        public string? SoDienThoai { get; set; }
-        public string? Email { get; set; }
-        public DateTime NgaySinh { get; set; }
+        public string? HoTen { get; set; }
         public string? DiaChi { get; set; }
-        public DateTime NgayTuyenDung { get; set; }
-        public decimal Luong { get; set; }
+        public string? GioiTinh { get; set; }
+        public int? DienThoai { get; set; }
+        public int IdTaiKhoan { get; set; }
+        public string? TenTaiKhoan { get; set; }
+        public string? Email { get; set; }
+        public string? VaiTro { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+
+    public class AddNhanVien
+    {
+        public string HoTen { get; set; } = null!;
+        public string? DiaChi { get; set; }
+        public string? GioiTinh { get; set; }
+        public int? DienThoai { get; set; }
+        public int IdTaiKhoan { get; set; }
+    }
+
+    public class UpdateNhanVien
+    {
+        public string HoTen { get; set; } = null!;
+        public string? DiaChi { get; set; }
+        public string? GioiTinh { get; set; }
+        public int? DienThoai { get; set; }
         public bool IsActive { get; set; } = true;
     }
 }

@@ -5,6 +5,8 @@
         public int IdVaiTro { get; set; }
         public string? TenVaiTro { get; set; }
         public string? MoTa { get; set; }
+
+        
         
     }
 

@@ -24,4 +24,11 @@
         public string? Email { get; set; }
         public string? MatKhau { get; set; }
     }
+
+    public class LoginTaiKhoan
+    {
+        public string TenDangNhap { get; set; } = null!;
+        public string MatKhau { get; set; } = null!;
+    }
+    
 }

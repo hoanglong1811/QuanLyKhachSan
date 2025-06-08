@@ -52,7 +52,7 @@ namespace back_end.Services
                     Gia = tb.Gia,
                     SoLuong = tb.SoLuong,
                     IdPhong = tb.IdPhong,
-                    TenPhong = tb.IdPhongNavigation.SoPhong.ToString()
+                    SoPhong = tb.IdPhongNavigation.SoPhong.ToString()
                 })
                 .ToListAsync();
         }
@@ -78,7 +78,7 @@ namespace back_end.Services
                     Gia = tb.Gia,
                     SoLuong = tb.SoLuong,
                     IdPhong = tb.IdPhong,
-                    TenPhong = tb.IdPhongNavigation.SoPhong.ToString()
+                    SoPhong = tb.IdPhongNavigation.SoPhong.ToString()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -97,7 +97,7 @@ namespace back_end.Services
                     Gia = tb.Gia,
                     SoLuong = tb.SoLuong,
                     IdPhong = tb.IdPhong,
-                    TenPhong = tb.IdPhongNavigation.SoPhong.ToString()
+                    SoPhong = tb.IdPhongNavigation.SoPhong.ToString()
                 })
                 .ToListAsync();
         }

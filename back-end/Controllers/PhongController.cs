@@ -34,7 +34,7 @@ namespace back_end.Controllers
 
             if (phong == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy phòng");
             }
 
             return Ok(phong);
@@ -70,10 +70,10 @@ namespace back_end.Controllers
             
             if (!result)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy phòng");
             }
 
-            return NoContent();
+            return Ok($"Cập nhật phòng thành công");
         }
 
         // DELETE: api/Phong/5
@@ -84,10 +84,10 @@ namespace back_end.Controllers
             
             if (!result)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy phòng");
             }
 
-            return NoContent();
+            return Ok($"Xóa phòng thành công");
         }
     }
 }

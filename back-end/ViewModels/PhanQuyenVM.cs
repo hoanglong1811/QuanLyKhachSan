@@ -2,13 +2,24 @@
 {
     public class PhanQuyenVM
     {
-        public int Id { get; set; }
+        public int IdPhanQuyen { get; set; }
         public string? TenQuyen { get; set; }
-        public string? MoTa { get; set; }
-        public bool? TrangThai { get; set; }
-        public DateTime? NgayTao { get; set; }
-        public DateTime? NgayCapNhat { get; set; }
-        public string? NguoiTao { get; set; }
-        public string? NguoiCapNhat { get; set; }
+        public int IdVaiTro { get; set; }
+        public bool? QuyenHan { get; set; }
+        public string? TenVaiTro { get; set; }
+    }
+
+    public class AddPhanQuyen
+    {
+        public string? TenQuyen { get; set; }
+        public int IdVaiTro { get; set; }
+        public bool? QuyenHan { get; set; }
+    }
+    
+    public class UpdatePhanQuyen
+    {
+        public string? TenQuyen { get; set; }
+        public int IdVaiTro { get; set; }
+        public bool? QuyenHan { get; set; }
     }
 }

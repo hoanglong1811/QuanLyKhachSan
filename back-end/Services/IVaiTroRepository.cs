@@ -13,6 +13,7 @@ namespace back_end.Services
         Task<bool> UpdateAsync(VaiTro vaiTro);
         Task<bool> DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<TaiKhoan>> GetTaiKhoanByVaiTroIdAsync(int idVaiTro);
     }
 
     public class VaiTroRepository : IVaiTroRepository
@@ -81,6 +82,13 @@ namespace back_end.Services
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.VaiTros.AnyAsync(e => e.IdVaiTro == id);
+        }
+
+        public async Task<IEnumerable<TaiKhoan>> GetTaiKhoanByVaiTroIdAsync(int idVaiTro)
+        {
+            return await _context.TaiKhoans
+                .Where(t => t.IdVaiTro == idVaiTro)
+                .ToListAsync();
         }
     }
 }

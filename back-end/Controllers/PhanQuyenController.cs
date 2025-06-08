@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
 
 namespace back_end.Controllers
 {
@@ -8,97 +9,67 @@ namespace back_end.Controllers
     [ApiController]
     public class PhanQuyenController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IPhanQuyenRepository _phanQuyenRepository;
 
-        public PhanQuyenController(DataQlks114Nhom3Context context)
+        public PhanQuyenController(IPhanQuyenRepository phanQuyenRepository)
         {
-            _context = context;
+            _phanQuyenRepository = phanQuyenRepository;
         }
 
         // GET: api/PhanQuyen
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhanQuyen>>> GetPhanQuyens()
+        public async Task<ActionResult<IEnumerable<PhanQuyenVM>>> GetPhanQuyens()
         {
-            return await _context.PhanQuyens
-                .Include(pq => pq.IdVaiTroNavigation)
-                .ToListAsync();
+            var phanQuyens = await _phanQuyenRepository.GetAllAsync();
+            return Ok(phanQuyens);
         }
 
         // GET: api/PhanQuyen/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PhanQuyen>> GetPhanQuyen(int id)
+        public async Task<ActionResult<PhanQuyenVM>> GetPhanQuyen(int id)
         {
-            var phanQuyen = await _context.PhanQuyens
-                .Include(pq => pq.IdVaiTroNavigation)
-                .FirstOrDefaultAsync(pq => pq.IdPhanQuyen == id);
+            var phanQuyen = await _phanQuyenRepository.GetByIdAsync(id);
 
             if (phanQuyen == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy phân quyền");
             }
 
-            return phanQuyen;
+            return Ok(phanQuyen);
         }
 
         // POST: api/PhanQuyen
         [HttpPost]
-        public async Task<ActionResult<PhanQuyen>> PostPhanQuyen(PhanQuyen phanQuyen)
+        public async Task<ActionResult<PhanQuyenVM>> PostPhanQuyen(AddPhanQuyen model)
         {
-            _context.PhanQuyens.Add(phanQuyen);
-            await _context.SaveChangesAsync();
-
+            var phanQuyen = await _phanQuyenRepository.AddAsync(model);
             return CreatedAtAction(nameof(GetPhanQuyen), new { id = phanQuyen.IdPhanQuyen }, phanQuyen);
         }
 
         // PUT: api/PhanQuyen/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPhanQuyen(int id, PhanQuyen phanQuyen)
+        public async Task<IActionResult> PutPhanQuyen(int id, UpdatePhanQuyen model)
         {
-            if (id != phanQuyen.IdPhanQuyen)
+            var result = await _phanQuyenRepository.UpdateAsync(id, model);
+            if (!result)
             {
-                return BadRequest();
+                return NotFound("Không tìm thấy phân quyền");
             }
 
-            _context.Entry(phanQuyen).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PhanQuyenExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok("Cập nhật phân quyền thành công");
         }
 
         // DELETE: api/PhanQuyen/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhanQuyen(int id)
         {
-            var phanQuyen = await _context.PhanQuyens.FindAsync(id);
-            if (phanQuyen == null)
+            var result = await _phanQuyenRepository.DeleteAsync(id);
+            if (!result)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy phân quyền");
             }
 
-            _context.PhanQuyens.Remove(phanQuyen);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PhanQuyenExists(int id)
-        {
-            return _context.PhanQuyens.Any(e => e.IdPhanQuyen == id);
+            return Ok("Xóa phân quyền thành công");
         }
     }
 }

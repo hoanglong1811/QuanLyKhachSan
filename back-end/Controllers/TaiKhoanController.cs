@@ -13,10 +13,12 @@ namespace back_end.Controllers
     public class TaiKhoanController : ControllerBase
     {
         private readonly ITaiKhoanRepository _taiKhoanRepository;
+        private readonly IVaiTroRepository _vaiTroRepository;
 
-        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository)
+        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, IVaiTroRepository vaiTroRepository)
         {
             _taiKhoanRepository = taiKhoanRepository;
+            _vaiTroRepository = vaiTroRepository;
         }
 
         // GET: api/TaiKhoan
@@ -42,7 +44,7 @@ namespace back_end.Controllers
         {
             var tk = await _taiKhoanRepository.GetByIdAsync(id);
             if (tk == null)
-                return NotFound();
+                return NotFound(new { message = $"Không tìm thấy tài khoản với ID: {id}" });
 
             var result = new TaiKhoanVM
             {
@@ -123,9 +125,9 @@ namespace back_end.Controllers
             }
 
             if (!await _taiKhoanRepository.UpdateAsync(existingTaiKhoan))
-                return NotFound();
+                return NotFound($"Không tìm thấy tài khoản với ID: {id}");
 
-            return NoContent();
+            return Ok($"Cập nhật tài khoản thành công");
         }
 
         // DELETE: api/TaiKhoan/5
@@ -133,9 +135,38 @@ namespace back_end.Controllers
         public async Task<IActionResult> DeleteTaiKhoan(int id)
         {
             if (!await _taiKhoanRepository.DeleteAsync(id))
-                return NotFound();
+                return NotFound($"Không tìm thấy tài khoản với ID: {id}");
 
-            return NoContent();
+            return Ok($"Xóa tài khoản thành công");
+        }
+
+        // POST: api/TaiKhoan/login
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginModel loginModel)
+        {
+            if (string.IsNullOrEmpty(loginModel.TenDangNhap) || string.IsNullOrEmpty(loginModel.MatKhau))
+            {
+                return BadRequest(new { message = "Tên đăng nhập và mật khẩu không được để trống" });
+            }
+
+            var hashedPassword = HashPassword(loginModel.MatKhau);
+            var taiKhoan = await _taiKhoanRepository.GetByUsernameAndPasswordAsync(loginModel.TenDangNhap, hashedPassword);
+
+            if (taiKhoan == null)
+            {
+                return Unauthorized(new { message = "Tên đăng nhập hoặc mật khẩu không đúng" });
+            }
+
+            var response = new LoginResponse
+            {
+                IdTaiKhoan = taiKhoan.IdTaiKhoan,
+                TenDangNhap = taiKhoan.TenDangNhap ?? string.Empty,
+                Email = taiKhoan.Email ?? string.Empty,
+                IdVaiTro = taiKhoan.IdVaiTro,
+                TenVaiTro = taiKhoan.IdVaiTroNavigation?.TenVaiTro ?? string.Empty
+            };
+
+            return Ok(response);
         }
 
         private static string HashPassword(string password)
