@@ -30,9 +30,7 @@ builder.Services.AddScoped<IChiTietBaoTriRepository, ChiTietBaoTriRepository>();
 builder.Services.AddScoped<IChiTietDatPhongRepository, ChiTietDatPhongRepository>();
 builder.Services.AddScoped<IChiTietDichVuRepository, ChiTietDichVuRepository>();
 builder.Services.AddScoped<IChiTietHoaDonRepository, ChiTietHoaDonRepository>();
-
-
-
+builder.Services.AddScoped<INhanVienRepository, NhanVienRepository>();
 
 builder.Services.AddCors(options =>
 {
@@ -43,9 +41,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials());
 });
-
-
-
 
 var app = builder.Build();
 
@@ -62,6 +57,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

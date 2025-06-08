@@ -13,71 +13,50 @@ namespace back_end.Controllers
     [ApiController]
     public class LoaiPhongController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly ILoaiPhongRepository _repo;
 
-        public LoaiPhongController(DataQlks114Nhom3Context context)
+        public LoaiPhongController(ILoaiPhongRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         // GET: api/LoaiPhong
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoaiPhong>>> GetLoaiPhongs()
+        public async Task<ActionResult<IEnumerable<LoaiPhongVM>>> GetLoaiPhongs()
         {
-            return await _context.LoaiPhongs.ToListAsync();
+            var result = await _repo.GetAllAsync();
+            return Ok(result);
         }
 
         // GET: api/LoaiPhong/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<LoaiPhong>> GetLoaiPhong(int id)
+        public async Task<ActionResult<LoaiPhongVM>> GetLoaiPhong(int id)
         {
-            var loaiPhong = await _context.LoaiPhongs.FindAsync(id);
-
+            var loaiPhong = await _repo.GetByIdAsync(id);
             if (loaiPhong == null)
             {
                 return NotFound($"Loại phòng với ID {id} không tồn tại.");
             }
-
             return Ok(loaiPhong);
         }
 
         // POST: api/LoaiPhong
         [HttpPost]
-        public async Task<ActionResult<LoaiPhong>> PostLoaiPhong(LoaiPhong loaiPhong)
+        public async Task<ActionResult<LoaiPhongVM>> PostLoaiPhong(AddLoaiPhong model)
         {
-            _context.LoaiPhongs.Add(loaiPhong);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetLoaiPhong), new { id = loaiPhong.IdLoaiPhong }, loaiPhong);
+            var result = await _repo.AddAsync(model);
+            return CreatedAtAction(nameof(GetLoaiPhong), new { id = result.IdLoaiPhong }, result);
         }
 
         // PUT: api/LoaiPhong/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLoaiPhong(int id, LoaiPhong loaiPhong)
+        public async Task<IActionResult> PutLoaiPhong(int id, UpdateLoaiPhong model)
         {
-            if (id != loaiPhong.IdLoaiPhong)
+            var success = await _repo.UpdateAsync(id, model);
+            if (!success)
             {
-                return BadRequest();
+                return NotFound($"Loại phòng với ID {id} không tồn tại.");
             }
-
-            _context.Entry(loaiPhong).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LoaiPhongExists(id))
-                {
-                    return NotFound($"Loại phòng với ID {id} không tồn tại.");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return Ok($"Đã cập nhật loại phòng với ID {id} thành công.");
         }
 
@@ -85,21 +64,12 @@ namespace back_end.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLoaiPhong(int id)
         {
-            var loaiPhong = await _context.LoaiPhongs.FindAsync(id);
-            if (loaiPhong == null)
+            var success = await _repo.DeleteAsync(id);
+            if (!success)
             {
                 return NotFound($"Loại phòng với ID {id} không tồn tại.");
             }
-
-            _context.LoaiPhongs.Remove(loaiPhong);
-            await _context.SaveChangesAsync();
-
             return Ok($"Đã xóa loại phòng với ID {id} thành công.");
-        }
-
-        private bool LoaiPhongExists(int id)
-        {
-            return _context.LoaiPhongs.Any(e => e.IdLoaiPhong == id);
         }
     }
 }

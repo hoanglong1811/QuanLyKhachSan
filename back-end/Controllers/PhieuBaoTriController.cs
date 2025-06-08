@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using back_end.Data;
 using back_end.Services;
 using back_end.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,75 +10,46 @@ namespace back_end.Controllers
     [ApiController]
     public class PhieuBaoTriController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IPhieuBaoTriRepository _repository;
 
-        public PhieuBaoTriController(DataQlks114Nhom3Context context)
+        public PhieuBaoTriController(IPhieuBaoTriRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/PhieuBaoTri
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhieuBaoTri>>> GetPhieuBaoTris()
+        public async Task<ActionResult<IEnumerable<PhieuBaoTriVM>>> GetPhieuBaoTris()
         {
-            return await _context.PhieuBaoTris
-                .Include(p => p.ChiTietBaoTris)
-                .ToListAsync();
+            var result = await _repository.GetAllAsync();
+            return Ok(result);
         }
 
         // GET: api/PhieuBaoTri/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PhieuBaoTri>> GetPhieuBaoTri(int id)
+        public async Task<ActionResult<PhieuBaoTriVM>> GetPhieuBaoTri(int id)
         {
-            var phieuBaoTri = await _context.PhieuBaoTris
-                .Include(p => p.ChiTietBaoTris)
-                .FirstOrDefaultAsync(p => p.IdPhieuBaoTri == id);
-
-            if (phieuBaoTri == null)
-            {
+            var result = await _repository.GetByIdAsync(id);
+            if (result == null)
                 return NotFound($"PhieuBaoTri with ID {id} not found.");
-            }
-
-            return Ok(phieuBaoTri);
+            return Ok(result);
         }
 
         // POST: api/PhieuBaoTri
         [HttpPost]
-        public async Task<ActionResult<PhieuBaoTri>> PostPhieuBaoTri(PhieuBaoTri phieuBaoTri)
+        public async Task<ActionResult<PhieuBaoTriVM>> PostPhieuBaoTri(AddPhieuBaoTri model)
         {
-            _context.PhieuBaoTris.Add(phieuBaoTri);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetPhieuBaoTri), new { id = phieuBaoTri.IdPhieuBaoTri }, phieuBaoTri);
+            var result = await _repository.AddAsync(model);
+            return CreatedAtAction(nameof(GetPhieuBaoTri), new { id = result.Id }, result);
         }
 
         // PUT: api/PhieuBaoTri/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPhieuBaoTri(int id, PhieuBaoTri phieuBaoTri)
+        public async Task<IActionResult> PutPhieuBaoTri(int id, UpdatePhieuBaoTri model)
         {
-            if (id != phieuBaoTri.IdPhieuBaoTri)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(phieuBaoTri).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PhieuBaoTriExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            var success = await _repository.UpdateAsync(id, model);
+            if (!success)
+                return NotFound();
             return Ok($"Cập nhật phiếu bảo trì với ID {id} thành công.");
         }
 
@@ -89,21 +57,10 @@ namespace back_end.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhieuBaoTri(int id)
         {
-            var phieuBaoTri = await _context.PhieuBaoTris.FindAsync(id);
-            if (phieuBaoTri == null)
-            {
+            var success = await _repository.DeleteAsync(id);
+            if (!success)
                 return NotFound($"Không tìm thấy phiếu bảo trì với ID {id}.");
-            }
-
-            _context.PhieuBaoTris.Remove(phieuBaoTri);
-            await _context.SaveChangesAsync();
-
             return Ok($"Đã xóa phiếu bảo trì với ID {id} thành công.");
-        }
-
-        private bool PhieuBaoTriExists(int id)
-        {
-            return _context.PhieuBaoTris.Any(e => e.IdPhieuBaoTri == id);
         }
     }
 }

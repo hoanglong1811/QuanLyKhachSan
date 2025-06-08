@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using back_end.ViewModels;
 
 namespace back_end.Services
 {
     public interface ILoaiPhongRepository
     {
-        Task<IEnumerable<LoaiPhong>> GetAllAsync();
-        Task<LoaiPhong?> GetByIdAsync(int id);
-        Task<LoaiPhong> AddAsync(LoaiPhong entity);
-        Task<bool> UpdateAsync(LoaiPhong entity);
+        Task<IEnumerable<LoaiPhongVM>> GetAllAsync();
+        Task<LoaiPhongVM?> GetByIdAsync(int id);
+        Task<LoaiPhongVM> AddAsync(AddLoaiPhong entity);
+        Task<bool> UpdateAsync(int id, UpdateLoaiPhong entity);
         Task<bool> DeleteAsync(int id);
     }
 
@@ -23,34 +24,57 @@ namespace back_end.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<LoaiPhong>> GetAllAsync()
+        private static LoaiPhongVM ToVM(LoaiPhong entity)
         {
-            return await _context.LoaiPhongs.ToListAsync();
+            return new LoaiPhongVM
+            {
+                IdLoaiPhong = entity.IdLoaiPhong,
+                TenLoaiPhong = entity.TenLoaiPhong,
+                MoTa = entity.MoTa,
+                Gia = entity.Gia
+            };
         }
 
-        public async Task<LoaiPhong?> GetByIdAsync(int id)
+        public async Task<IEnumerable<LoaiPhongVM>> GetAllAsync()
         {
-            return await _context.LoaiPhongs.FindAsync(id);
+            var list = await _context.LoaiPhongs.ToListAsync();
+            return list.Select(ToVM);
         }
 
-        public async Task<LoaiPhong> AddAsync(LoaiPhong entity)
+        public async Task<LoaiPhongVM?> GetByIdAsync(int id)
         {
+            var entity = await _context.LoaiPhongs.FindAsync(id);
+            return entity == null ? null : ToVM(entity);
+        }
+
+        public async Task<LoaiPhongVM> AddAsync(AddLoaiPhong model)
+        {
+            var entity = new LoaiPhong
+            {
+                TenLoaiPhong = model.TenLoaiPhong,
+                MoTa = model.MoTa,
+                Gia = model.Gia
+            };
             _context.LoaiPhongs.Add(entity);
             await _context.SaveChangesAsync();
-            return entity;
+            return ToVM(entity);
         }
 
-        public async Task<bool> UpdateAsync(LoaiPhong entity)
+        public async Task<bool> UpdateAsync(int id, UpdateLoaiPhong model)
         {
+            var entity = await _context.LoaiPhongs.FindAsync(id);
+            if (entity == null) return false;
+            entity.TenLoaiPhong = model.TenLoaiPhong ?? entity.TenLoaiPhong;
+            entity.MoTa = model.MoTa ?? entity.MoTa;
+            if (model.Gia.HasValue) entity.Gia = model.Gia;
             _context.LoaiPhongs.Update(entity);
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _context.LoaiPhongs.FindAsync(id);
             if (entity == null) return false;
-
             _context.LoaiPhongs.Remove(entity);
             return await _context.SaveChangesAsync() > 0;
         }

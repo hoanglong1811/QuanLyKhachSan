@@ -13,75 +13,50 @@ namespace back_end.Controllers
     [ApiController]
     public class NhanVienController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly INhanVienRepository _nhanVienRepository;
 
-        public NhanVienController(DataQlks114Nhom3Context context)
+        public NhanVienController(INhanVienRepository nhanVienRepository)
         {
-            _context = context;
+            _nhanVienRepository = nhanVienRepository;
         }
 
         // GET: api/NhanVien
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NhanVien>>> GetNhanViens()
+        public async Task<ActionResult<IEnumerable<NhanVienVM>>> GetNhanViens()
         {
-            return await _context.NhanViens
-                .Include(nv => nv.IdTaiKhoanNavigation)
-                .ToListAsync();
+            var result = await _nhanVienRepository.GetAllAsync();
+            return Ok(result);
         }
 
         // GET: api/NhanVien/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<NhanVien>> GetNhanVien(int id)
+        public async Task<ActionResult<NhanVienVM>> GetNhanVien(int id)
         {
-            var nhanVien = await _context.NhanViens
-                .Include(nv => nv.IdTaiKhoanNavigation)
-                .FirstOrDefaultAsync(nv => nv.IdNhanVien == id);
-
+            var nhanVien = await _nhanVienRepository.GetByIdAsync(id);
             if (nhanVien == null)
             {
                 return NotFound($"Nhân viên với ID {id} không tồn tại.");
             }
-
             return Ok(nhanVien);
         }
 
         // POST: api/NhanVien
         [HttpPost]
-        public async Task<ActionResult<NhanVien>> PostNhanVien(NhanVien nhanVien)
+        public async Task<ActionResult<NhanVienVM>> PostNhanVien([FromBody] AddNhanVien model)
         {
-            _context.NhanViens.Add(nhanVien);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetNhanVien), new { id = nhanVien.IdNhanVien }, nhanVien);
+            var result = await _nhanVienRepository.AddAsync(model);
+            return CreatedAtAction(nameof(GetNhanVien), new { id = result.IdNhanVien }, result);
         }
 
         // PUT: api/NhanVien/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNhanVien(int id, NhanVien nhanVien)
+        public async Task<IActionResult> PutNhanVien(int id, [FromBody] UpdateNhanVien model)
         {
-            if (id != nhanVien.IdNhanVien)
+            var success = await _nhanVienRepository.UpdateAsync(id, model);
+            if (!success)
             {
-                return BadRequest();
+                return NotFound($"Nhân viên với ID {id} không tồn tại.");
             }
-
-            _context.Entry(nhanVien).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NhanVienExists(id))
-                {
-                    return NotFound($"Nhân viên với ID {id} không tồn tại.");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return Ok($"Đã cập nhật nhân viên với ID {id} thành công.");
         }
 
@@ -89,21 +64,12 @@ namespace back_end.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNhanVien(int id)
         {
-            var nhanVien = await _context.NhanViens.FindAsync(id);
-            if (nhanVien == null)
+            var success = await _nhanVienRepository.DeleteAsync(id);
+            if (!success)
             {
                 return NotFound($"Nhân viên với ID {id} không tồn tại.");
             }
-
-            _context.NhanViens.Remove(nhanVien);
-            await _context.SaveChangesAsync();
-
             return Ok($"Đã xóa nhân viên với ID {id} thành công.");
-        }
-
-        private bool NhanVienExists(int id)
-        {
-            return _context.NhanViens.Any(e => e.IdNhanVien == id);
         }
     }
 }
