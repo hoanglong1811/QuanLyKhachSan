@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -36,10 +41,10 @@ namespace back_end.Controllers
 
             if (khachHang == null)
             {
-                return NotFound();
+                return NotFound($"Khách hàng với ID {id} không tồn tại.");
             }
 
-            return khachHang;
+            return Ok(khachHang);
         }
 
         // POST: api/KhachHang
@@ -71,7 +76,7 @@ namespace back_end.Controllers
             {
                 if (!KhachHangExists(id))
                 {
-                    return NotFound();
+                    return NotFound($"Khách hàng với ID {id} không tồn tại.");
                 }
                 else
                 {
@@ -79,7 +84,7 @@ namespace back_end.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Đã cập nhật khách hàng với ID {id} thành công.");
         }
 
         // DELETE: api/KhachHang/5
@@ -89,13 +94,13 @@ namespace back_end.Controllers
             var khachHang = await _context.KhachHangs.FindAsync(id);
             if (khachHang == null)
             {
-                return NotFound();
+                return NotFound($"Khách hàng với ID {id} không tồn tại.");
             }
 
             _context.KhachHangs.Remove(khachHang);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Đã xóa khách hàng với ID {id} thành công.");
         }
 
         private bool KhachHangExists(int id)

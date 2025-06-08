@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -30,10 +35,10 @@ namespace back_end.Controllers
 
             if (loaiPhong == null)
             {
-                return NotFound();
+                return NotFound($"Loại phòng với ID {id} không tồn tại.");
             }
 
-            return loaiPhong;
+            return Ok(loaiPhong);
         }
 
         // POST: api/LoaiPhong
@@ -65,7 +70,7 @@ namespace back_end.Controllers
             {
                 if (!LoaiPhongExists(id))
                 {
-                    return NotFound();
+                    return NotFound($"Loại phòng với ID {id} không tồn tại.");
                 }
                 else
                 {
@@ -73,7 +78,7 @@ namespace back_end.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Đã cập nhật loại phòng với ID {id} thành công.");
         }
 
         // DELETE: api/LoaiPhong/5
@@ -83,13 +88,13 @@ namespace back_end.Controllers
             var loaiPhong = await _context.LoaiPhongs.FindAsync(id);
             if (loaiPhong == null)
             {
-                return NotFound();
+                return NotFound($"Loại phòng với ID {id} không tồn tại.");
             }
 
             _context.LoaiPhongs.Remove(loaiPhong);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Đã xóa loại phòng với ID {id} thành công.");
         }
 
         private bool LoaiPhongExists(int id)

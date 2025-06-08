@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -8,97 +13,67 @@ namespace back_end.Controllers
     [ApiController]
     public class DatPhongController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IDatPhongRepository _repository;
 
-        public DatPhongController(DataQlks114Nhom3Context context)
+        public DatPhongController(IDatPhongRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/DatPhong
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DatPhong>>> GetDatPhongs()
+        public async Task<ActionResult<IEnumerable<DatPhongVM>>> GetDatPhongs()
         {
-            return await _context.DatPhongs
-                .Include(dp => dp.IdKhachHangNavigation)
-                .ToListAsync();
+            var result = await _repository.GetAllAsync();
+            return Ok(result);
         }
 
         // GET: api/DatPhong/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DatPhong>> GetDatPhong(int id)
+        public async Task<ActionResult<DatPhongVM>> GetDatPhong(int id)
         {
-            var datPhong = await _context.DatPhongs
-                .Include(dp => dp.IdKhachHangNavigation)
-                .FirstOrDefaultAsync(dp => dp.IdDatPhong == id);
-
-            if (datPhong == null)
+            var datPhong = await _repository.GetByIdAsync(id);
+            if (datPhong is null)
             {
-                return NotFound();
+                return NotFound($"Đặt phòng với ID {id} không tồn tại.");
             }
-
-            return datPhong;
+            return Ok();
         }
 
         // POST: api/DatPhong
         [HttpPost]
-        public async Task<ActionResult<DatPhong>> PostDatPhong(DatPhong datPhong)
+        public async Task<ActionResult<DatPhongVM>> PostDatPhong([FromBody] AddDatPhong model)
         {
-            _context.DatPhongs.Add(datPhong);
-            await _context.SaveChangesAsync();
-
+            var datPhong = await _repository.AddAsync(model);
             return CreatedAtAction(nameof(GetDatPhong), new { id = datPhong.IdDatPhong }, datPhong);
         }
 
         // PUT: api/DatPhong/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDatPhong(int id, DatPhong datPhong)
+        public async Task<IActionResult> PutDatPhong(int id, [FromBody] UpdateDatPhong model)
         {
-            if (id != datPhong.IdDatPhong)
+            if (id != model.IdDatPhong)
             {
                 return BadRequest();
             }
-
-            _context.Entry(datPhong).State = EntityState.Modified;
-
-            try
+            var result = await _repository.UpdateAsync(id, model);
+            if (!result)
             {
-                await _context.SaveChangesAsync();
+                return NotFound($"Đặt phòng với ID {id} không tồn tại.");
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DatPhongExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok($"Đặt phòng với ID {id} đã được cập nhật thành công.");
         }
 
         // DELETE: api/DatPhong/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDatPhong(int id)
         {
-            var datPhong = await _context.DatPhongs.FindAsync(id);
-            if (datPhong == null)
+            var result = await _repository.DeleteAsync(id);
+            if (!result)
             {
-                return NotFound();
+                return NotFound($"Đặt phòng với ID {id} không tồn tại.");
             }
-
-            _context.DatPhongs.Remove(datPhong);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool DatPhongExists(int id)
-        {
-            return _context.DatPhongs.Any(e => e.IdDatPhong == id);
+            return Ok($"Đã xóa đặt phòng với ID {id} thành công.");
         }
     }
 }

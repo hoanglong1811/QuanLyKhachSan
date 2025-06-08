@@ -2,14 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using back_end.ViewModels;
 namespace back_end.Services
+
 {
     public interface IChiTietDichVuRepository
     {
-        Task<IEnumerable<ChiTietDichVu>> GetAllAsync();
-        Task<ChiTietDichVu?> GetByIdAsync(int id);
-        Task<ChiTietDichVu> AddAsync(ChiTietDichVu entity);
-        Task<bool> UpdateAsync(ChiTietDichVu entity);
+        Task<IEnumerable<ChiTietDichVuVM>> GetAllAsync();
+        Task<ChiTietDichVuVM?> GetByIdAsync(int id);
+        Task<ChiTietDichVuVM> AddAsync(AddChiTietDichVu model);
+        Task<bool> UpdateAsync(int id, UpdateChiTietDichVu model);
         Task<bool> DeleteAsync(int id);
     }
 
@@ -22,35 +24,72 @@ namespace back_end.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<ChiTietDichVu>> GetAllAsync()
+        public async Task<IEnumerable<ChiTietDichVuVM>> GetAllAsync()
         {
-            return await _context.ChiTietDichVus.ToListAsync();
+            return await _context.ChiTietDichVus.Select(c => new ChiTietDichVuVM
+            {
+                IdChiTietDichVu = c.IdChiTietDichVu,
+                IdDichVu = c.IdDichVu,
+                SoLuong = c.SoLuong,
+                TongTien = c.TongTien
+            }).ToListAsync();
         }
 
-        public async Task<ChiTietDichVu?> GetByIdAsync(int id)
+        public async Task<ChiTietDichVuVM?> GetByIdAsync(int id)
         {
-            return await _context.ChiTietDichVus.FindAsync(id);
+            var chiTietDichVu = await _context.ChiTietDichVus.FindAsync(id);
+            if (chiTietDichVu == null) return null;
+
+            return new ChiTietDichVuVM
+            {
+                IdChiTietDichVu = chiTietDichVu.IdChiTietDichVu,
+                IdDichVu = chiTietDichVu.IdDichVu,
+                SoLuong = chiTietDichVu.SoLuong,
+                TongTien = chiTietDichVu.TongTien
+            };
         }
 
-        public async Task<ChiTietDichVu> AddAsync(ChiTietDichVu entity)
+        public async Task<ChiTietDichVuVM> AddAsync(AddChiTietDichVu model)
         {
-            _context.ChiTietDichVus.Add(entity);
+            var chiTietDichVu = new ChiTietDichVu
+            {
+                IdDichVu = model.IdDichVu,
+                SoLuong = model.SoLuong,
+                TongTien = model.TongTien
+            };
+
+            _context.ChiTietDichVus.Add(chiTietDichVu);
             await _context.SaveChangesAsync();
-            return entity;
+
+            return new ChiTietDichVuVM
+            {
+                IdChiTietDichVu = chiTietDichVu.IdChiTietDichVu,
+                IdDichVu = chiTietDichVu.IdDichVu,
+                SoLuong = chiTietDichVu.SoLuong,
+                TongTien = chiTietDichVu.TongTien
+            };
         }
 
-        public async Task<bool> UpdateAsync(ChiTietDichVu entity)
+
+        public async Task<bool> UpdateAsync(int id, UpdateChiTietDichVu model)
         {
-            _context.ChiTietDichVus.Update(entity);
+            var chiTietDichVu = await _context.ChiTietDichVus.FindAsync(id);
+            if (chiTietDichVu == null) return false;
+
+            chiTietDichVu.IdDichVu = model.IdDichVu;
+            chiTietDichVu.SoLuong = model.SoLuong;
+            chiTietDichVu.TongTien = model.TongTien;
+
+            _context.ChiTietDichVus.Update(chiTietDichVu);
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
-            if (entity == null) return false;
+            var chiTietDichVu = await _context.ChiTietDichVus.FindAsync(id);
+            if (chiTietDichVu == null) return false;
 
-            _context.ChiTietDichVus.Remove(entity);
+            _context.ChiTietDichVus.Remove(chiTietDichVu);
             return await _context.SaveChangesAsync() > 0;
         }
     }

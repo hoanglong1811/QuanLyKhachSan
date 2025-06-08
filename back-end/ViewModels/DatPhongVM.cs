@@ -2,11 +2,43 @@
 {
     public class DatPhongVM
     {
-        public int Id { get; set; }
-        public int KhachHangId { get; set; }
-        public int PhongId { get; set; }
-        public DateTime NgayDat { get; set; }
-        public DateTime NgayTra { get; set; }
-        public decimal TongTien { get; set; }
+        public int IdDatPhong { get; set; }
+
+        public DateTime? NgayDatPhong { get; set; }
+
+        public DateTime? NgayTraPhong { get; set; }
+
+        public string? TrangThaiDatPhong { get; set; }
+
+        public string? GhiChu { get; set; }
+
+        public int IdKhachHang { get; set; }
+    }
+
+    public class AddDatPhong
+    {
+        public DateTime? NgayDatPhong { get; set; }
+
+        public DateTime? NgayTraPhong { get; set; }
+
+        public string? TrangThaiDatPhong { get; set; }
+
+        public string? GhiChu { get; set; }
+
+        public int IdKhachHang { get; set; }
+    }
+    public class UpdateDatPhong
+    {
+        public int IdDatPhong { get; set; }
+
+        public DateTime? NgayDatPhong { get; set; }
+
+        public DateTime? NgayTraPhong { get; set; }
+
+        public string? TrangThaiDatPhong { get; set; }
+
+        public string? GhiChu { get; set; }
+
+        public int IdKhachHang { get; set; }
     }
 }

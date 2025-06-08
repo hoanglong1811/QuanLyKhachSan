@@ -7,17 +7,7 @@
         public int? DienThoai { get; set; }
         public string? Cccd { get; set; }      
 
-        public string? IdDatPhong { get; set; }
-        public string? TenDatPhong { get; set; }
-        public string? NgayDatPhong { get; set; }
-        public string? NgayTraPhong { get; set; }
-        public string? TrangThaiDatPhong { get; set; }
 
-        public string? TenPhong { get; set; }
-        public string? TenLoaiPhong { get; set; }
-        public string? TenNhanVien { get; set; }
-       
-        
 
     }
 

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -8,97 +10,60 @@ namespace back_end.Controllers
     [ApiController]
     public class ChiTietDichVuController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IChiTietDichVuRepository _repository;
 
-        public ChiTietDichVuController(DataQlks114Nhom3Context context)
+        public ChiTietDichVuController(IChiTietDichVuRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/ChiTietDichVu
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ChiTietDichVu>>> GetChiTietDichVus()
+        public async Task<ActionResult<IEnumerable<ChiTietDichVuVM>>> GetChiTietDichVus()
         {
-            return await _context.ChiTietDichVus
-                .Include(ct => ct.IdDichVuNavigation)
-                .ToListAsync();
+            var result = await _repository.GetAllAsync();
+            return Ok(result);
         }
 
         // GET: api/ChiTietDichVu/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ChiTietDichVu>> GetChiTietDichVu(int id)
+        public async Task<ActionResult<ChiTietDichVuVM>> GetChiTietDichVu(int id)
         {
-            var chiTietDichVu = await _context.ChiTietDichVus
-                .Include(ct => ct.IdDichVuNavigation)
-                .FirstOrDefaultAsync(ct => ct.IdChiTietDichVu == id);
-
-            if (chiTietDichVu == null)
-            {
-                return NotFound();
-            }
-
-            return chiTietDichVu;
+            var chiTiet = await _repository.GetByIdAsync(id);
+            if (chiTiet == null)
+                return NotFound($"Chi tiết dịch vụ với ID {id} không tồn tại.");
+            return Ok(chiTiet);
         }
 
         // POST: api/ChiTietDichVu
         [HttpPost]
-        public async Task<ActionResult<ChiTietDichVu>> PostChiTietDichVu(ChiTietDichVu chiTietDichVu)
+        public async Task<ActionResult<ChiTietDichVuVM>> PostChiTietDichVu([FromBody] AddChiTietDichVu model)
         {
-            _context.ChiTietDichVus.Add(chiTietDichVu);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetChiTietDichVu), new { id = chiTietDichVu.IdChiTietDichVu }, chiTietDichVu);
+            var result = await _repository.AddAsync(model);
+            return CreatedAtAction(nameof(GetChiTietDichVu), new { id = result.IdChiTietDichVu }, result);
         }
 
         // PUT: api/ChiTietDichVu/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutChiTietDichVu(int id, ChiTietDichVu chiTietDichVu)
+        public async Task<IActionResult> PutChiTietDichVu(int id, [FromBody] UpdateChiTietDichVu model)
         {
-            if (id != chiTietDichVu.IdChiTietDichVu)
-            {
+            if (id != model.IdDichVu)
                 return BadRequest();
-            }
 
-            _context.Entry(chiTietDichVu).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChiTietDichVuExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var result = await _repository.UpdateAsync(id, model);
+            if (!result)
+                return NotFound($"Chi tiết dịch vụ với ID {id} không tồn tại.");
+            return Ok($"Đã cập nhật chi tiết dịch vụ với ID {id} thành công.");
         }
 
         // DELETE: api/ChiTietDichVu/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChiTietDichVu(int id)
         {
-            var chiTietDichVu = await _context.ChiTietDichVus.FindAsync(id);
-            if (chiTietDichVu == null)
-            {
-                return NotFound();
-            }
-
-            _context.ChiTietDichVus.Remove(chiTietDichVu);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ChiTietDichVuExists(int id)
-        {
-            return _context.ChiTietDichVus.Any(e => e.IdChiTietDichVu == id);
+            var result = await _repository.DeleteAsync(id);
+            if (!result)
+                return NotFound($"Chi tiết dịch vụ với ID {id} không tồn tại.");
+            return Ok($"Đã xóa chi tiết dịch vụ với ID {id} thành công.");
         }
     }
 }

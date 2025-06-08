@@ -1,4 +1,5 @@
 ﻿using back_end.Data;
+using back_end.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,10 +7,10 @@ namespace back_end.Services
 {
     public interface IDichVuRepository
     {
-        Task<IEnumerable<DichVu>> GetAllAsync();
-        Task<DichVu?> GetByIdAsync(int id);
-        Task<DichVu> AddAsync(DichVu entity);
-        Task<bool> UpdateAsync(DichVu entity);
+        Task<IEnumerable<DichVuVM>> GetAllAsync();
+        Task<DichVuVM?> GetByIdAsync(int id);
+        Task<DichVuVM> AddAsync(AddDichVu model);
+        Task<bool> UpdateAsync(int id, UpdateDichVu model);
         Task<bool> DeleteAsync(int id);
     }
 
@@ -22,34 +23,60 @@ namespace back_end.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<DichVu>> GetAllAsync()
+        private static DichVuVM ToVM(DichVu entity)
         {
-            return await _context.DichVus.ToListAsync();
+            return new DichVuVM
+            {
+                IdDichVu = entity.IdDichVu,
+                TenDichVu = entity.TenDichVu,
+                Gia = entity.Gia,
+                DonViTinh = entity.DonViTinh,
+                MoTa = entity.MoTa
+            };
         }
 
-        public async Task<DichVu?> GetByIdAsync(int id)
+        public async Task<IEnumerable<DichVuVM>> GetAllAsync()
         {
-            return await _context.DichVus.FindAsync(id);
+            var entities = await _context.DichVus.ToListAsync();
+            return entities.ConvertAll(ToVM);
         }
 
-        public async Task<DichVu> AddAsync(DichVu entity)
+        public async Task<DichVuVM?> GetByIdAsync(int id)
         {
+            var entity = await _context.DichVus.FindAsync(id);
+            return entity == null ? null : ToVM(entity);
+        }
+
+        public async Task<DichVuVM> AddAsync(AddDichVu model)
+        {
+            var entity = new DichVu
+            {
+                TenDichVu = model.TenDichVu,
+                Gia = model.Gia,
+                DonViTinh = model.DonViTinh,
+                MoTa = model.MoTa
+            };
             _context.DichVus.Add(entity);
             await _context.SaveChangesAsync();
-            return entity;
+            return ToVM(entity);
         }
 
-        public async Task<bool> UpdateAsync(DichVu entity)
+        public async Task<bool> UpdateAsync(int id, UpdateDichVu model)
         {
+            var entity = await _context.DichVus.FindAsync(id);
+            if (entity == null) return false;
+            entity.TenDichVu = model.TenDichVu;
+            entity.Gia = model.Gia;
+            entity.DonViTinh = model.DonViTinh;
+            entity.MoTa = model.MoTa;
             _context.Entry(entity).State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _context.DichVus.FindAsync(id);
             if (entity == null) return false;
-
             _context.DichVus.Remove(entity);
             return await _context.SaveChangesAsync() > 0;
         }

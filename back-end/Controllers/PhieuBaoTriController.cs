@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -34,10 +39,10 @@ namespace back_end.Controllers
 
             if (phieuBaoTri == null)
             {
-                return NotFound();
+                return NotFound($"PhieuBaoTri with ID {id} not found.");
             }
 
-            return phieuBaoTri;
+            return Ok(phieuBaoTri);
         }
 
         // POST: api/PhieuBaoTri
@@ -77,7 +82,7 @@ namespace back_end.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Cập nhật phiếu bảo trì với ID {id} thành công.");
         }
 
         // DELETE: api/PhieuBaoTri/5
@@ -87,13 +92,13 @@ namespace back_end.Controllers
             var phieuBaoTri = await _context.PhieuBaoTris.FindAsync(id);
             if (phieuBaoTri == null)
             {
-                return NotFound();
+                return NotFound($"Không tìm thấy phiếu bảo trì với ID {id}.");
             }
 
             _context.PhieuBaoTris.Remove(phieuBaoTri);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Đã xóa phiếu bảo trì với ID {id} thành công.");
         }
 
         private bool PhieuBaoTriExists(int id)

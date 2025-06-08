@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -30,10 +35,10 @@ namespace back_end.Controllers
 
             if (dichVu == null)
             {
-                return NotFound();
+                return NotFound($"Dịch vụ với ID {id} không tồn tại.");
             }
 
-            return dichVu;
+            return Ok(dichVu);
         }
 
         // POST: api/DichVu
@@ -65,7 +70,7 @@ namespace back_end.Controllers
             {
                 if (!DichVuExists(id))
                 {
-                    return NotFound();
+                    return NotFound($"Dịch vụ với ID {id} không tồn tại.");
                 }
                 else
                 {
@@ -73,7 +78,7 @@ namespace back_end.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Đã cập nhật dịch vụ với ID {id} thành công.");
         }
 
         // DELETE: api/DichVu/5
@@ -83,13 +88,13 @@ namespace back_end.Controllers
             var dichVu = await _context.DichVus.FindAsync(id);
             if (dichVu == null)
             {
-                return NotFound();
+                return NotFound($"Dịch vụ với ID {id} không tồn tại.");
             }
 
             _context.DichVus.Remove(dichVu);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Đã xóa dịch vụ với ID {id} thành công.");
         }
 
         private bool DichVuExists(int id)

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using back_end.Services;
 using back_end.ViewModels;
 using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,7 +29,7 @@ builder.Services.AddScoped<IPhieuBaoTriRepository, PhieuBaoTriRepository>();
 builder.Services.AddScoped<IChiTietBaoTriRepository, ChiTietBaoTriRepository>();
 builder.Services.AddScoped<IChiTietDatPhongRepository, ChiTietDatPhongRepository>();
 builder.Services.AddScoped<IChiTietDichVuRepository, ChiTietDichVuRepository>();
-
+builder.Services.AddScoped<IChiTietHoaDonRepository, ChiTietHoaDonRepository>();
 
 
 

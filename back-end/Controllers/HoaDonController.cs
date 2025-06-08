@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Data;
+using back_end.Services;
+using back_end.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace back_end.Controllers
 {
@@ -10,27 +15,30 @@ namespace back_end.Controllers
     {
         private readonly DataQlks114Nhom3Context _context;
 
-        public HoaDonController(DataQlks114Nhom3Context context)
+        private readonly IHoaDonRepository _hoaDonRepository;
+
+        public HoaDonController(DataQlks114Nhom3Context context, IHoaDonRepository hoaDonRepository)
         {
+            _hoaDonRepository = hoaDonRepository;
             _context = context;
         }
 
         // GET: api/HoaDon
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HoaDon>>> GetHoaDons()
+        public async Task<IEnumerable<HoaDonVM>> GetAllAsync()
         {
-            return await _context.HoaDons.ToListAsync();
+            return await _hoaDonRepository.GetAllAsync();
         }
 
         // GET: api/HoaDon/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<HoaDon>> GetHoaDon(int id)
+        public async Task<ActionResult<HoaDonVM>> GetHoaDon(int id)
         {
-            var hoaDon = await _context.HoaDons.FindAsync(id);
+            var hoaDon = await _hoaDonRepository.GetByIdAsync(id);
 
             if (hoaDon == null)
             {
-                return NotFound();
+                return NotFound($"Hóa đơn với ID {id} không tồn tại.");
             }
 
             return hoaDon;
@@ -38,63 +46,31 @@ namespace back_end.Controllers
 
         // POST: api/HoaDon
         [HttpPost]
-        public async Task<ActionResult<HoaDon>> PostHoaDon(HoaDon hoaDon)
+        public async Task<IActionResult> PostHoaDon([FromBody] AddHoaDon entity)
         {
-            _context.HoaDons.Add(hoaDon);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetHoaDon), new { id = hoaDon.IdHoaDon }, hoaDon);
+            var hoaDon = await _hoaDonRepository.AddAsync(entity);
+           
+            return Ok(new { message = "Thêm hóa đơn thành công", hoaDon }); 
         }
 
         // PUT: api/HoaDon/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHoaDon(int id, HoaDon hoaDon)
+        public async Task<IActionResult> UpdateAsync(int id, UpdateHoaDon entity)
         {
-            if (id != hoaDon.IdHoaDon)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(hoaDon).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HoaDonExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var result = await _hoaDonRepository.UpdateAsync(id, entity);
+            if (!result)
+                return NotFound($"Hóa đơn với ID {id} không tồn tại.");
+            return Ok($"Đã cập nhật hóa đơn với ID {id} thành công.");
         }
 
         // DELETE: api/HoaDon/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHoaDon(int id)
         {
-            var hoaDon = await _context.HoaDons.FindAsync(id);
-            if (hoaDon == null)
-            {
-                return NotFound();
-            }
-
-            _context.HoaDons.Remove(hoaDon);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool HoaDonExists(int id)
-        {
-            return _context.HoaDons.Any(e => e.IdHoaDon == id);
-        }
+            var result = await _hoaDonRepository.DeleteAsync(id);
+            if (!result)
+                return NotFound($"Hóa đơn với ID {id} không tồn tại.");
+            return Ok($"Đã xóa hóa đơn với ID {id} thành công.");
+        }       
     }
 }

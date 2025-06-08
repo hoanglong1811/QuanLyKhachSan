@@ -1,4 +1,5 @@
 ﻿using back_end.Data;
+using back_end.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,10 +8,10 @@ namespace back_end.Services
 {
     public interface IChiTietBaoTriRepository
     {
-        Task<IEnumerable<ChiTietBaoTri>> GetAllAsync();
-        Task<ChiTietBaoTri?> GetByIdAsync(int id);
-        Task<ChiTietBaoTri> AddAsync(ChiTietBaoTri entity);
-        Task<bool> UpdateAsync(ChiTietBaoTri entity);
+        Task<IEnumerable<ChiTietBaoTriVM>> GetAllAsync();
+        Task<ChiTietBaoTriVM?> GetByIdAsync(int id);
+        Task AddAsync(AddChiTietBaoTri model);
+        Task UpdateAsync(UpdateChiTietBaoTri model);
         Task<bool> DeleteAsync(int id);
     }
     public class ChiTietBaoTriRepository : IChiTietBaoTriRepository
@@ -22,32 +23,68 @@ namespace back_end.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<ChiTietBaoTri>> GetAllAsync()
+        public async Task<IEnumerable<ChiTietBaoTriVM>> GetAllAsync()
         {
-            return await _context.ChiTietBaoTris.ToListAsync();
+            return await _context.ChiTietBaoTris
+                .Select(ct => new ChiTietBaoTriVM
+                {
+                    IdChiTietBaoTri = ct.IdChiTietBaoTri,
+                    IdThietBi = ct.IdThietBi,
+                    NgayBatDau = ct.NgayBatDau,
+                    NgayKetThuc = ct.NgayKetThuc,
+                    SoLuongThietBi = ct.SoLuongThietBi,
+                    IdPhieuBaoTri = ct.IdPhieuBaoTri
+                })
+                .ToListAsync();
         }
 
-        public async Task<ChiTietBaoTri?> GetByIdAsync(int id)
+        public async Task<ChiTietBaoTriVM?> GetByIdAsync(int id)
         {
-            return await _context.ChiTietBaoTris.FindAsync(id);
+            return await _context.ChiTietBaoTris
+                .Where(ct => ct.IdChiTietBaoTri == id)
+                .Select(ct => new ChiTietBaoTriVM
+                {
+                    IdChiTietBaoTri = ct.IdChiTietBaoTri,
+                    IdThietBi = ct.IdThietBi,
+                    NgayBatDau = ct.NgayBatDau,
+                    NgayKetThuc = ct.NgayKetThuc,
+                    SoLuongThietBi = ct.SoLuongThietBi,
+                    IdPhieuBaoTri = ct.IdPhieuBaoTri
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<ChiTietBaoTri> AddAsync(ChiTietBaoTri entity)
+        public async Task AddAsync(AddChiTietBaoTri model)
         {
+            var entity = new ChiTietBaoTri
+            {
+                IdThietBi = model.IdThietBi,
+                NgayBatDau = model.NgayBatDau,
+                NgayKetThuc = model.NgayKetThuc,
+                SoLuongThietBi = model.SoLuongThietBi,
+                IdPhieuBaoTri = model.IdPhieuBaoTri
+            };
             _context.ChiTietBaoTris.Add(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
-        public async Task<bool> UpdateAsync(ChiTietBaoTri entity)
+        public async Task UpdateAsync(UpdateChiTietBaoTri model)
         {
-            _context.ChiTietBaoTris.Update(entity);
-            return await _context.SaveChangesAsync() > 0;
+            var entity = await _context.ChiTietBaoTris.FindAsync(model.IdChiTietBaoTri);
+            if (entity != null)
+            {
+                entity.IdThietBi = model.IdThietBi;
+                entity.NgayBatDau = model.NgayBatDau;
+                entity.NgayKetThuc = model.NgayKetThuc;
+                entity.SoLuongThietBi = model.SoLuongThietBi;
+                entity.IdPhieuBaoTri = model.IdPhieuBaoTri;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _context.ChiTietBaoTris.FindAsync(id);
             if (entity == null) return false;
 
             _context.ChiTietBaoTris.Remove(entity);
