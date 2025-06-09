@@ -13,7 +13,7 @@ EXPOSE 5012
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back-end.csproj", "."]
+COPY ["back-end/back-end.csproj", "."]
 RUN dotnet restore "./back-end.csproj"
 COPY . .
 WORKDIR "/src/."
