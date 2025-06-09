@@ -14,7 +14,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["back-end/back-end.csproj", "."]
-RUN dotnet restore "/back-end.csproj"
+RUN dotnet restore "./back-end.csproj"
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/build
@@ -28,4 +28,4 @@ RUN dotnet publish "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "back-end.dll"]
+ENTRYPOINT ["dotnet", "./back-end.dll"]
