@@ -13,19 +13,19 @@ EXPOSE 5012
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back-end.csproj", "."]
-RUN dotnet restore "./back-end.csproj"
+COPY ["back-end/back-end.csproj", "."]
+RUN dotnet restore "back-end/back-end.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "/back-end/back-end.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "back-end/back-end.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "back-end.dll"]
+ENTRYPOINT ["dotnet", "back-end/back-end.dll"]
