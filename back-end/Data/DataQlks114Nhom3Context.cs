@@ -116,7 +116,6 @@ public partial class DataQlks114Nhom3Context : DbContext
 
             entity.ToTable("ChiTietHoaDon");
 
-            entity.Property(e => e.IdChiTietHoaDon).ValueGeneratedNever();
             entity.Property(e => e.GhiChu).HasMaxLength(255);
             entity.Property(e => e.MoTa).HasMaxLength(255);
             entity.Property(e => e.NgayTao).HasColumnType("datetime");
@@ -292,16 +291,14 @@ public partial class DataQlks114Nhom3Context : DbContext
             entity.Property(e => e.TenDangNhap)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Token)
+                .HasMaxLength(255)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.IdVaiTroNavigation).WithMany(p => p.TaiKhoans)
                 .HasForeignKey(d => d.IdVaiTro)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TaiKhoan_VaiTro");
-
-            entity.Property(e => e.Token)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-                
         });
 
         modelBuilder.Entity<ThietBi>(entity =>

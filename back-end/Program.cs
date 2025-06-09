@@ -52,11 +52,16 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+<<<<<<< HEAD
     var jwtKey = builder.Configuration["Jwt:Key"];
     if (string.IsNullOrEmpty(jwtKey))
     {
         throw new InvalidOperationException("JWT Key is not configured.");
     }
+=======
+    var jwtKey = builder.Configuration["Jwt:Key"] 
+        ?? throw new InvalidOperationException("JWT Key is not configured.");
+>>>>>>> 32573704e7710386b507a946fd59d548a59bb067
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -71,9 +76,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 
 app.UseHttpsRedirection();
