@@ -291,4 +291,3 @@ D:\QuanLyKhachSan\back-end\obj\Debug\net8.0\refint\back-end.dll
 D:\QuanLyKhachSan\back-end\obj\Debug\net8.0\back-end.pdb
 D:\QuanLyKhachSan\back-end\obj\Debug\net8.0\back-end.genruntimeconfig.cache
 D:\QuanLyKhachSan\back-end\obj\Debug\net8.0\ref\back-end.dll
-D:\QuanLyKhachSan\back-end\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
