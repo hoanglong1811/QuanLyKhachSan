@@ -15,6 +15,8 @@ public partial class TaiKhoan
 
     public int IdVaiTro { get; set; }
 
+    public string? Token { get; set; }
+
     public virtual VaiTro IdVaiTroNavigation { get; set; } = null!;
 
     public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();

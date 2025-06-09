@@ -39,8 +39,11 @@ namespace back_end.Controllers
         [HttpPost]
         public async Task<ActionResult<PhieuBaoTriVM>> PostPhieuBaoTri(AddPhieuBaoTri model)
         {
+            if (model == null)
+                return BadRequest("Invalid data.");
+
             var result = await _repository.AddAsync(model);
-            return CreatedAtAction(nameof(GetPhieuBaoTri), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetPhieuBaoTri), new { id = result.IdPhieuBaoTri }, result);
         }
 
         // PUT: api/PhieuBaoTri/5

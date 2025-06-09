@@ -300,6 +300,11 @@ public partial class DataQlks114Nhom3Context : DbContext
                 .HasForeignKey(d => d.IdVaiTro)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TaiKhoan_VaiTro");
+
+            entity.Property(e => e.Token)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+                
         });
 
         modelBuilder.Entity<ThietBi>(entity =>

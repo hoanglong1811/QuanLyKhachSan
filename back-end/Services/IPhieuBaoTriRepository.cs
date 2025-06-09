@@ -29,37 +29,27 @@ namespace back_end.Services
         {
             return await _context.PhieuBaoTris
                 .Include(p => p.ChiTietBaoTris)
-                .Include(p => p.IdNhanVienNavigation)
                 .Select(p => new PhieuBaoTriVM
                 {
-                    Id = p.IdPhieuBaoTri,
-                    ThietBiId = p.ChiTietBaoTris.FirstOrDefault().IdThietBi,
-                    NgayBaoTri = p.NgayTao ?? System.DateTime.MinValue,
-                    MoTa = p.MoTaVanDe,
-                    TrangThai = p.TrangThai == "Đã hoàn thành",
-                    TenNhanVien = p.IdNhanVienNavigation.HoTen,
-                    TenThietBi = p.ChiTietBaoTris.FirstOrDefault().IdThietBiNavigation.TenThietBi,
-                    SoPhong = p.ChiTietBaoTris.FirstOrDefault().IdThietBiNavigation.IdPhongNavigation.SoPhong.ToString()
-                })
-                .ToListAsync();
+                    IdPhieuBaoTri = p.IdPhieuBaoTri,
+                    MoTaVanDe = p.MoTaVanDe,
+                    NgayTao = p.NgayTao,
+                    TrangThai = p.TrangThai,
+                    IdNhanVien = p.IdNhanVien
+                }).ToListAsync();
         }
 
         public async Task<PhieuBaoTriVM?> GetByIdAsync(int id)
         {
             return await _context.PhieuBaoTris
                 .Include(p => p.ChiTietBaoTris)
-                .Include(p => p.IdNhanVienNavigation)
-                .Where(p => p.IdPhieuBaoTri == id)
                 .Select(p => new PhieuBaoTriVM
                 {
-                    Id = p.IdPhieuBaoTri,
-                    ThietBiId = p.ChiTietBaoTris.FirstOrDefault().IdThietBi,
-                    NgayBaoTri = p.NgayTao ?? System.DateTime.MinValue,
-                    MoTa = p.MoTaVanDe,
-                    TrangThai = p.TrangThai == "Đã hoàn thành",
-                    TenNhanVien = p.IdNhanVienNavigation.HoTen,
-                    TenThietBi = p.ChiTietBaoTris.FirstOrDefault().IdThietBiNavigation.TenThietBi,
-                    SoPhong = p.ChiTietBaoTris.FirstOrDefault().IdThietBiNavigation.IdPhongNavigation.SoPhong.ToString()
+                    IdPhieuBaoTri = p.IdPhieuBaoTri,
+                    MoTaVanDe = p.MoTaVanDe,
+                    NgayTao = p.NgayTao,
+                    TrangThai = p.TrangThai,
+                    IdNhanVien = p.IdNhanVien
                 })
                 .FirstOrDefaultAsync();
         }
@@ -68,50 +58,35 @@ namespace back_end.Services
         {
             var phieu = new PhieuBaoTri
             {
-                MoTaVanDe = model.MoTa,
-                NgayTao = model.NgayBaoTri,
-                TrangThai = model.TrangThai == true ? "Đã hoàn thành" : "Chưa hoàn thành",
-                IdNhanVien = 1 // Cần sửa lại để lấy từ user đăng nhập
+                MoTaVanDe = model.MoTaVanDe,
+                NgayTao = model.NgayTao ?? DateTime.Now,
+                TrangThai = model.TrangThai,
+                IdNhanVien = model.IdNhanVien
             };
             _context.PhieuBaoTris.Add(phieu);
-            await _context.SaveChangesAsync();
-
-            var chiTiet = new ChiTietBaoTri
-            {
-                IdPhieuBaoTri = phieu.IdPhieuBaoTri,
-                IdThietBi = model.ThietBiId,
-                NgayBatDau = model.NgayBaoTri,
-                NgayKetThuc = null
-            };
-            _context.ChiTietBaoTris.Add(chiTiet);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();           
 
             return await GetByIdAsync(phieu.IdPhieuBaoTri) ?? new PhieuBaoTriVM();
         }
 
         public async Task<bool> UpdateAsync(int id, UpdatePhieuBaoTri model)
         {
-            var phieu = await _context.PhieuBaoTris.Include(p => p.ChiTietBaoTris).FirstOrDefaultAsync(p => p.IdPhieuBaoTri == id);
+            var phieu = await _context.PhieuBaoTris.FirstOrDefaultAsync(p => p.IdPhieuBaoTri == id);
             if (phieu == null) return false;
-            phieu.MoTaVanDe = model.MoTa;
-            phieu.NgayTao = model.NgayBaoTri;
-            phieu.TrangThai = model.TrangThai == true ? "Đã hoàn thành" : "Chưa hoàn thành";
-            // Cập nhật chi tiết bảo trì
-            var chiTiet = phieu.ChiTietBaoTris.FirstOrDefault();
-            if (chiTiet != null)
-            {
-                chiTiet.IdThietBi = model.ThietBiId;
-                chiTiet.NgayBatDau = model.NgayBaoTri;
-            }
+
+            phieu.MoTaVanDe = model.MoTaVanDe;
+            phieu.NgayTao = model.NgayTao;
+            phieu.TrangThai = model.TrangThai;
+            phieu.IdNhanVien = model.IdNhanVien;
+
             await _context.SaveChangesAsync();
             return true;
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
-            var phieu = await _context.PhieuBaoTris.Include(p => p.ChiTietBaoTris).FirstOrDefaultAsync(p => p.IdPhieuBaoTri == id);
+            var phieu = await _context.PhieuBaoTris.FindAsync(id);
             if (phieu == null) return false;
-            _context.ChiTietBaoTris.RemoveRange(phieu.ChiTietBaoTris);
+
             _context.PhieuBaoTris.Remove(phieu);
             await _context.SaveChangesAsync();
             return true;

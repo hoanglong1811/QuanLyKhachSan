@@ -5,6 +5,10 @@ using back_end.ViewModels;
 using back_end.Services;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace back_end.Controllers
 {
@@ -14,11 +18,13 @@ namespace back_end.Controllers
     {
         private readonly ITaiKhoanRepository _taiKhoanRepository;
         private readonly IVaiTroRepository _vaiTroRepository;
+        private readonly IConfiguration _configuration;
 
-        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, IVaiTroRepository vaiTroRepository)
+        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, IVaiTroRepository vaiTroRepository, IConfiguration configuration)
         {
             _taiKhoanRepository = taiKhoanRepository;
             _vaiTroRepository = vaiTroRepository;
+            _configuration = configuration;
         }
 
         // GET: api/TaiKhoan
@@ -163,7 +169,8 @@ namespace back_end.Controllers
                 TenDangNhap = taiKhoan.TenDangNhap ?? string.Empty,
                 Email = taiKhoan.Email ?? string.Empty,
                 IdVaiTro = taiKhoan.IdVaiTro,
-                TenVaiTro = taiKhoan.IdVaiTroNavigation?.TenVaiTro ?? string.Empty
+                TenVaiTro = taiKhoan.IdVaiTroNavigation?.TenVaiTro ?? string.Empty,
+                Token = GenerateJwtToken(taiKhoan)
             };
 
             return Ok(response);
@@ -175,6 +182,30 @@ namespace back_end.Controllers
             var bytes = Encoding.UTF8.GetBytes(password);
             var hash = sha256.ComputeHash(bytes);
             return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        }
+
+        private string GenerateJwtToken(TaiKhoan taiKhoan)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, taiKhoan.IdTaiKhoan.ToString()),
+                new Claim(ClaimTypes.Name, taiKhoan.TenDangNhap ?? string.Empty),
+                new Claim(ClaimTypes.Email, taiKhoan.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, taiKhoan.IdVaiTro.ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

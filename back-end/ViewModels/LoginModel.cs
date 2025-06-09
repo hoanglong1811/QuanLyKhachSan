@@ -18,5 +18,6 @@ namespace back_end.ViewModels
         public string Email { get; set; }
         public int IdVaiTro { get; set; }
         public string TenVaiTro { get; set; }
+        public string Token { get; set; }
     }
 } 
