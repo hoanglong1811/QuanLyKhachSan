@@ -525,6 +525,7 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 50px;
+  align-items: stretch;
 }
 
 .form-container {
@@ -532,6 +533,7 @@ section {
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
 .form-header {
@@ -608,11 +610,27 @@ section {
 }
 
 .map-container {
-  border-radius: 15px;
-  overflow: hidden;
+  position: relative;
+  width: 100%;
   height: 100%;
   min-height: 500px;
+  border-radius: 15px;
+  overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* FAQ Section */
