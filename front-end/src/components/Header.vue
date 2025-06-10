@@ -20,14 +20,6 @@
 
       <!-- Right Section -->
       <div class="right-section">
-        <div class="language-selector" @click="toggleLanguage">
-          <i class="fas fa-globe"></i>
-          <span>{{ currentLanguage }}</span>
-          <div class="language-dropdown" v-if="showLanguageDropdown">
-            <div class="language-option" @click="selectLanguage('VI')">Tiếng Việt</div>
-            <div class="language-option" @click="selectLanguage('EN')">English</div>
-          </div>
-        </div>
         <button class="booking-btn" @click="goToBooking">
           <i class="fas fa-calendar-alt"></i>
           Đặt phòng ngay
@@ -47,9 +39,7 @@ export default {
   data() {
     return {
       isScrolled: false,
-      isMenuOpen: false,
-      showLanguageDropdown: false,
-      currentLanguage: 'VI'
+      isMenuOpen: false
     };
   },
   methods: {
@@ -64,26 +54,12 @@ export default {
       this.isMenuOpen = false;
       document.body.style.overflow = '';
     },
-    toggleLanguage() {
-      this.showLanguageDropdown = !this.showLanguageDropdown;
-    },
-    selectLanguage(lang) {
-      this.currentLanguage = lang;
-      this.showLanguageDropdown = false;
-      // Implement language change logic here
-    },
     goToBooking() {
       this.$router.push('/booking');
     }
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
-    // Close language dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.language-selector')) {
-        this.showLanguageDropdown = false;
-      }
-    });
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -208,66 +184,6 @@ header.sticky {
   gap: 25px;
 }
 
-.language-selector {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: white;
-  cursor: pointer;
-  padding: 8px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.language-selector:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.language-selector i {
-  font-size: 16px;
-}
-
-.language-dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  min-width: 150px;
-  transform-origin: top right;
-  animation: dropdownFade 0.2s ease;
-}
-
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.language-option {
-  padding: 12px 20px;
-  color: #333;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-.language-option:hover {
-  background: #f8f9fa;
-  color: #CDB79E;
-}
-
 .booking-btn {
   background: linear-gradient(45deg, #CDB79E, #E6C9A8);
   color: white;
@@ -351,21 +267,12 @@ header.sticky {
     z-index: 1001;
   }
 
-  .language-selector {
-    padding: 8px;
-    border: none;
-  }
-
-  .language-selector span {
-    display: none;
-  }
-
   .booking-btn {
     padding: 12px;
   }
 
-  .booking-btn span {
-    display: none;
+  .booking-btn i {
+    font-size: 16px;
   }
 }
 

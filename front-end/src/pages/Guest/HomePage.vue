@@ -23,17 +23,6 @@
         <span> LONG HAI RESORT</span>
       </div>
       <div class="right-section">
-        <div class="language" @click="toggleLanguageDropdown">
-          <i class="fas fa-globe"></i>
-          <span>{{ currentLanguage }}</span>
-          <i class="fas fa-chevron-down"></i>
-          <div class="language-dropdown" v-if="showLanguageDropdown">
-            <span @click.stop="selectLanguage('Tiếng Việt')">Tiếng Việt</span>
-            <span @click.stop="selectLanguage('English')">English</span>
-            <span @click.stop="selectLanguage('日本語')">日本語</span>
-            <span @click.stop="selectLanguage('Français')">Français</span>
-          </div>
-        </div>
         <button class="booking-btn" @click="goToBooking">Đặt phòng ngay</button>
       </div>
     </header>
@@ -184,14 +173,13 @@ export default {
   data() {
     return {
       showMenu: false,
-      showLanguageDropdown: false, // Trạng thái hiển thị dropdown ngôn ngữ
-      currentLanguage: 'Tiếng Việt', // Ngôn ngữ hiện tại
+      isScrolled: false,
+      currentImageIndex: 0,
       descriptions: [
         { show: false },
         { show: false },
         { show: false }
       ],
-      isScrolled: false,
       sunsetImages: [
         "https://i.pinimg.com/736x/c2/05/c1/c205c1f5c0a0186abea431e8c8b59cd1.jpg",
         "https://i.pinimg.com/736x/01/86/17/018617ed16deae698f2631ab63f1122f.jpg",
@@ -199,20 +187,12 @@ export default {
         "https://i.pinimg.com/736x/e9/70/e3/e970e3114cbcf4f582328a0ef0e8c3ab.jpg",
         "https://i.pinimg.com/736x/d3/3c/54/d33c54da9337a403e5ae2e265df290e7.jpg",
         "https://i.pinimg.com/736x/7e/13/4f/7e134f89974b32ac5eb22c545ce626d6.jpg"
-      ],
-      currentImageIndex: 0
+      ]
     };
   },
   methods: {
     toggleMenu() {
       this.showMenu = !this.showMenu;
-    },
-    toggleLanguageDropdown() {
-      this.showLanguageDropdown = !this.showLanguageDropdown;
-    },
-    selectLanguage(language) {
-      this.currentLanguage = language;
-      this.showLanguageDropdown = false;
     },
     showDescription(index) {
       this.descriptions[index].show = true;
@@ -418,57 +398,6 @@ header.sticky {
   display: flex;
   align-items: center;
   gap: 25px;
-}
-
-.language {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 22px;
-  cursor: pointer;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-weight: 500;
-}
-
-.language:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.language i {
-  font-size: 16px;
-}
-
-.language-dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  min-width: 150px;
-  transform-origin: top right;
-  animation: dropdownFade 0.2s ease;
-}
-
-.language-dropdown span {
-  padding: 12px 20px;
-  display: block;
-  color: #333;
-  font-size: 20px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.language-dropdown span:hover {
-  background: #f8f9fa;
-  color: #CDB79E;
 }
 
 .booking-btn {
@@ -908,21 +837,8 @@ footer {
     font-size: 16px;
   }
 
-  .language,
   .booking-btn {
     font-size: 16px;
-  }
-
-  .language i {
-    font-size: 12px;
-  }
-
-  .language-dropdown {
-    min-width: 100px;
-  }
-
-  .booking-btn {
-    padding: 5px 10px;
   }
 
   .main-image {
