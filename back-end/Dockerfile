@@ -6,14 +6,13 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-EXPOSE 5012
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back-end/back-end.csproj", "."]
+COPY ["back-end.csproj", "."]
 RUN dotnet restore "./back-end.csproj"
 COPY . .
 WORKDIR "/src/."
@@ -28,4 +27,4 @@ RUN dotnet publish "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "./back-end.dll"]
+ENTRYPOINT ["dotnet", "back-end.dll"]
