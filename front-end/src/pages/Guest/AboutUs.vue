@@ -116,23 +116,27 @@
     <!-- New Section: Service Highlights -->
     <div class="main-content">
       <h2>Các điểm nổi bật của chúng tôi</h2>
-      <div class="service-item" @mouseover="showDescription(0)" @mouseleave="hideDescription(0)">
-        <img src="https://i.pinimg.com/736x/08/9d/94/089d94bf9610318138e58402f01e4c5c.jpg" alt="Green Place">
-        <div class="service-overlay" v-show="descriptions[0].show">
-          Bạn có thể tận hưởng môi trường thanh bình được bao quanh bởi cây xanh tươi tốt và không khí trong lành, lý tưởng để thư giãn.
+      <div class="service-grid">
+        <div class="service-item">
+          <img src="https://i.pinimg.com/736x/08/9d/94/089d94bf9610318138e58402f01e4c5c.jpg" alt="Green Place">
+          <div class="service-overlay">
+            <h3>Không gian xanh</h3>
+            <p>Môi trường thanh bình với cây xanh và không khí trong lành</p>
+          </div>
         </div>
-      </div>
-      <div class="service-item" @mouseover="showDescription(1)" @mouseleave="hideDescription(1)">
-        <img src="https://i.pinimg.com/736x/49/b7/f2/49b7f2e9745a66cef581c4d03c4d7e88.jpg" alt="Service Heart">
-        <div class="service-overlay" v-show="descriptions[1].show">
-          Trải nghiệm lòng hiếu khách chân thành với đội ngũ nhân viên tận tụy của chúng tôi, đảm bảo đáp ứng mọi nhu cầu của bạn.
+        <div class="service-item">
+          <img src="https://i.pinimg.com/736x/49/b7/f2/49b7f2e9745a66cef581c4d03c4d7e88.jpg" alt="Service Heart">
+          <div class="service-overlay">
+            <h3>Dịch vụ tận tâm</h3>
+            <p>Đội ngũ nhân viên chuyên nghiệp, sẵn sàng phục vụ 24/7</p>
+          </div>
         </div>
-      </div>
-    
-      <div class="service-item" @mouseover="showDescription(3)" @mouseleave="hideDescription(3)">
-        <img src="https://i.pinimg.com/736x/94/5b/93/945b93d607c108c5849738363a068faf.jpg" alt="International Friendly">
-        <div class="service-overlay" v-show="descriptions[3].show">
-          Chào đón du khách quốc tế với đội ngũ nhân viên nói tiếng Anh và những trải nghiệm được thiết kế riêng cho du khách từ Vương quốc Anh và nhiều nơi khác.
+        <div class="service-item">
+          <img src="https://i.pinimg.com/736x/94/5b/93/945b93d607c108c5849738363a068faf.jpg" alt="International Friendly">
+          <div class="service-overlay">
+            <h3>Đa văn hóa</h3>
+            <p>Môi trường quốc tế với dịch vụ đa ngôn ngữ</p>
+          </div>
         </div>
       </div>
     </div>
@@ -154,25 +158,13 @@ export default {
   },
   data() {
     return {
-      isScrolled: false,
-      descriptions: [
-        { show: false },
-        { show: false },
-        { show: false },
-        { show: false }, // Thêm cho phần mới
-      ],
+      isScrolled: false
     };
   },
   methods: {
     handleScroll() {
       this.isScrolled = window.scrollY > 0;
-    },
-    showDescription(index) {
-      this.descriptions[index].show = true;
-    },
-    hideDescription(index) {
-      this.descriptions[index].show = false;
-    },
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
@@ -280,34 +272,51 @@ export default {
 
 /* Service Highlights Styles */
 .main-content {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 50px 20px;
-  flex-wrap: wrap;
-  background: #f1f0f0;
+  padding: 80px 20px;
+  background-color: #f5f5f5;
 }
 
 .main-content h2 {
-  font-size: 48px;
-  color: #3b7097;
   text-align: center;
-  margin-bottom: 40px;
-  width: 100%;
-  font-weight: bold;
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 50px;
+  font-weight: 700;
+  position: relative;
+}
+
+.main-content h2:after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #c4a35a;
+  margin: 15px auto;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
 }
 
 .service-item {
   position: relative;
-  width: 30%;
-  min-width: 300px;
   overflow: hidden;
+  border-radius: 8px;
+  aspect-ratio: 1;
 }
 
 .service-item img {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.service-item:hover img {
+  transform: scale(1.05);
 }
 
 .service-overlay {
@@ -316,23 +325,139 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 30px;
+  padding: 20px;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  font-size: 26px;
+  transition: opacity 0.3s ease;
+  text-align: center;
 }
 
 .service-item:hover .service-overlay {
   opacity: 1;
-  transform: translateY(0);
+}
+
+.service-overlay h3 {
+  color: #FFD700;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.service-overlay p {
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.5;
+  max-width: 80%;
+  margin: 0 auto;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* New Styles for Read More Button and Modal */
+.read-more-btn {
+  background-color: #c4a35a;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+  background-color: #a68c4d;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content h3 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.modal-content p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.close-modal-btn {
+  background-color: #c4a35a;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.close-modal-btn:hover {
+  background-color: #a68c4d;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 30px;
+  }
+
+  .modal-content h3 {
+    font-size: 24px;
+  }
+
+  .modal-content p {
+    font-size: 14px;
+  }
+
+  .close-modal-btn {
+    font-size: 14px;
+    padding: 8px 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -376,18 +501,21 @@ export default {
   }
 
   .main-content h2 {
-    font-size: 36px;
+    font-size: 28px;
     margin-bottom: 30px;
   }
 
-  .service-item {
-    width: 100%;
-    min-width: 0;
+  .service-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .service-overlay {
-    font-size: 22px;
-    padding: 20px;
+  .service-overlay h3 {
+    font-size: 16px;
+  }
+
+  .service-overlay p {
+    font-size: 12px;
   }
 }
 </style>
