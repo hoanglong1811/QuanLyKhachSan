@@ -1,3 +1,4 @@
+*.csproj
 **/.classpath
 **/.dockerignore
 **/.env
