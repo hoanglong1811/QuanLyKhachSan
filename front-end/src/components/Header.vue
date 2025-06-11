@@ -1,30 +1,39 @@
 <template>
   <header :class="{ 'sticky': isScrolled }">
     <div class="header-container">
-      <!-- Logo Section -->
-      <div class="logo">
-        <router-link to="/">
-          <span class="logo-text">PALACE</span>
-          <span class="logo-subtext">LONG HAI RESORT</span>
-        </router-link>
+      <!-- Left Section: Logo -->
+      <div class="left-section">
+        <div class="logo">
+          <router-link to="/">
+            <span class="logo-text">PALACE</span>
+            <span class="logo-subtext">LONG HAI RESORT</span>
+          </router-link>
+        </div>
       </div>
 
-      <!-- Navigation Menu -->
-      <nav class="menu" :class="{ 'menu-active': isMenuOpen }">
-        <router-link to="/" class="nav-link" @click="closeMenu">Trang chủ</router-link>
-        <router-link to="/about-us" class="nav-link" @click="closeMenu">Giới thiệu</router-link>
-        <router-link to="/room-types" class="nav-link" @click="closeMenu">Các loại phòng</router-link>
-        <router-link to="/services" class="nav-link" @click="closeMenu">Dịch vụ</router-link>
-        <router-link to="/contact-us" class="nav-link" @click="closeMenu">Liên hệ</router-link>
-      </nav>
+      <!-- Center Section: Navigation Menu -->
+      <div class="center-section">
+        <nav class="menu" :class="{ 'menu-active': isMenuOpen }">
+          <div class="menu-group">
+            <router-link to="/" class="nav-link" @click="closeMenu">Trang chủ</router-link>
+            <router-link to="/about-us" class="nav-link" @click="closeMenu">Giới thiệu</router-link>
+          </div>
+          <div class="menu-group">
+            <router-link to="/room-types" class="nav-link" @click="closeMenu">Các loại phòng</router-link>
+            <router-link to="/services" class="nav-link" @click="closeMenu">Dịch vụ</router-link>
+          </div>
+          <div class="menu-group">
+            <router-link to="/contact-us" class="nav-link" @click="closeMenu">Liên hệ</router-link>
+          </div>
+        </nav>
+      </div>
 
-      <!-- Right Section -->
+      <!-- Right Section: Booking & Menu Toggle -->
       <div class="right-section">
         <button class="booking-btn" @click="goToBooking">
           <i class="fas fa-calendar-alt"></i>
-          Đặt phòng ngay
+          <span class="booking-text">Đặt phòng ngay</span>
         </button>
-        <!-- Mobile Menu Button -->
         <button class="menu-toggle" @click="toggleMenu">
           <i :class="isMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
         </button>
@@ -98,9 +107,12 @@ header.sticky {
   width: 100%;
 }
 
-/* Logo Styles */
-.logo {
+/* Left Section Styles */
+.left-section {
   flex: 0 0 auto;
+}
+
+.logo {
   transition: transform 0.3s ease;
 }
 
@@ -136,12 +148,24 @@ header.sticky {
   margin-top: 2px;
 }
 
-/* Navigation Menu */
+/* Center Section Styles */
+.center-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
 .menu {
   display: flex;
   gap: 40px;
   align-items: center;
   margin: 0 20px;
+}
+
+.menu-group {
+  display: flex;
+  gap: 40px;
+  align-items: center;
 }
 
 .nav-link {
@@ -177,8 +201,9 @@ header.sticky {
   width: 100%;
 }
 
-/* Right Section */
+/* Right Section Styles */
 .right-section {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 25px;
@@ -212,6 +237,10 @@ header.sticky {
   font-size: 18px;
 }
 
+.booking-text {
+  white-space: nowrap;
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -233,6 +262,10 @@ header.sticky {
     padding: 0 20px;
   }
 
+  .center-section {
+    display: none;
+  }
+
   .menu {
     position: fixed;
     top: 0;
@@ -249,6 +282,11 @@ header.sticky {
 
   .menu-active {
     left: 0;
+  }
+
+  .menu-group {
+    flex-direction: column;
+    gap: 20px;
   }
 
   .nav-link {
@@ -271,8 +309,13 @@ header.sticky {
     padding: 12px;
   }
 
+  .booking-text {
+    display: none;
+  }
+
   .booking-btn i {
     font-size: 16px;
+    margin: 0;
   }
 }
 
