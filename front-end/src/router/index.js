@@ -26,6 +26,8 @@ import UserManager from "@/pages/employee/UserManager.vue";
 import UserInformation from "@/pages/employee/UserInformation.vue";
 import InvoiceManagement from "@/pages/employee/InvoiceManagement.vue";
 import InvoiceDetail from "@/pages/employee/InvoiceDetail.vue";
+import Reports from "@/pages/employee/Reports.vue";
+import AccountList from "@/pages/employee/AccountList.vue";
 
 const routes = [
   // Guest Routes
@@ -158,6 +160,19 @@ const routes = [
     path: "/employee/personal-info",
     name: "UserInformation",
     component: UserInformation,
+    meta: { requiresAuth: true, role: 'employee' }
+  },
+  {
+    path: "/employee/reports",
+    name: "Reports",
+    component: Reports,
+    meta: { requiresAuth: true, role: 'employee' }
+  },
+ 
+  {
+    path: "/employee/account-list",
+    name: "AccountList",
+    component: AccountList,
     meta: { requiresAuth: true, role: 'employee' }
   },
 ];
