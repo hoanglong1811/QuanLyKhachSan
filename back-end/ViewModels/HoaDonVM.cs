@@ -10,6 +10,9 @@
         public string? TrangThaiThanhToan { get; set; }
         public int? TongTien { get; set; }
         
+        public string? HoTen { get; set; }
+        public int? DienThoai { get; set; }
+        public string? Cccd { get; set; }
         
     }
     public class AddHoaDon

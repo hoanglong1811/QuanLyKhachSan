@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue';
+
+import Navbar from '@/components/navbar.vue';
 import { bookingService } from '@/services/bookingService';
 import { authService } from '@/services/authService';
 

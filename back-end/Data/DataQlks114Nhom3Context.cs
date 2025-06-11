@@ -142,11 +142,6 @@ public partial class DataQlks114Nhom3Context : DbContext
 
             entity.ToTable("DatPhong");
 
-            entity.Property(e => e.GhiChu).HasMaxLength(255);
-            entity.Property(e => e.NgayDatPhong).HasColumnType("datetime");
-            entity.Property(e => e.NgayTraPhong).HasColumnType("datetime");
-            entity.Property(e => e.TrangThaiDatPhong).HasMaxLength(255);
-
             entity.HasOne(d => d.IdKhachHangNavigation).WithMany(p => p.DatPhongs)
                 .HasForeignKey(d => d.IdKhachHang)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -173,6 +168,12 @@ public partial class DataQlks114Nhom3Context : DbContext
             entity.Property(e => e.NgayTao).HasColumnType("datetime");
             entity.Property(e => e.PhuongThucThanhToan).HasMaxLength(255);
             entity.Property(e => e.TrangThaiThanhToan).HasMaxLength(255);
+
+            entity.HasOne(d => d.IdDatPhongNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdDatPhong)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HoaDon_DatPhong");
         });
 
         modelBuilder.Entity<KhachHang>(entity =>

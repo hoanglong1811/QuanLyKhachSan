@@ -20,4 +20,6 @@ public partial class HoaDon
     public int? TongTien { get; set; }
 
     public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
+
+    public virtual DatPhong IdDatPhongNavigation { get; set; } = null!;
 }
