@@ -37,7 +37,7 @@ namespace back_end.Controllers
             {
                 return NotFound($"Đặt phòng với ID {id} không tồn tại.");
             }
-            return Ok();
+            return Ok(datPhong);
         }
 
         // POST: api/DatPhong

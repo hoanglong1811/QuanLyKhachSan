@@ -30,10 +30,6 @@ namespace back_end.Services
                 .Select(dp => new DatPhongVM
                 {
                     IdDatPhong = dp.IdDatPhong,
-                    NgayDatPhong = dp.NgayDatPhong,
-                    NgayTraPhong = dp.NgayTraPhong,
-                    TrangThaiDatPhong = dp.TrangThaiDatPhong,
-                    GhiChu = dp.GhiChu,
                     IdKhachHang = dp.IdKhachHang
                 })
                 .ToListAsync();
@@ -46,10 +42,6 @@ namespace back_end.Services
                 .Select(dp => new DatPhongVM
                 {
                     IdDatPhong = dp.IdDatPhong,
-                    NgayDatPhong = dp.NgayDatPhong,
-                    NgayTraPhong = dp.NgayTraPhong,
-                    TrangThaiDatPhong = dp.TrangThaiDatPhong,
-                    GhiChu = dp.GhiChu,
                     IdKhachHang = dp.IdKhachHang
                 })
                 .FirstOrDefaultAsync();
@@ -59,10 +51,6 @@ namespace back_end.Services
         {
             var datPhong = new DatPhong
             {
-                NgayDatPhong = entity.NgayDatPhong,
-                NgayTraPhong = entity.NgayTraPhong,
-                TrangThaiDatPhong = entity.TrangThaiDatPhong,
-                GhiChu = entity.GhiChu,
                 IdKhachHang = entity.IdKhachHang
             };
             _context.DatPhongs.Add(datPhong);
@@ -70,10 +58,6 @@ namespace back_end.Services
             return new DatPhongVM
             {
                 IdDatPhong = datPhong.IdDatPhong,
-                NgayDatPhong = datPhong.NgayDatPhong,
-                NgayTraPhong = datPhong.NgayTraPhong,
-                TrangThaiDatPhong = datPhong.TrangThaiDatPhong,
-                GhiChu = datPhong.GhiChu,
                 IdKhachHang = datPhong.IdKhachHang
             };
         }
@@ -82,10 +66,6 @@ namespace back_end.Services
         {
             var datPhong = await _context.DatPhongs.FindAsync(id);
             if (datPhong == null) return false;
-            datPhong.NgayDatPhong = entity.NgayDatPhong;
-            datPhong.NgayTraPhong = entity.NgayTraPhong;
-            datPhong.TrangThaiDatPhong = entity.TrangThaiDatPhong;
-            datPhong.GhiChu = entity.GhiChu;
             datPhong.IdKhachHang = entity.IdKhachHang;
             _context.DatPhongs.Update(datPhong);
             return await _context.SaveChangesAsync() > 0;

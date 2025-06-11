@@ -1,46 +1,82 @@
 <template>
-  <div class="extended-detail-container">
-    <Header />
-    <div class="extended-detail-content">
-      <h1 class="extended-title">Thông Tin Chi Tiết - {{ room.name }} - Phòng {{ room.number }}</h1>
-      
-      <div class="extended-info">
-        <!-- Carousel hiển thị 5 hình ảnh -->
-        <div class="image-carousel">
-          <button class="carousel-btn prev-btn" @click="scrollCarousel('prev')">&#10094;</button>
-          <div class="carousel-container" ref="carousel">
-            <div class="carousel-slide" v-for="(image, index) in room.images" :key="index">
+  <div class="room-detail">
+    <div class="container">
+      <button class="back-btn" @click="goBack">← Quay Lại</button>
+      <div class="detail-content">
+        <div class="detail-info">
+          <h2>{{ room.name }} - Phòng {{ room.number }}</h2>
+          <p class="description">"{{ room.description }}"</p>
+          <div class="room-intro">
+            <h3>Giới Thiệu Phòng</h3>
+            <p class="intro-text">
+              Trải nghiệm sự sang trọng và thoải mái tại {{ room.name }}. Với thiết kế tinh tế và tiện nghi hiện đại, căn phòng này mang đến không gian lý tưởng cho kỳ nghỉ của bạn. 
+              <strong>Điểm đánh giá:</strong> {{ room.rating }} <span class="star-icon">★</span> | 
+              <strong>Giá:</strong> {{ room.price }} VNĐ/đêm
+            </p>
+          </div>
+          <h3>Thông Tin</h3>
+          <div class="info-list">
+            <p><span class="icon">📏</span> Diện tích: {{ room.area }} m²</p>
+            <p><span class="icon">👥</span> Sức chứa: {{ room.maxGuests }} người</p>
+            <p><span class="icon">🛏️</span> Loại giường: {{ room.bedType }}</p>
+            <p><span class="icon">🌳</span> Hướng nhìn: {{ room.view }}</p>
+          </div>
+          <div class="main-images">
+            <div class="carousel">
+              <img
+                v-if="room.images && room.images[currentImageIndex]"
+                :src="room.images[currentImageIndex]"
+                :alt="`${room.name} - Hình ${currentImageIndex + 1}`"
+              />
+              <div v-else class="no-image">Không có hình ảnh</div>
+              <button class="carousel-btn prev" @click="prevImage">❮</button>
+              <button class="carousel-btn next" @click="nextImage">❯</button>
+            </div>
+            <div class="carousel-dots">
+              <span
+                v-for="(image, index) in room.images"
+                :key="index"
+                :class="{ active: index === currentImageIndex }"
+                @click="setImage(index)"
+              ></span>
+            </div>
+          </div>
+          <div class="sub-images">
+            <div class="sub-image" v-for="(image, index) in room.images" :key="index">
               <img :src="image" :alt="`${room.name} - Hình ${index + 1}`" />
             </div>
           </div>
-          <button class="carousel-btn next-btn" @click="scrollCarousel('next')">&#10095;</button>
-        </div>
-        <div class="extended-details">
-          <h3>Thông Tin Cơ Bản</h3>
-          <ul class="basic-info-list">
-            <li><strong>Diện tích:</strong> {{ room.area }} m²</li>
-            <li><strong>Số người tối đa:</strong> {{ room.maxGuests }} người</li>
-            <li><strong>Loại giường:</strong> {{ room.bedType }}</li>
-            <li><strong>Hướng view:</strong> {{ room.view }}</li>
-          </ul>
-
-          <h3>Tiện Nghi</h3>
-          <ul class="amenities-list">
-            <li v-for="amenity in room.amenities" :key="amenity">{{ amenity }}</li>
-          </ul>
-
-          <h3>Thông Tin Thêm</h3>
-          <ul class="additional-info-list">
-            <li><strong>Chính sách hủy phòng:</strong> Miễn phí hủy trước 48 giờ</li>
-            <li><strong>Giờ nhận phòng:</strong> Sau 14:00</li>
-            <li><strong>Giờ trả phòng:</strong> Trước 12:00</li>
-            <li><strong>Dịch vụ bổ sung:</strong> Bữa sáng miễn phí, dịch vụ dọn phòng hàng ngày</li>
-          </ul>
-
-          <button class="back-btn" @click="goBack">Quay Lại</button>
+          <div class="tabs">
+            <button
+              :class="{ active: activeTab === 'services' }"
+              @click="activeTab = 'services'"
+            >
+              Dịch Vụ
+            </button>
+            <button
+              :class="{ active: activeTab === 'regulations' }"
+              @click="activeTab = 'regulations'"
+            >
+              Quy Định
+            </button>
+          </div>
+          <div class="tab-content" v-if="activeTab === 'services'">
+            <div class="amenities">
+              <div class="amenity" v-for="(amenity, index) in room.amenities" :key="index">
+                <span class="amenity-icon">{{ getAmenityIcon(amenity) }}</span>
+                {{ amenity }}
+              </div>
+            </div>
+          </div>
+          <div class="tab-content" v-if="activeTab === 'regulations'">
+            <ul class="policy-list">
+              <li v-for="(rule, index) in room.policy" :key="index">{{ rule }}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
+    <Header />
     <Footer />
   </div>
 </template>
@@ -58,30 +94,49 @@ export default {
   data() {
     return {
       room: {},
+      activeTab: 'services',
+      currentImageIndex: 0,
       roomData: {
         deluxe: {
           name: 'Phòng Deluxe',
           rating: 4.5,
           price: '2,500,000',
           description: 'Thiết kế hiện đại, view đẹp, lý tưởng cho cặp đôi.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar'],
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar', 'Máy pha cà phê', 'Két an toàn'],
+          policy: [
+            'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+            'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+            'Không hút thuốc trong phòng.',
+            'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+            'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+          ],
           rooms: Array.from({ length: 18 }, (_, index) => ({
             id: `deluxe-D${101 + index}`,
             number: `D${101 + index}`,
             name: 'Phòng Deluxe',
             images: [
-              'https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg',
-              'https://i.pinimg.com/736x/5d/3e/4a/5d3e4a1a2b3f4c5d6e7f8a9b0c1d2e3.jpg',
-              'https://i.pinimg.com/736x/7f/2e/5b/7f2e5b1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/9a/3c/6d/9a3c6d1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/bc/4e/8f/bc4e8f1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/08/DSC07689_2-small.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05174.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05159.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2023/04/IMG_2015_2-1024x683-1.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/08/STANDARD-GARDEN-FAMILY_22-small.jpg',
             ],
             status: 'available',
             area: 35,
             maxGuests: 2,
             bedType: '1 giường đôi',
             view: 'Hướng vườn',
+            rating: 4.5,
+            price: '2,500,000',
+            description: 'Thiết kế hiện đại, view đẹp, lý tưởng cho cặp đôi.',
             amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar', 'Máy pha cà phê', 'Két an toàn'],
+            policy: [
+              'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+              'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+              'Không hút thuốc trong phòng.',
+              'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+              'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+            ],
           })),
         },
         suite: {
@@ -89,24 +144,41 @@ export default {
           rating: 4.8,
           price: '3,500,000',
           description: 'Rộng rãi, view biển, tiện nghi cao cấp.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar'],
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar', 'Máy pha cà phê', 'Két an toàn', 'Ban công riêng'],
+          policy: [
+            'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+            'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+            'Không hút thuốc trong phòng.',
+            'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+            'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+          ],
           rooms: Array.from({ length: 18 }, (_, index) => ({
             id: `suite-S${201 + index}`,
             number: `S${201 + index}`,
             name: 'Phòng Suite',
             images: [
-              'https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg',
-              'https://i.pinimg.com/736x/4d/5f/6a/4d5f6a1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/6e/7h/8i/6e7h8i1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/8f/9i/0j/8f9i0j1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/0a/1b/2c/0a1b2c1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/12/DSC01469-small-1.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/12/DSC01457-small.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/12/DSC01455-small.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/08/STANDARD-GARDEN-FAMILY_04-small.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/08/STANDARD-GARDEN-FAMILY_02-small.jpg',
             ],
             status: 'available',
             area: 50,
             maxGuests: 3,
             bedType: '1 giường đôi lớn',
             view: 'Hướng biển một phần',
+            rating: 4.8,
+            price: '3,500,000',
+            description: 'Rộng rãi, view biển, tiện nghi cao cấp.',
             amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar', 'Máy pha cà phê', 'Két an toàn', 'Ban công riêng'],
+            policy: [
+              'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+              'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+              'Không hút thuốc trong phòng.',
+              'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+              'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+            ],
           })),
         },
         villa: {
@@ -114,24 +186,41 @@ export default {
           rating: 5.0,
           price: '5,500,000',
           description: 'Hồ bơi riêng, view biển tuyệt đẹp.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar'],
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar', 'Máy pha cà phê', 'Két an toàn', 'Ban công riêng', 'Khu vực ăn uống'],
+          policy: [
+            'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+            'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+            'Không hút thuốc trong phòng.',
+            'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+            'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+          ],
           rooms: Array.from({ length: 18 }, (_, index) => ({
             id: `villa-V${301 + index}`,
             number: `V${301 + index}`,
             name: 'Beach Villa',
             images: [
-              'https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg',
-              'https://i.pinimg.com/736x/2c/3d/4e/2c3d4e1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/4f/5g/6h/4f5g6h1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/6i/7j/8k/6i7j8k1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
-              'https://i.pinimg.com/736x/8l/9m/0n/8l9m0n1a2b3c4d5e6f7g8h9i0j1k2l3.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2024/08/DSC07187_2-small.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05166.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05127.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05103.jpg',
+              'https://palacelonghairesort.vn/wp-content/uploads/2025/05/DSC05379.jpg',
             ],
             status: 'available',
             area: 80,
             maxGuests: 4,
             bedType: '2 giường đôi',
             view: 'Hướng biển toàn cảnh',
+            rating: 5.0,
+            price: '5,500,000',
+            description: 'Hồ bơi riêng, view biển tuyệt đẹp.',
             amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar', 'Máy pha cà phê', 'Két an toàn', 'Ban công riêng', 'Khu vực ăn uống'],
+            policy: [
+              'Hủy miễn phí trước 48 giờ, không hoàn tiền nếu hủy muộn.',
+              'Thời gian nhận phòng: 14:00, trả phòng: 12:00.',
+              'Không hút thuốc trong phòng.',
+              'Phụ thu cho thú cưng: 500,000 VNĐ/đêm (phải báo trước).',
+              'Không chịu trách nhiệm về mất mát tài sản cá nhân.',
+            ],
           })),
         },
       },
@@ -146,79 +235,190 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
-    scrollCarousel(direction) {
-      const carousel = this.$refs.carousel;
-      const scrollAmount = carousel.clientWidth; // Cuộn theo chiều rộng của 1 ảnh
-      if (direction === 'prev') {
-        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    getAmenityIcon(amenity) {
+      const icons = {
+        'Wifi miễn phí': '📶',
+        'Điều hòa': '❄️',
+        'Smart TV': '📺',
+        'Mini bar': '🍹',
+        'Máy pha cà phê': '☕',
+        'Két an toàn': '🔒',
+        'Bồn tắm': '🛁',
+        'Ban công riêng': '🌅',
+        'Hồ bơi riêng': '🏊',
+        'Khu vực ăn uống': '🍽️',
+      };
+      return icons[amenity] || '⚙️';
+    },
+    prevImage() {
+      if (this.room.images && this.room.images.length > 0) {
+        this.currentImageIndex =
+          (this.currentImageIndex - 1 + this.room.images.length) % this.room.images.length;
       }
+    },
+    nextImage() {
+      if (this.room.images && this.room.images.length > 0) {
+        this.currentImageIndex = (this.currentImageIndex + 1) % this.room.images.length;
+      }
+    },
+    setImage(index) {
+      this.currentImageIndex = index;
     },
   },
 };
 </script>
 
 <style scoped>
-.extended-detail-container {
-  width: 100%;
-  background-color: #f5f1e9;
-  font-family: 'Roboto', sans-serif;
-  color: #1e3a5f;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+.room-detail {
+  padding: 60px 0;
+  background-color: #f8f5f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.extended-detail-content {
+.container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 0 20px;
 }
 
-.extended-title {
+.back-btn {
+  background: linear-gradient(90deg, #d4b68f, #c0a77a);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: linear-gradient(90deg, #c0a77a, #a88f5f);
+  transform: translateY(-2px);
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-info {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.detail-info h2 {
   font-family: 'Playfair Display', serif;
   font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
+  color: #d4b68f;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.extended-info {
-  display: flex;
-  gap: 30px;
-  background: #fff;
-  border-radius: 15px;
+.description {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.room-intro {
+  background: #f9f9f9;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.image-carousel {
-  flex: 1;
-  height: 300px;
-  position: relative;
   border-radius: 10px;
-  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.carousel-container {
+.room-intro h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #d4b68f;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #d4b68f;
+  padding-bottom: 5px;
+}
+
+.intro-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.8;
+}
+
+.star-icon {
+  color: #d4a017;
+  font-size: 1.2rem;
+}
+
+.detail-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #d4b68f;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #d4b68f;
+  padding-bottom: 5px;
+}
+
+.info-list {
+  margin-bottom: 30px;
+}
+
+.info-list p {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 10px;
   display: flex;
-  height: 100%;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  align-items: center;
+  gap: 10px;
 }
 
-.carousel Misses .carousel-container::-webkit-scrollbar {
-  display: none; /* Ẩn thanh cuộn */
+.info-list .icon {
+  font-size: 1.2rem;
 }
 
-.carousel-slide {
-  flex: 0 0 auto;
+.main-images {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.carousel {
+  position: relative;
+}
+
+.carousel img {
   width: 100%;
-  height: 100%;
-}
-
-.carousel-slide img {
-  width: 100%;
-  height: 100%;
+  height: 500px;
   object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-image {
+  width: 100%;
+  height: 500px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1.2rem;
+  font-style: italic;
   border-radius: 10px;
 }
 
@@ -226,88 +426,140 @@ export default {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  background: linear-gradient(90deg, rgba(212, 182, 143, 0.8), rgba(212, 182, 143, 0.5));
+  color: white;
   border: none;
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
 .carousel-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(212, 182, 143, 1);
 }
 
-.prev-btn {
-  left: 10px;
+.carousel-btn.prev {
+  left: 20px;
 }
 
-.next-btn {
-  right: 10px;
+.carousel-btn.next {
+  right: 20px;
 }
 
-.extended-details {
-  flex: 1;
-  padding: 20px;
+.carousel-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
 }
 
-.extended-details h3 {
+.carousel-dots span {
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.carousel-dots span.active {
+  background-color: #d4b68f;
+}
+
+.carousel-dots span:hover {
+  background-color: #c0a77a;
+}
+
+.sub-images {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+}
+
+.sub-image {
+  flex: 0 0 auto;
+  width: 300px;
+}
+
+.sub-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background: #d4b68f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.basic-info-list, .amenities-list, .additional-info-list {
-  list-style: none;
-  margin-bottom: 1rem;
+.tabs button.active {
+  background: linear-gradient(90deg, #c0a77a, #a88f5f);
 }
 
-.basic-info-list li, .amenities-list li, .additional-info-list li {
-  font-size: 1rem;
-  color: #4b5d67;
-  margin-bottom: 0.5rem;
+.tabs button:hover {
+  background: linear-gradient(90deg, #c0a77a, #a88f5f);
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.amenities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.amenity {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.amenities-list li::before {
-  content: '✔';
-  color: #2ecc71;
-}
-
-.back-btn {
-  background-color: #c9a66b;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
+  font-family: 'Playfair Display', serif;
   font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  color: #666;
 }
 
-.back-btn:hover {
-  background-color: #a87c3a;
+.amenity-icon {
+  font-size: 1.2rem;
 }
 
-@media (max-width: 768px) {
-  .extended-info {
-    flex-direction: column;
-  }
+.policy-list {
+  list-style: none;
+  padding: 0;
+}
 
-  .image-carousel {
-    height: 200px;
-  }
-
-  .extended-title {
-    font-size: 2rem;
-  }
-
-  .extended-details h3 {
-    font-size: 1.3rem;
-  }
+.policy-list li {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 10px;
 }
 </style>

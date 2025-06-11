@@ -34,6 +34,7 @@ builder.Services.AddScoped<IChiTietDatPhongRepository, ChiTietDatPhongRepository
 builder.Services.AddScoped<IChiTietDichVuRepository, ChiTietDichVuRepository>();
 builder.Services.AddScoped<IChiTietHoaDonRepository, ChiTietHoaDonRepository>();
 builder.Services.AddScoped<INhanVienRepository, NhanVienRepository>();
+builder.Services.AddScoped<IDatPhongRepository, DatPhongRepository>();
 
 builder.Services.AddCors(options =>
 {
