@@ -110,7 +110,7 @@
                     placeholder="Nhập họ và tên của bạn"
                   >
                 </div>
-                <div class="form-group">
+                <div class="form-group phone-group">
                   <label for="phone">Số điện thoại *</label>
                   <input 
                     type="tel" 
@@ -118,32 +118,32 @@
                     v-model="formData.phone"
                     required
                     placeholder="Nhập số điện thoại của bạn"
+                    class="phone-input"
                   >
                 </div>
               </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="email">Email *</label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    v-model="formData.email"
-                    required
-                    placeholder="Nhập địa chỉ email của bạn"
-                  >
-                </div>
-                <div class="form-group">
-                  <label for="subject">Chủ đề</label>
-                  <select id="subject" v-model="formData.subject">
-                    <option value="">Chọn chủ đề</option>
-                    <option value="booking">Đặt phòng</option>
-                    <option value="service">Dịch vụ</option>
-                    <option value="complaint">Khiếu nại</option>
-                    <option value="feedback">Góp ý</option>
-                    <option value="other">Khác</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  v-model="formData.email"
+                  required
+                  placeholder="Nhập địa chỉ email của bạn"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Chủ đề</label>
+                <select id="subject" v-model="formData.subject">
+                  <option value="">Chọn chủ đề</option>
+                  <option value="booking">Đặt phòng</option>
+                  <option value="service">Dịch vụ</option>
+                  <option value="complaint">Khiếu nại</option>
+                  <option value="feedback">Góp ý</option>
+                  <option value="other">Khác</option>
+                </select>
               </div>
 
               <div class="form-group">
@@ -840,5 +840,21 @@ section {
   .emergency-item i {
     font-size: 20px;
   }
+}
+
+.phone-input {
+  max-width: 220px;
+  margin-left: 0;
+}
+
+.phone-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 20px;
+}
+
+.phone-group label {
+  margin-right: 0;
 }
 </style>

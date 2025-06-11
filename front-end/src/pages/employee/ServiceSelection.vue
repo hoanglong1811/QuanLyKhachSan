@@ -235,7 +235,7 @@
               <span class="total-label">Tổng tiền dự kiến:</span>
               <span class="total-amount">{{ totalPrice }} VND</span>
             </div>
-            <button class="confirm-button">
+            <button class="confirm-button" @click="confirmServices">
               Xác nhận
             </button>
           </div>
@@ -284,35 +284,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Delete Confirmation Modal -->
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div class="bg-white rounded-xl p-6 w-full max-w-md">
-            <div class="text-center mb-6">
-              <svg class="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <h3 class="text-lg font-medium text-gray-900 mt-4">Xác nhận xóa dịch vụ</h3>
-              <p class="text-gray-500 mt-2">
-                Bạn có chắc chắn muốn xóa dịch vụ "{{ serviceToDelete?.name }}" không?
-              </p>
-            </div>
-            <div class="flex justify-end gap-4">
-              <button
-                @click="cancelDelete"
-                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              >
-                Hủy
-              </button>
-              <button
-                @click="confirmDelete"
-                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                Xóa
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -355,11 +326,6 @@ export default {
         { name: 'Xông hơi', price: '150,000/lần', quantity: 0 },
       ],
       selectedServices: [],
-
-      // Delete confirmation
-      showDeleteModal: false,
-      serviceToDelete: null,
-      serviceIndexToDelete: -1,
     };
   },
   computed: {
@@ -423,25 +389,18 @@ export default {
       if (section === 'spa') this.spaServices[index].quantity = 0;
     },
     removeService(service, index) {
-      this.serviceToDelete = service;
-      this.serviceIndexToDelete = index;
-      this.showDeleteModal = true;
-    },
-
-    // Add new methods for delete confirmation
-    cancelDelete() {
-      this.showDeleteModal = false;
-      this.serviceToDelete = null;
-      this.serviceIndexToDelete = -1;
-    },
-
-    confirmDelete() {
-      if (this.serviceIndexToDelete > -1) {
-        this.selectedServices.splice(this.serviceIndexToDelete, 1);
-        this.showDeleteModal = false;
-        this.serviceToDelete = null;
-        this.serviceIndexToDelete = -1;
+      if (confirm(`Bạn có chắc chắn muốn xóa dịch vụ "${service.name}" không?`)) {
+        this.selectedServices.splice(index, 1);
+        alert('Dịch vụ đã được xóa khỏi danh sách');
       }
+    },
+    confirmServices() {
+      if (this.selectedServices.length === 0) {
+        alert('Vui lòng chọn ít nhất một dịch vụ');
+        return;
+      }
+      alert('Đã thêm dịch vụ thành công');
+      this.$router.push('/employee/invoice-management');
     },
   },
 };
