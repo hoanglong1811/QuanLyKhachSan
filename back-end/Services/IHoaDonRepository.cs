@@ -35,6 +35,9 @@ namespace back_end.Services
                 PhuongThucThanhToan = hd.PhuongThucThanhToan,
                 TrangThaiThanhToan = hd.TrangThaiThanhToan,
                 TongTien = hd.TongTien,
+                HoTen = hd.IdDatPhongNavigation.IdKhachHangNavigation.HoTen,
+                DienThoai = hd.IdDatPhongNavigation.IdKhachHangNavigation.DienThoai,
+                Cccd = hd.IdDatPhongNavigation.IdKhachHangNavigation.Cccd,
             }).ToListAsync();
         }
 
@@ -51,6 +54,9 @@ namespace back_end.Services
                     PhuongThucThanhToan = hd.PhuongThucThanhToan,
                     TrangThaiThanhToan = hd.TrangThaiThanhToan,
                     TongTien = hd.TongTien,
+                    HoTen = hd.IdDatPhongNavigation.IdKhachHangNavigation.HoTen,
+                    DienThoai = hd.IdDatPhongNavigation.IdKhachHangNavigation.DienThoai,
+                    Cccd = hd.IdDatPhongNavigation.IdKhachHangNavigation.Cccd,
                 })
                 .FirstOrDefaultAsync();
         }

@@ -66,6 +66,7 @@
 
 <script>
 import NavBar from '@/components/navbar.vue';
+import apiClient from '@/services/api';
 
 export default {
   name: 'InvoiceManagement',
@@ -74,14 +75,30 @@ export default {
   },
   data() {
     return {
-      invoices: [
-        { invoiceId: 'HD001', customerInfo: 'Nguyễn Văn A', status: 'ĐÃ THANH TOÁN' },
-        { invoiceId: 'HD002', customerInfo: 'Trần Thị B', status: 'CHƯA THANH TOÁN' },
-        { invoiceId: 'HD003', customerInfo: 'Lê Văn C', status: 'ĐÃ THANH TOÁN' },
-      ],
+      invoices: [],
+      loading: false,
+      error: '',
     };
   },
   methods: {
+    async fetchInvoices() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await apiClient.get('/api/HoaDon');
+        // Map dữ liệu trả về cho phù hợp với bảng
+        this.invoices = response.data.map(item => ({
+          invoiceId: item.idHoaDon,
+          customerInfo: `${item.hoTen || ''} - ${item.dienThoai || ''} - ${item.cccd || ''}`,
+          status: item.trangThaiThanhToan,
+        }));
+      } catch (err) {
+        this.error = 'Không thể tải danh sách hóa đơn';
+        console.error(err);
+      } finally {
+        this.loading = false;
+      }
+    },
     goBack() {
       this.$router ? this.$router.go(-1) : window.history.back();
     },
@@ -94,6 +111,9 @@ export default {
         : 'status-unpaid';
     }
   },
+  mounted() {
+    this.fetchInvoices();
+  }
 };
 </script>
 
