@@ -11,7 +11,7 @@ namespace back_end.Services
     {
         Task<IEnumerable<KhachHangVM>> GetAllAsync();
         Task<KhachHangVM?> GetByIdAsync(int id);
-        Task<KhachHang> AddAsync(AddKhachHang model);
+        Task<KhachHangVM> AddAsync(AddKhachHang model);
         Task<bool> UpdateAsync(int id, UpdateKhachHang model);
         Task<bool> DeleteAsync(int id);
         Task<bool> KhachHangExistsAsync(int id);
@@ -37,8 +37,7 @@ namespace back_end.Services
                     IdKhachHang = kh.IdKhachHang,
                     HoTen = kh.HoTen,
                     DienThoai = kh.DienThoai,
-                    Cccd = kh.Cccd,
-                    
+                    Cccd = kh.Cccd
                 })
                 .ToListAsync();
         }
@@ -52,23 +51,30 @@ namespace back_end.Services
                     IdKhachHang = kh.IdKhachHang,
                     HoTen = kh.HoTen,
                     DienThoai = kh.DienThoai,
-                    Cccd = kh.Cccd,
+                    Cccd = kh.Cccd
                 })
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<KhachHang> AddAsync(AddKhachHang model)
+        public async Task<KhachHangVM> AddAsync(AddKhachHang model)
         {
             var entity = new KhachHang
             {
                 HoTen = model.HoTen,
                 DienThoai = model.DienThoai,
-                Cccd = model.Cccd,
-                // Gán các trường khác nếu có
+                Cccd = model.Cccd
             };
+
             _context.KhachHangs.Add(entity);
             await _context.SaveChangesAsync();
-            return entity;
+
+            return new KhachHangVM
+            {
+                IdKhachHang = entity.IdKhachHang,
+                HoTen = entity.HoTen,
+                DienThoai = entity.DienThoai,
+                Cccd = entity.Cccd
+            };
         }
 
         public async Task<bool> UpdateAsync(int id, UpdateKhachHang model)
@@ -79,7 +85,6 @@ namespace back_end.Services
             entity.HoTen = model.HoTen;
             entity.DienThoai = model.DienThoai;
             entity.Cccd = model.Cccd;
-            // Cập nhật các trường khác nếu có
 
             _context.KhachHangs.Update(entity);
             return await _context.SaveChangesAsync() > 0;
@@ -108,7 +113,7 @@ namespace back_end.Services
                     IdKhachHang = kh.IdKhachHang,
                     HoTen = kh.HoTen,
                     DienThoai = kh.DienThoai,
-                    Cccd = kh.Cccd,
+                    Cccd = kh.Cccd
                 })
                 .FirstOrDefaultAsync();
         }
@@ -122,7 +127,7 @@ namespace back_end.Services
                     IdKhachHang = kh.IdKhachHang,
                     HoTen = kh.HoTen,
                     DienThoai = kh.DienThoai,
-                    Cccd = kh.Cccd,
+                    Cccd = kh.Cccd
                 })
                 .FirstOrDefaultAsync();
         }
@@ -130,13 +135,13 @@ namespace back_end.Services
         public async Task<IEnumerable<KhachHangVM>> SearchKhachHangAsync(string searchTerm)
         {
             return await _context.KhachHangs
-                .Where(kh => (kh.HoTen ?? "").Contains(searchTerm) || (kh.Cccd ?? "").Contains(searchTerm))
+                .Where(kh => kh.DienThoai.ToString().Contains(searchTerm))
                 .Select(kh => new KhachHangVM
                 {
                     IdKhachHang = kh.IdKhachHang,
                     HoTen = kh.HoTen,
                     DienThoai = kh.DienThoai,
-                    Cccd = kh.Cccd,
+                    Cccd = kh.Cccd
                 })
                 .ToListAsync();
         }

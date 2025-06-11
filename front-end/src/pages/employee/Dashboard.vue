@@ -9,28 +9,98 @@
           <span>Loại phòng:</span>
           <select v-model="selectedRoomType" @change="filterRooms">
             <option value="all">Tất cả</option>
-            <option value="Phòng đơn">Phòng đơn</option>
-            <option value="Phòng đôi">Phòng đôi</option>
-            <option value="Phòng VIP">Phòng VIP</option>
+            <option v-for="type in roomTypes" :key="type.idLoaiPhong" :value="type.idLoaiPhong">
+              {{ type.tenLoaiPhong }}
+            </option>
           </select>
         </div>
       </div>
+
+      <!-- Loading state -->
+      <div v-if="loading" class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Error message -->
+      <div v-if="error" class="error-message">
+        {{ error }}
+      </div>
+
       <div class="room-grid">
-        <div class="room-card" v-for="room in filteredRooms" :key="room.id">
-          <div class="room-top">
-            <div class="room-info">
-              <span class="room-id">{{ room.id }}</span>
-              <span class="room-type">{{ room.type }}</span>
+        <div class="room-card" v-for="room in filteredRooms" :key="room.idPhong" @click="openUpdateModal(room)">
+          <div class="room-header">
+            <span class="room-number">Phòng {{ room.soPhong }}</span>
+            <span :class="['room-status', room.trangThai?.toLowerCase()]">{{ room.trangThai }}</span>
+          </div>
+          
+          <div class="room-info">
+            <div class="info-row">
+              <span class="label">Loại phòng:</span>
+              <span class="value">{{ getRoomTypeName(room.idLoaiPhong) }}</span>
             </div>
-            <div class="status-container">
-              <span class="icon check">{{ room.statusIcon }}</span>
-              <span class="room-status">{{ room.status }}</span>
+            <div class="info-row">
+              <span class="label">Sức chứa:</span>
+              <span class="value">{{ room.sucChua }} người</span>
+            </div>
+            
+            <!-- Thông tin đặt phòng/thuê phòng -->
+            <div v-if="room.bookingInfo" class="booking-info">
+              <div class="info-row">
+                <span class="label">Khách hàng:</span>
+                <span class="value">{{ room.bookingInfo.tenKhachHang }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Thời gian:</span>
+                <span class="value">
+                  {{ formatDate(room.bookingInfo.ngayDatPhong) }} - 
+                  {{ formatDate(room.bookingInfo.ngayTraPhong) }}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="label">Trạng thái:</span>
+                <span :class="['booking-status', room.bookingInfo.trangThaiDatPhong?.toLowerCase()]">
+                  {{ room.bookingInfo.trangThaiDatPhong }}
+                </span>
+              </div>
             </div>
           </div>
-          <div class="room-bottom">
-            <span class="icon">⏰ {{ room.time }}</span>
-            <span :class="['icon', room.cleanStatus === 'đã dọn dẹp' ? 'check' : 'cross']">{{ room.cleanStatusIcon }} {{ room.cleanStatus }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal cập nhật trạng thái phòng -->
+    <div v-if="showUpdateModal" class="modal-overlay" @click="closeUpdateModal">
+      <div class="modal-content" @click.stop>
+        <h2>Cập nhật thông tin phòng {{ selectedRoom?.soPhong }}</h2>
+        
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Số phòng:</label>
+            <input type="number" v-model="updateForm.soPhong" readonly class="readonly-input" />
           </div>
+
+          <div class="form-group">
+            <label>Trạng thái phòng:</label>
+            <select v-model="updateForm.trangThai">
+              <option value="Trống">Trống</option>
+              <option value="Đã đặt">Đã đặt</option>
+              <option value="Đang thuê">Đang thuê</option>
+              <option value="Đang dọn">Đang dọn</option>
+              <option value="Đang bảo trì">Đang bảo trì</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Sức chứa:</label>
+            <input type="number" v-model="updateForm.sucChua" min="1" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeUpdateModal">Hủy</button>
+          <button class="btn-save" @click="saveRoomUpdate" :disabled="loading">
+            {{ loading ? 'Đang lưu...' : 'Lưu thay đổi' }}
+          </button>
         </div>
       </div>
     </div>
@@ -39,7 +109,8 @@
 
 <script>
 import Navbar from '../../components/navbar.vue';
-import apiClient from '@/services/api';
+import { roomService } from '@/services/roomService';
+import { authService } from '@/services/authService';
 
 export default {
   components: {
@@ -49,8 +120,18 @@ export default {
     return {
       selectedRoomType: 'all',
       rooms: [],
+      roomTypes: [],
       loading: false,
       error: '',
+      user: null,
+      showUpdateModal: false,
+      selectedRoom: null,
+      updateForm: {
+        trangThai: '',
+        sucChua: 1,
+        soPhong: null,
+        idLoaiPhong: null
+      }
     };
   },
   computed: {
@@ -58,24 +139,46 @@ export default {
       if (this.selectedRoomType === 'all') {
         return this.rooms;
       }
-      return this.rooms.filter(room => room.type === this.selectedRoomType);
+      return this.rooms.filter(room => room.idLoaiPhong === this.selectedRoomType);
     },
   },
   methods: {
+    formatDate(date) {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    },
+    getRoomTypeName(idLoaiPhong) {
+      const roomType = this.roomTypes.find(type => type.idLoaiPhong === idLoaiPhong);
+      return roomType ? roomType.tenLoaiPhong : 'Không xác định';
+    },
+    async fetchRoomTypes() {
+      try {
+        const response = await roomService.getRoomTypes();
+        this.roomTypes = response;
+      } catch (err) {
+        console.error('Lỗi khi lấy danh sách loại phòng:', err);
+      }
+    },
     async fetchRooms() {
       this.loading = true;
       this.error = '';
       try {
-        const response = await apiClient.get('/api/Phong'); // Đổi endpoint phù hợp backend
-        // Giả sử response.data là mảng phòng, bạn có thể cần map lại dữ liệu cho đúng định dạng
-        this.rooms = response.data.map(item => ({
-          id: item.idPhong || item.id,
-          type: item.loaiPhong || item.type,
-          status: item.trangThai || item.status,
-          statusIcon: item.trangThai === 'Phòng trống' ? '✓' : '✗',
-          time: item.thoiGian || '0 giờ',
-          cleanStatus: item.tinhTrangDonDep || 'đã dọn dẹp',
-          cleanStatusIcon: item.tinhTrangDonDep === 'đã dọn dẹp' ? '✓' : '✗',
+        const response = await roomService.getAllRooms();
+        // Lấy thông tin đặt phòng cho mỗi phòng
+        this.rooms = await Promise.all(response.map(async room => {
+          const bookingInfo = await roomService.getRoomBookingInfo(room.idPhong);
+          // Đảm bảo số phòng luôn được giữ
+          return {
+            ...room,
+            soPhong: room.soPhong || '',
+            bookingInfo: bookingInfo
+          };
         }));
       } catch (err) {
         this.error = 'Không thể tải danh sách phòng';
@@ -84,121 +187,337 @@ export default {
         this.loading = false;
       }
     },
+    openUpdateModal(room) {
+      this.selectedRoom = { ...room };  // Tạo bản sao của room
+      this.updateForm = {
+        trangThai: room.trangThai || 'Trống',
+        sucChua: room.sucChua || 1,
+        soPhong: room.soPhong,
+        idLoaiPhong: room.idLoaiPhong
+      };
+      this.showUpdateModal = true;
+    },
+    closeUpdateModal() {
+      this.showUpdateModal = false;
+      this.selectedRoom = null;
+      this.updateForm = {
+        trangThai: '',
+        sucChua: 1,
+        soPhong: null,
+        idLoaiPhong: null
+      };
+    },
+    async saveRoomUpdate() {
+      if (!this.selectedRoom) return;
+
+      this.loading = true;
+      try {
+        const updateData = {
+          trangThai: this.updateForm.trangThai,
+          sucChua: this.updateForm.sucChua,
+          soPhong: this.selectedRoom.soPhong, // Sử dụng số phòng từ selectedRoom
+          idLoaiPhong: this.selectedRoom.idLoaiPhong
+        };
+        await roomService.updateRoom(this.selectedRoom.idPhong, updateData);
+        await this.fetchRooms(); // Refresh data
+        this.closeUpdateModal();
+      } catch (err) {
+        this.error = 'Không thể cập nhật thông tin phòng';
+        console.error(err);
+      } finally {
+        this.loading = false;
+      }
+    },
     filterRooms() {
-      // Hàm này để trigger computed filteredRooms
+      // Trigger computed property
     },
   },
-  mounted() {
-    this.fetchRooms();
+  async created() {
+    this.user = authService.getCurrentUser();
+    if (!this.user) {
+      this.$router.push('/login');
+      return;
+    }
+    await this.fetchRoomTypes();
+    await this.fetchRooms();
   },
 };
 </script>
 
-<style>
+<style scoped>
 .dashboard-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  background-color: #fff;
+  background-color: #f5f5f5;
 }
 
+.content-section {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
 
-
-.status-header {
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
-  justify-content: flex-end;
-  font-size: 1rem;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #5bb790;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.room-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem;
+  transition: transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.room-number {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.room-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.room-status.trống {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.room-status.đã-đặt {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.room-status.đang-thuê {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.value {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.booking-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #eee;
+}
+
+.booking-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.booking-status.đã-xác-nhận {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.booking-status.chờ-xác-nhận {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
 .filter-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
+
 .filter-section select {
-  padding: 0.25rem;
-  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
   border-radius: 0.25rem;
   font-size: 0.875rem;
   color: #333;
-  background-color: #fff;
-  cursor: pointer;
-  transition: border-color 0.3s;
+  min-width: 150px;
 }
-.filter-section select:hover {
-  border-color: #4caf50;
+
+.filter-section select:focus {
+  outline: none;
+  border-color: #5bb790;
 }
-.room-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.75rem;
-}
-.room-card {
-  border-radius: 0.5rem;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
-  min-height: 130px;
-  background: linear-gradient(145deg, #e0f2e9, #d1e7dd);
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.7);
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-.room-card:hover {
-  transform: scale(1.02);
-  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15), -6px -6px 12px rgba(255, 255, 255, 0.9);
-}
-.room-top {
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  flex: 1;
-}
-.room-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.room-id {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2e7d32;
-}
-.room-type {
-  font-size: 0.75rem;
-  color: #4a4a4a;
-  font-style: italic;
-}
-.status-container {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+  align-items: center;
+  z-index: 1000;
 }
-.room-status {
-  font-size: 0.875rem;
-  color: #333;
+
+.modal-content {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h2 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666;
   font-weight: 500;
 }
-.room-bottom {
-  background: linear-gradient(145deg, #d3d3d3, #e0e0e0);
-  padding: 0.25rem 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-.icon {
-  display: flex;
-  align-items: center;
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 1rem;
   color: #333;
 }
-.icon.check {
-  color: #4caf50;
+
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: #5bb790;
 }
-.icon.cross {
-  color: #ff4444;
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-save {
+  background: #5bb790;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #bdbdbd;
+}
+
+.btn-save:hover {
+  background: #4caf50;
+}
+
+.btn-save:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+}
+
+/* Thêm style cho input readonly */
+.readonly-input {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.readonly-input:focus {
+  border-color: #ddd;
 }
 </style>

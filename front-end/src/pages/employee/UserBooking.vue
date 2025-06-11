@@ -46,22 +46,18 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
+import { bookingService } from '@/services/bookingService';
+import { authService } from '@/services/authService';
 
 export default {
   components: { Navbar },
   data() {
     return {
       searchPhone: '',
-      bookings: [
-        { id: 1, customerName: 'Nguyễn Văn A', phone: '0901234567', room: 'Phòng 101', checkInDate: '2025-05-20', checkOutDate: '2025-05-23', status: 'Đã xác nhận' },
-        { id: 2, customerName: 'Nguyễn Văn C', phone: '0912345678', room: 'Phòng 102', checkInDate: '2025-05-21', checkOutDate: '2025-05-24', status: 'Đã xác nhận' },
-        { id: 3, customerName: 'Huỳnh Văn D', phone: '0923456789', room: 'Phòng 103', checkInDate: '2025-05-22', checkOutDate: '2025-05-25', status: 'Đang chờ' },
-        { id: 4, customerName: 'Chu Văn L', phone: '0934567890', room: 'Phòng 104', checkInDate: '2025-05-23', checkOutDate: '2025-05-26', status: 'Đã xác nhận' },
-        { id: 5, customerName: 'Hoàng Văn H', phone: '0945678901', room: 'Phòng VIP 201', checkInDate: '2025-05-23', checkOutDate: '2025-05-27', status: 'Đang chờ' },
-        { id: 6, customerName: 'Lê Văn P', phone: '0956789012', room: 'Phòng VIP 202', checkInDate: '2025-05-22', checkOutDate: '2025-05-24', status: 'Đã xác nhận' },
-        { id: 7, customerName: 'Trần Thị B', phone: '0967890123', room: 'Phòng 105', checkInDate: '2025-05-20', checkOutDate: '2025-05-22', status: 'Đã xác nhận' },
-        { id: 8, customerName: 'Phạm Văn E', phone: '0978901234', room: 'Phòng 106', checkInDate: '2025-05-21', checkOutDate: '2025-05-23', status: 'Đang chờ' },
-      ],
+      bookings: [],
+      loading: false,
+      error: '',
+      user: null
     };
   },
   computed: {
@@ -74,6 +70,40 @@ export default {
       );
     },
   },
+  methods: {
+    async fetchBookings() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await bookingService.getBookingHistory(this.searchPhone);
+        this.bookings = response.map(booking => ({
+          id: booking.idDatPhong,
+          customerName: booking.tenKhachHang,
+          phone: booking.soDienThoai,
+          room: booking.tenPhong,
+          checkInDate: new Date(booking.ngayDat).toLocaleDateString('vi-VN'),
+          checkOutDate: new Date(booking.ngayTra).toLocaleDateString('vi-VN'),
+          status: booking.trangThai
+        }));
+      } catch (err) {
+        this.error = 'Không thể tải lịch sử đặt phòng';
+        console.error(err);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async filterBookings() {
+      await this.fetchBookings();
+    }
+  },
+  async created() {
+    this.user = authService.getCurrentUser();
+    if (!this.user) {
+      this.$router.push('/login');
+      return;
+    }
+    await this.fetchBookings();
+  }
 };
 </script>
 

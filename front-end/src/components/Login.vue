@@ -130,9 +130,6 @@ export default {
         });
 
         if (response && response.token) {
-          // Lưu thông tin user
-          localStorage.setItem('user', JSON.stringify(response));
-          
           // Nếu remember me được chọn, lưu thông tin đăng nhập
           if (rememberMe.value) {
             localStorage.setItem('rememberedUser', JSON.stringify({
@@ -143,7 +140,8 @@ export default {
           }
           
           // Chuyển hướng dựa vào role của user
-          const redirectPath = response.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+          const user = authService.getCurrentUser();
+          const redirectPath = user?.role === 'admin' ? '/dashboard' : '/dashboard';
           router.push(redirectPath);
         } else {
           error.value = 'Đăng nhập thất bại';

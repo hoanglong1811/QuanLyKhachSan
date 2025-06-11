@@ -13,99 +13,122 @@ namespace back_end.Controllers
     [ApiController]
     public class KhachHangController : ControllerBase
     {
-        private readonly DataQlks114Nhom3Context _context;
+        private readonly IKhachHangRepository _khachHangRepository;
 
-        public KhachHangController(DataQlks114Nhom3Context context)
+        public KhachHangController(IKhachHangRepository khachHangRepository)
         {
-            _context = context;
+            _khachHangRepository = khachHangRepository;
         }
 
         // GET: api/KhachHang
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KhachHang>>> GetKhachHangs()
+        public async Task<ActionResult<IEnumerable<KhachHangVM>>> GetKhachHangs()
         {
-            return await _context.KhachHangs
-                .Include(kh => kh.ChiTietDatPhongs)
-                .Include(kh => kh.DatPhongs)
-                .ToListAsync();
+            try
+            {
+                var khachHangs = await _khachHangRepository.GetAllAsync();
+                return Ok(khachHangs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         // GET: api/KhachHang/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<KhachHang>> GetKhachHang(int id)
+        public async Task<ActionResult<KhachHangVM>> GetKhachHang(int id)
         {
-            var khachHang = await _context.KhachHangs
-                .Include(kh => kh.ChiTietDatPhongs)
-                .Include(kh => kh.DatPhongs)
-                .FirstOrDefaultAsync(kh => kh.IdKhachHang == id);
-
-            if (khachHang == null)
+            try
             {
-                return NotFound($"Khách hàng với ID {id} không tồn tại.");
-            }
+                var khachHang = await _khachHangRepository.GetByIdAsync(id);
 
-            return Ok(khachHang);
+                if (khachHang == null)
+                {
+                    return NotFound(new { message = $"Khách hàng với ID {id} không tồn tại." });
+                }
+
+                return Ok(khachHang);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        // GET: api/KhachHang/search
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<KhachHangVM>>> SearchKhachHang([FromQuery] string phone)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(phone))
+                {
+                    return BadRequest(new { message = "Số điện thoại không được để trống" });
+                }
+
+                var khachHangs = await _khachHangRepository.SearchKhachHangAsync(phone);
+                return Ok(khachHangs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         // POST: api/KhachHang
         [HttpPost]
-        public async Task<ActionResult<KhachHang>> PostKhachHang(KhachHang khachHang)
+        public async Task<ActionResult<KhachHangVM>> PostKhachHang(AddKhachHang model)
         {
-            _context.KhachHangs.Add(khachHang);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetKhachHang), new { id = khachHang.IdKhachHang }, khachHang);
+            try
+            {
+                var khachHang = await _khachHangRepository.AddAsync(model);
+                return CreatedAtAction(nameof(GetKhachHang), new { id = khachHang.IdKhachHang }, khachHang);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         // PUT: api/KhachHang/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutKhachHang(int id, KhachHang khachHang)
+        public async Task<IActionResult> PutKhachHang(int id, UpdateKhachHang model)
         {
-            if (id != khachHang.IdKhachHang)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(khachHang).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!KhachHangExists(id))
+                var result = await _khachHangRepository.UpdateAsync(id, model);
+                if (!result)
                 {
-                    return NotFound($"Khách hàng với ID {id} không tồn tại.");
+                    return NotFound(new { message = $"Khách hàng với ID {id} không tồn tại." });
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return Ok($"Đã cập nhật khách hàng với ID {id} thành công.");
+                return Ok(new { message = $"Đã cập nhật khách hàng với ID {id} thành công." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         // DELETE: api/KhachHang/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteKhachHang(int id)
         {
-            var khachHang = await _context.KhachHangs.FindAsync(id);
-            if (khachHang == null)
+            try
             {
-                return NotFound($"Khách hàng với ID {id} không tồn tại.");
+                var result = await _khachHangRepository.DeleteAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = $"Khách hàng với ID {id} không tồn tại." });
+                }
+
+                return Ok(new { message = $"Đã xóa khách hàng với ID {id} thành công." });
             }
-
-            _context.KhachHangs.Remove(khachHang);
-            await _context.SaveChangesAsync();
-
-            return Ok($"Đã xóa khách hàng với ID {id} thành công.");
-        }
-
-        private bool KhachHangExists(int id)
-        {
-            return _context.KhachHangs.Any(e => e.IdKhachHang == id);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }

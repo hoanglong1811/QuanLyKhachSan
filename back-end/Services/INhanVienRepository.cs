@@ -11,6 +11,7 @@ namespace back_end.Services
     {
         Task<IEnumerable<NhanVienVM>> GetAllAsync();
         Task<NhanVienVM?> GetByIdAsync(int id);
+        Task<NhanVienVM?> GetByAccountIdAsync(int accountId);
         Task<NhanVienVM> AddAsync(AddNhanVien model);
         Task<bool> UpdateAsync(int id, UpdateNhanVien model);
         Task<bool> DeleteAsync(int id);
@@ -63,6 +64,30 @@ namespace back_end.Services
                 Email = nv.IdTaiKhoanNavigation.Email,
                 VaiTro = nv.IdTaiKhoanNavigation.IdVaiTroNavigation.TenVaiTro,
                 IsActive = true // Nếu có trường này trong entity thì lấy từ entity
+            };
+        }
+
+        public async Task<NhanVienVM?> GetByAccountIdAsync(int accountId)
+        {
+            var nv = await _context.NhanViens
+                .Include(nv => nv.IdTaiKhoanNavigation)
+                .ThenInclude(tk => tk.IdVaiTroNavigation)
+                .FirstOrDefaultAsync(nv => nv.IdTaiKhoan == accountId);
+
+            if (nv == null) return null;
+
+            return new NhanVienVM
+            {
+                IdNhanVien = nv.IdNhanVien,
+                HoTen = nv.HoTen,
+                DiaChi = nv.DiaChi,
+                GioiTinh = nv.GioiTinh,
+                DienThoai = nv.DienThoai,
+                IdTaiKhoan = nv.IdTaiKhoan,
+                TenTaiKhoan = nv.IdTaiKhoanNavigation.TenDangNhap,
+                Email = nv.IdTaiKhoanNavigation.Email,
+                VaiTro = nv.IdTaiKhoanNavigation.IdVaiTroNavigation.TenVaiTro,
+                IsActive = true
             };
         }
 

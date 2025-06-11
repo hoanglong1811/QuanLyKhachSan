@@ -4,34 +4,52 @@
     <Navbar />
     <!-- Nội dung chính -->
     <div class="content-section">
-      <div class="search-header">
-        <span>Tìm kiếm thông tin khách hàng:</span>
-        <input
-          type="text"
-          v-model="searchPhone"
-          placeholder="Nhập số điện thoại..."
-          class="search-input"
-          @input="filterCustomers"
-        />
+      <div class="header-section">
+        <h2>Quản Lý Khách Hàng</h2>
+        <div class="search-header">
+          <div class="search-group">
+            <label for="searchPhone">Tìm kiếm theo số điện thoại:</label>
+            <input
+              type="text"
+              id="searchPhone"
+              v-model="searchPhone"
+              placeholder="Nhập số điện thoại..."
+              class="search-input"
+              @input="handleSearch"
+            />
+          </div>
+        </div>
       </div>
-      <div class="table-container">
+
+      <!-- Loading spinner -->
+      <div v-if="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+      </div>
+
+      <!-- Error message -->
+      <div v-if="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <!-- Customer table -->
+      <div v-if="!loading" class="table-container">
         <table class="customer-table">
           <thead>
             <tr>
-              <th>Tên khách hàng</th>
-              <th>Số cccd</th>
+              <th>Họ và tên</th>
               <th>Số điện thoại</th>
-              <th>Mã hóa đơn</th>
-              <th>Lịch sử đặt phòng</th>
+              <th>CCCD</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="customer in filteredCustomers" :key="customer.name">
-              <td>{{ customer.name }}</td>
-              <td>{{ customer.cccd }}</td>
-              <td>{{ customer.phone }}</td>
-              <td>{{ customer.invoice }}</td>
-              <td>{{ customer.history }}</td>
+            <tr v-for="customer in filteredCustomers" :key="customer.idKhachHang">
+              <td>{{ customer.hoTen || 'Chưa cập nhật' }}</td>
+              <td>{{ customer.dienThoai || 'Chưa cập nhật' }}</td>
+              <td>{{ customer.cccd || 'Chưa cập nhật' }}</td>
+            </tr>
+            <tr v-if="filteredCustomers.length === 0">
+              <td colspan="3" class="no-data">Không tìm thấy khách hàng nào</td>
             </tr>
           </tbody>
         </table>
@@ -42,104 +60,229 @@
 
 <script>
 import Navbar from '@/components/navbar.vue';
+import { userService } from '@/services/userService';
+import { authService } from '@/services/authService';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
+  name: 'UserManager',
   components: { Navbar },
-  data() {
-    return {
-      searchPhone: '',
-      customers: [
-        { name: 'Nguyễn Văn A', cccd: 'Đôi', phone: '0901234567', invoice: 'HD001', history: 'Phòng 101, 2025-05-20' },
-        { name: 'Nguyễn Văn C', cccd: 'Đơn', phone: '0912345678', invoice: 'HD002', history: 'Phòng 102, 2025-05-21' },
-        { name: 'Huỳnh Văn D', cccd: 'Đôi', phone: '0923456789', invoice: 'HD003', history: 'Phòng 103, 2025-05-22' },
-        { name: 'Chu Văn L', cccd: 'Đơn', phone: '0934567890', invoice: 'HD004', history: 'Phòng 104, 2025-05-23' },
-        { name: 'Hoàng Văn H', cccd: 'Premium', phone: '0945678901', invoice: 'HD005', history: 'Phòng VIP 201, 2025-05-23' },
-        { name: 'Lê Văn P', cccd: 'Premium', phone: '0956789012', invoice: 'HD006', history: 'Phòng VIP 202, 2025-05-22' },
-        { name: 'Huỳnh Văn D', cccd: 'Đôi', phone: '0923456789', invoice: 'HD007', history: 'Phòng 105, 2025-05-20' },
-        { name: 'Chu Văn L', cccd: 'Đơn', phone: '0934567890', invoice: 'HD008', history: 'Phòng 106, 2025-05-21' },
-        { name: 'Hoàng Văn H', cccd: 'Premium', phone: '0945678901', invoice: 'HD009', history: 'Phòng VIP 203, 2025-05-22' },
-        { name: 'Lê Văn P', cccd: 'Premium', phone: '0956789012', invoice: 'HD010', history: 'Phòng VIP 204, 2025-05-23' },
-      ],
-    };
-  },
-  computed: {
-    filteredCustomers() {
-      if (!this.searchPhone) {
-        return this.customers;
+  setup() {
+    const router = useRouter();
+    const customers = ref([]);
+    const searchPhone = ref('');
+    const loading = ref(false);
+    const error = ref('');
+
+    // Kiểm tra quyền admin
+    const checkAdminAccess = () => {
+      if (!authService.isAdmin()) {
+        console.log('Access denied: User is not admin');
+        router.push('/dashboard');
+        return false;
       }
-      return this.customers.filter(customer =>
-        customer.phone.toLowerCase().includes(this.searchPhone.toLowerCase())
+      return true;
+    };
+
+    // Lọc khách hàng theo số điện thoại
+    const filteredCustomers = computed(() => {
+      if (!searchPhone.value) return customers.value;
+      const searchTerm = searchPhone.value.toLowerCase();
+      return customers.value.filter(customer => 
+        customer.dienThoai?.toString().includes(searchTerm)
       );
-    },
-  },
+    });
+
+    // Lấy danh sách khách hàng
+    const fetchCustomers = async () => {
+      if (!checkAdminAccess()) return;
+      
+      loading.value = true;
+      error.value = '';
+      try {
+        console.log('Starting to fetch customers...');
+        const response = await userService.getAllCustomers();
+        console.log('Response received:', response);
+        
+        if (!response || !Array.isArray(response)) {
+          throw new Error('Dữ liệu không hợp lệ');
+        }
+
+        customers.value = response.map(customer => ({
+          idKhachHang: customer.idKhachHang,
+          hoTen: customer.hoTen || customer.tenKhachHang || 'Chưa cập nhật',
+          dienThoai: customer.dienThoai || customer.soDienThoai || 'Chưa cập nhật',
+          cccd: customer.cccd || 'Chưa cập nhật'
+        }));
+
+        console.log('Processed customers:', customers.value);
+      } catch (err) {
+        console.error('Error in fetchCustomers:', err);
+        error.value = err.message || 'Không thể tải danh sách khách hàng';
+        if (err.message.includes('đăng nhập lại')) {
+          authService.clearAuth();
+          router.push('/login');
+        }
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    // Xử lý tìm kiếm
+    const handleSearch = () => {
+      if (searchPhone.value.trim() === '') {
+        fetchCustomers();
+        return;
+      }
+
+      const searchTerm = searchPhone.value.trim();
+      const filtered = customers.value.filter(customer => 
+        customer.dienThoai?.toString().includes(searchTerm)
+      );
+      
+      if (filtered.length === 0) {
+        error.value = 'Không tìm thấy khách hàng nào';
+      } else {
+        error.value = '';
+      }
+    };
+
+    // Mounted hook
+    onMounted(() => {
+      fetchCustomers();
+    });
+
+    return {
+      customers,
+      searchPhone,
+      loading,
+      error,
+      filteredCustomers,
+      handleSearch
+    };
+  }
 };
 </script>
 
-<style>
+<style scoped>
 .user-manager-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  background-color: #fff;
+  background-color: #f5f7fa;
 }
+
 .content-section {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  background-color: #f9f9f9;
-  gap: 1rem;
+  padding: 2rem;
   overflow-y: auto;
 }
+
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.header-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
 .search-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 1rem;
-  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-group label {
+  color: #2c3e50;
   font-weight: 500;
-  margin-bottom: 1rem;
 }
+
 .search-input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  width: 200px;
-  transition: border-color 0.3s;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 250px;
+  transition: all 0.3s;
 }
+
 .search-input:focus {
   outline: none;
-  border-color: #5bb790;
+  border-color: #409eff;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
+
 .table-container {
-  overflow-x: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
+
 .customer-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .customer-table th,
 .customer-table td {
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ebeef5;
 }
+
 .customer-table th {
-  background-color: #5bb790;
-  color: white;
-  font-weight: 600;
+  background-color: #f5f7fa;
+  color: #606266;
+  font-weight: 500;
 }
-.customer-table tr:nth-child(even) {
-  background-color: #f5f5f5;
-}
+
 .customer-table tr:hover {
-  background-color: #e0f7fa;
-  transition: background-color 0.3s;
+  background-color: #f5f7fa;
+}
+
+.no-data {
+  text-align: center;
+  color: #909399;
+  padding: 2rem;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #409eff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error-message {
+  background-color: #fef0f0;
+  color: #f56c6c;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

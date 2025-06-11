@@ -40,6 +40,18 @@ namespace back_end.Controllers
             return Ok(nhanVien);
         }
 
+        // GET: api/NhanVien/account/5
+        [HttpGet("account/{accountId}")]
+        public async Task<ActionResult<NhanVienVM>> GetNhanVienByAccountId(int accountId)
+        {
+            var nhanVien = await _nhanVienRepository.GetByAccountIdAsync(accountId);
+            if (nhanVien == null)
+            {
+                return NotFound($"Không tìm thấy nhân viên với ID tài khoản {accountId}.");
+            }
+            return Ok(nhanVien);
+        }
+
         // POST: api/NhanVien
         [HttpPost]
         public async Task<ActionResult<NhanVienVM>> PostNhanVien([FromBody] AddNhanVien model)
