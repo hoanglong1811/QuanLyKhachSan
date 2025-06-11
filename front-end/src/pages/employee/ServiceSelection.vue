@@ -1,283 +1,286 @@
 <!-- File: ServiceSelection.vue -->
 <template>
-  <div class="page-container">
-    <div class="content-wrapper">
-      <div class="content-container">
-        <!-- Header -->
-        <div class="header-section">
-          <div class="header-left">
-            <h1 class="page-title">Quản lý dịch vụ</h1>
-            <p class="subtitle">Thêm và quản lý dịch vụ cho khách hàng</p>
-          </div>
-          <button class="back-button" @click="goBack">
-            Quay lại
-          </button>
-        </div>
-
-        <!-- Customer Selection Section -->
-        <div class="section-container">
-          <div class="section-header">
-            <h2 class="section-title">Thông tin khách hàng</h2>
-            <button
-              v-if="!selectedCustomer"
-              @click="showCustomerModal = true"
-              class="primary-button"
-            >
-              Chọn khách hàng
+  <div>
+    <Navbar />
+    <div class="page-container">
+      <div class="content-wrapper">
+        <div class="content-container">
+          <!-- Header -->
+          <div class="header-section">
+            <div class="header-left">
+              <h1 class="page-title">Quản lý dịch vụ</h1>
+              <p class="subtitle">Thêm và quản lý dịch vụ cho khách hàng</p>
+            </div>
+            <button class="back-button" @click="goBack">
+              Quay lại
             </button>
           </div>
 
-          <!-- Selected Customer Info -->
-          <div v-if="selectedCustomer" class="customer-info-card">
-            <div class="customer-info-content">
-              <div class="customer-details">
-                <h3 class="customer-name">{{ selectedCustomer.name }}</h3>
-                <p class="customer-data">SĐT: {{ selectedCustomer.phone }}</p>
-                <p class="customer-data">CCCD: {{ selectedCustomer.idNumber }}</p>
-              </div>
+          <!-- Customer Selection Section -->
+          <div class="section-container">
+            <div class="section-header">
+              <h2 class="section-title">Thông tin khách hàng</h2>
               <button
-                @click="clearSelectedCustomer"
-                class="icon-button"
+                v-if="!selectedCustomer"
+                @click="showCustomerModal = true"
+                class="primary-button"
               >
-                ✕
+                Chọn khách hàng
+              </button>
+            </div>
+
+            <!-- Selected Customer Info -->
+            <div v-if="selectedCustomer" class="customer-info-card">
+              <div class="customer-info-content">
+                <div class="customer-details">
+                  <h3 class="customer-name">{{ selectedCustomer.name }}</h3>
+                  <p class="customer-data">SĐT: {{ selectedCustomer.phone }}</p>
+                  <p class="customer-data">CCCD: {{ selectedCustomer.idNumber }}</p>
+                </div>
+                <button
+                  @click="clearSelectedCustomer"
+                  class="icon-button"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <!-- No Customer Selected Message -->
+            <div v-else class="empty-state">
+              <p>Vui lòng chọn khách hàng để thêm dịch vụ</p>
+            </div>
+          </div>
+
+          <!-- Service List with Expandable Tables -->
+          <div v-if="selectedCustomer" class="services-container">
+            <!-- Giặt ủi -->
+            <div class="service-section">
+              <button class="service-header" @click="toggleSection('laundry')">
+                <span class="service-title">Giặt ủi</span>
+                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.laundry }">▼</span>
+              </button>
+              <div v-if="expandedSections.laundry" class="service-content">
+                <div class="table-responsive">
+                  <table class="service-table">
+                    <thead>
+                      <tr>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá (VND)</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in laundryServices" :key="index">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                          <input 
+                            v-model.number="laundryServices[index].quantity" 
+                            type="number" 
+                            min="0" 
+                            class="quantity-input" 
+                            placeholder="0" 
+                          />
+                        </td>
+                        <td>
+                          <button 
+                            class="add-button"
+                            @click="addService({ ...laundryServices[index] }, 'laundry', index)"
+                          >
+                            Thêm
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ăn uống -->
+            <div class="service-section">
+              <button class="service-header" @click="toggleSection('food')">
+                <span class="service-title">Ăn uống</span>
+                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.food }">▼</span>
+              </button>
+              <div v-if="expandedSections.food" class="service-content">
+                <div class="table-responsive">
+                  <table class="service-table">
+                    <thead>
+                      <tr>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá (VND)</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in foodServices" :key="index">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                          <input 
+                            v-model.number="foodServices[index].quantity" 
+                            type="number" 
+                            min="0" 
+                            class="quantity-input" 
+                            placeholder="0" 
+                          />
+                        </td>
+                        <td>
+                          <button 
+                            class="add-button"
+                            @click="addService({ ...foodServices[index] }, 'food', index)"
+                          >
+                            Thêm
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spa -->
+            <div class="service-section">
+              <button class="service-header" @click="toggleSection('spa')">
+                <span class="service-title">Spa</span>
+                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.spa }">▼</span>
+              </button>
+              <div v-if="expandedSections.spa" class="service-content">
+                <div class="table-responsive">
+                  <table class="service-table">
+                    <thead>
+                      <tr>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá (VND)</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in spaServices" :key="index">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                          <input 
+                            v-model.number="spaServices[index].quantity" 
+                            type="number" 
+                            min="0" 
+                            class="quantity-input" 
+                            placeholder="0" 
+                          />
+                        </td>
+                        <td>
+                          <button 
+                            class="add-button"
+                            @click="addService({ ...spaServices[index] }, 'spa', index)"
+                          >
+                            Thêm
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected Services Section -->
+          <div v-if="selectedCustomer" class="selected-services-section">
+            <div class="section-header">
+              <h2 class="section-title">Dịch vụ đã chọn</h2>
+            </div>
+            
+            <div v-if="selectedServices.length" class="selected-services-table-container">
+              <div class="table-responsive">
+                <table class="selected-services-table">
+                  <thead>
+                    <tr>
+                      <th>Tên dịch vụ</th>
+                      <th>Giá (VND)</th>
+                      <th>Số lượng</th>
+                      <th>Thành tiền (VND)</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(service, index) in selectedServices" :key="index">
+                      <td class="service-name">{{ service.name }}</td>
+                      <td class="service-price">{{ service.price }}</td>
+                      <td class="service-quantity">{{ service.quantity }}</td>
+                      <td class="service-total">
+                        {{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}
+                      </td>
+                      <td>
+                        <button class="delete-button" @click="removeService(service, index)">
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div v-else class="empty-services">
+              <p>Chưa có dịch vụ nào được chọn.</p>
+            </div>
+
+            <!-- Total and Confirm Button -->
+            <div class="footer-section">
+              <div class="total-price">
+                <span class="total-label">Tổng tiền dự kiến:</span>
+                <span class="total-amount">{{ totalPrice }} VND</span>
+              </div>
+              <button class="confirm-button" @click="confirmServices">
+                Xác nhận
               </button>
             </div>
           </div>
 
-          <!-- No Customer Selected Message -->
-          <div v-else class="empty-state">
-            <p>Vui lòng chọn khách hàng để thêm dịch vụ</p>
-          </div>
-        </div>
-
-        <!-- Service List with Expandable Tables -->
-        <div v-if="selectedCustomer" class="services-container">
-          <!-- Giặt ủi -->
-          <div class="service-section">
-            <button class="service-header" @click="toggleSection('laundry')">
-              <span class="service-title">Giặt ủi</span>
-              <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.laundry }">▼</span>
-            </button>
-            <div v-if="expandedSections.laundry" class="service-content">
-              <div class="table-responsive">
-                <table class="service-table">
-                  <thead>
-                    <tr>
-                      <th>Tên dịch vụ</th>
-                      <th>Giá (VND)</th>
-                      <th>Số lượng</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, index) in laundryServices" :key="index">
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.price }}</td>
-                      <td>
-                        <input 
-                          v-model.number="laundryServices[index].quantity" 
-                          type="number" 
-                          min="0" 
-                          class="quantity-input" 
-                          placeholder="0" 
-                        />
-                      </td>
-                      <td>
-                        <button 
-                          class="add-button"
-                          @click="addService({ ...laundryServices[index] }, 'laundry', index)"
-                        >
-                          Thêm
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <!-- Customer Selection Modal -->
+          <div v-if="showCustomerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 w-full max-w-2xl">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Chọn khách hàng</h2>
+                <button @click="closeCustomerModal" class="text-gray-500 hover:text-gray-700">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-            </div>
-          </div>
 
-          <!-- Ăn uống -->
-          <div class="service-section">
-            <button class="service-header" @click="toggleSection('food')">
-              <span class="service-title">Ăn uống</span>
-              <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.food }">▼</span>
-            </button>
-            <div v-if="expandedSections.food" class="service-content">
-              <div class="table-responsive">
-                <table class="service-table">
-                  <thead>
-                    <tr>
-                      <th>Tên dịch vụ</th>
-                      <th>Giá (VND)</th>
-                      <th>Số lượng</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, index) in foodServices" :key="index">
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.price }}</td>
-                      <td>
-                        <input 
-                          v-model.number="foodServices[index].quantity" 
-                          type="number" 
-                          min="0" 
-                          class="quantity-input" 
-                          placeholder="0" 
-                        />
-                      </td>
-                      <td>
-                        <button 
-                          class="add-button"
-                          @click="addService({ ...foodServices[index] }, 'food', index)"
-                        >
-                          Thêm
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <!-- Search Input -->
+              <div class="mb-6">
+                <input
+                  type="text"
+                  v-model="searchQuery"
+                  placeholder="Tìm kiếm khách hàng..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
-            </div>
-          </div>
 
-          <!-- Spa -->
-          <div class="service-section">
-            <button class="service-header" @click="toggleSection('spa')">
-              <span class="service-title">Spa</span>
-              <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.spa }">▼</span>
-            </button>
-            <div v-if="expandedSections.spa" class="service-content">
-              <div class="table-responsive">
-                <table class="service-table">
-                  <thead>
-                    <tr>
-                      <th>Tên dịch vụ</th>
-                      <th>Giá (VND)</th>
-                      <th>Số lượng</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, index) in spaServices" :key="index">
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.price }}</td>
-                      <td>
-                        <input 
-                          v-model.number="spaServices[index].quantity" 
-                          type="number" 
-                          min="0" 
-                          class="quantity-input" 
-                          placeholder="0" 
-                        />
-                      </td>
-                      <td>
-                        <button 
-                          class="add-button"
-                          @click="addService({ ...spaServices[index] }, 'spa', index)"
-                        >
-                          Thêm
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Selected Services Section -->
-        <div v-if="selectedCustomer" class="selected-services-section">
-          <div class="section-header">
-            <h2 class="section-title">Dịch vụ đã chọn</h2>
-          </div>
-          
-          <div v-if="selectedServices.length" class="selected-services-table-container">
-            <div class="table-responsive">
-              <table class="selected-services-table">
-                <thead>
-                  <tr>
-                    <th>Tên dịch vụ</th>
-                    <th>Giá (VND)</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền (VND)</th>
-                    <th>Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(service, index) in selectedServices" :key="index">
-                    <td class="service-name">{{ service.name }}</td>
-                    <td class="service-price">{{ service.price }}</td>
-                    <td class="service-quantity">{{ service.quantity }}</td>
-                    <td class="service-total">
-                      {{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}
-                    </td>
-                    <td>
-                      <button class="delete-button" @click="removeService(service, index)">
-                        Xóa
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
-          <div v-else class="empty-services">
-            <p>Chưa có dịch vụ nào được chọn.</p>
-          </div>
-
-          <!-- Total and Confirm Button -->
-          <div class="footer-section">
-            <div class="total-price">
-              <span class="total-label">Tổng tiền dự kiến:</span>
-              <span class="total-amount">{{ totalPrice }} VND</span>
-            </div>
-            <button class="confirm-button" @click="confirmServices">
-              Xác nhận
-            </button>
-          </div>
-        </div>
-
-        <!-- Customer Selection Modal -->
-        <div v-if="showCustomerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div class="bg-white rounded-xl p-8 w-full max-w-2xl">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900">Chọn khách hàng</h2>
-              <button @click="closeCustomerModal" class="text-gray-500 hover:text-gray-700">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Search Input -->
-            <div class="mb-6">
-              <input
-                type="text"
-                v-model="searchQuery"
-                placeholder="Tìm kiếm khách hàng..."
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <!-- Customer List -->
-            <div class="max-h-96 overflow-y-auto">
-              <div
-                v-for="customer in filteredCustomers"
-                :key="customer.id"
-                @click="selectCustomer(customer)"
-                class="p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
-              >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <h3 class="font-medium text-gray-900">{{ customer.name }}</h3>
-                    <p class="text-sm text-gray-500">{{ customer.phone }}</p>
-                  </div>
-                  <div class="text-sm text-gray-500">
-                    CCCD: {{ customer.idNumber }}
+              <!-- Customer List -->
+              <div class="max-h-96 overflow-y-auto">
+                <div
+                  v-for="customer in filteredCustomers"
+                  :key="customer.id"
+                  @click="selectCustomer(customer)"
+                  class="p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                >
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="font-medium text-gray-900">{{ customer.name }}</h3>
+                      <p class="text-sm text-gray-500">{{ customer.phone }}</p>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      CCCD: {{ customer.idNumber }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -290,8 +293,13 @@
 </template>
 
 <script>
+import Navbar from '@/components/navbar.vue';
+
 export default {
   name: 'ServiceSelection',
+  components: {
+    Navbar
+  },
   data() {
     return {
       // Customer selection

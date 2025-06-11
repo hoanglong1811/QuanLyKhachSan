@@ -33,10 +33,6 @@
                 <i class="fas fa-door-open"></i>
                 Quản lý phòng
               </router-link>
-              <router-link class="nav-tab" to="/employee/room-layout-management">
-                <i class="fas fa-th-large"></i>
-                Bố trí phòng
-              </router-link>
               <router-link class="nav-tab" to="/employee/booking">
                 <i class="fas fa-calendar-check"></i>
                 Đặt phòng
@@ -65,7 +61,7 @@
                 <i class="fas fa-chart-bar"></i>
                 Báo cáo
               </router-link>
-              <router-link class="nav-tab" to="/employee/account-management">
+              <router-link class="nav-tab" to="/employee/account-list">
                 <i class="fas fa-user-cog"></i>
                 Tài khoản
               </router-link>
