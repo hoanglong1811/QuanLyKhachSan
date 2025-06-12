@@ -28,6 +28,7 @@ import InvoiceManagement from "@/pages/employee/InvoiceManagement.vue";
 import InvoiceDetail from "@/pages/employee/InvoiceDetail.vue";
 import Reports from "@/pages/employee/Reports.vue";
 import AccountList from "@/pages/employee/AccountList.vue";
+import DeviceManagement from "@/pages/employee/DeviceManagement.vue";
 
 const routes = [
   // Guest Routes
@@ -173,6 +174,12 @@ const routes = [
     path: "/employee/account-list",
     name: "AccountList",
     component: AccountList,
+    meta: { requiresAuth: true, role: 'employee' }
+  },
+  {
+    path: "/employee/device-management",
+    name: "DeviceManagement",
+    component: DeviceManagement,
     meta: { requiresAuth: true, role: 'employee' }
   },
 ];

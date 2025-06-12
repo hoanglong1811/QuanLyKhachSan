@@ -37,6 +37,10 @@
                 <i class="fas fa-calendar-check"></i>
                 Đặt phòng
               </router-link>
+              <router-link class="nav-tab" to="/employee/device-management">
+                <i class="fas fa-tools"></i>
+                Quản lý thiết bị
+              </router-link>
             </div>
           </div>
 
