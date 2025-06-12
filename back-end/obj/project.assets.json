@@ -4257,11 +4257,19 @@
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "projectName": "back-end",
       "projectPath": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
       "outputPath": "D:\\QuanLyKhachSan\\back-end\\obj\\",
+=======
+      "projectUniqueName": "D:\\New folder\\QuanLyKhachSan\\back-end\\back-end.csproj",
+      "projectName": "back-end",
+      "projectPath": "D:\\New folder\\QuanLyKhachSan\\back-end\\back-end.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "D:\\New folder\\QuanLyKhachSan\\back-end\\obj\\",
+>>>>>>> 14bf6029fce286629957f289addae2f178ab6cf4
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

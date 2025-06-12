@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "k+OR2TMdW6c=",
   "success": true,
   "projectFilePath": "D:\\QuanLyKhachSan\\back-end\\back-end.csproj",
+=======
+  "dgSpecHash": "3+ARRfAzIXk=",
+  "success": true,
+  "projectFilePath": "D:\\New folder\\QuanLyKhachSan\\back-end\\back-end.csproj",
+>>>>>>> 14bf6029fce286629957f289addae2f178ab6cf4
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -52,43 +52,7 @@
         </div>
       </div>
 
-      <div class="booking-form">
-        <div class="form-item">
-          <label>Nhận phòng</label>
-          <input type="date">
-        </div>
-        <div class="form-item">
-          <label>Trả phòng</label>
-          <input type="date">
-        </div>
-        <div class="form-item">
-          <label>Phòng</label>
-          <select>
-            <option>01 Phòng</option>
-            <option>02 Phòng</option>
-            <option>03 Phòng</option>
-          </select>
-        </div>
-        <div class="form-item">
-          <label>Người lớn</label>
-          <select>
-            <option>01 Người lớn</option>
-            <option>02 Người lớn</option>
-            <option>03 Người lớn</option>
-          </select>
-        </div>
-        <div class="form-item">
-          <label>Trẻ em</label>
-          <select>
-            <option>0 Trẻ em</option>
-            <option>1 Trẻ em</option>
-            <option>2 Trẻ em</option>
-          </select>
-        </div>
-        <div class="form-item">
-          <button class="check-availability" @click="goToBooking">Kiểm tra phòng</button>
-        </div>
-      </div>
+      
 
       <!-- Section: THE PLACE TO ENJOY THE MOST BEAUTIFUL SUNSET IN BARIA-VUNG TAU -->
       <section class="sunset-section">

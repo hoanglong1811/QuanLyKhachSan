@@ -27,7 +27,7 @@
       </div>
 
       <div class="room-grid">
-        <div class="room-card" v-for="room in filteredRooms" :key="room.idPhong" @click="openUpdateModal(room)">
+        <div :class="['room-card', statusClass(room.trangThai)]" v-for="room in filteredRooms" :key="room.idPhong" @click="handleRoomClick(room)">
           <div class="room-header">
             <span class="room-number">Phòng {{ room.soPhong }}</span>
             <span :class="['room-status', room.trangThai?.toLowerCase()]">{{ room.trangThai }}</span>
@@ -104,6 +104,67 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal đặt phòng -->
+    <div v-if="showBookingModal" class="modal-overlay" @click="closeBookingModal">
+      <div class="modal-content" @click.stop>
+        <h2>Đặt phòng {{ selectedRoom?.soPhong }}</h2>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Số điện thoại:</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="tel" v-model="bookingForm.phone" placeholder="Nhập SĐT khách hàng" style="flex:1;" />
+              <button class="btn-save" @click="searchCustomer" :disabled="!bookingForm.phone || loadingSearch">
+                {{ loadingSearch ? 'Đang tìm...' : 'Tìm' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tên khách hàng:</label>
+            <input type="text" v-model="bookingForm.name" :readonly="customerFound" placeholder="Nhập tên khách hàng" />
+          </div>
+
+          <div class="form-group">
+            <label>CCCD:</label>
+            <input type="text" v-model="bookingForm.cccd" :readonly="customerFound" placeholder="Nhập CCCD khách hàng" />
+          </div>
+
+          <div class="form-group">
+            <label>Ngày nhận phòng:</label>
+            <input type="date" v-model="bookingForm.checkIn" />
+          </div>
+
+          <div class="form-group">
+            <label>Ngày trả phòng:</label>
+            <input type="date" v-model="bookingForm.checkOut" :min="bookingForm.checkIn" />
+          </div>
+
+          <div class="form-group">
+            <label>Số người lớn:</label>
+            <input type="number" v-model.number="bookingForm.adults" min="1" />
+          </div>
+
+          <div class="form-group">
+            <label>Số trẻ em:</label>
+            <input type="number" v-model.number="bookingForm.children" min="0" />
+          </div>
+
+          <div class="form-group">
+            <label>Ghi chú:</label>
+            <textarea v-model="bookingForm.note" rows="2" placeholder="Ghi chú (tuỳ chọn)"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeBookingModal">Hủy</button>
+          <button class="btn-save" @click="confirmBooking" :disabled="loading">
+            {{ loading ? 'Đang lưu...' : 'Đặt phòng' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -111,6 +172,8 @@
 import Navbar from '../../components/navbar.vue';
 import { roomService } from '@/services/roomService';
 import { authService } from '@/services/authService';
+import { userService } from '@/services/userService';
+import { bookingService } from '@/services/bookingService';
 
 export default {
   components: {
@@ -131,7 +194,21 @@ export default {
         sucChua: 1,
         soPhong: null,
         idLoaiPhong: null
-      }
+      },
+      showBookingModal: false,
+      bookingForm: {
+        phone: '',
+        name: '',
+        cccd: '',
+        checkIn: '',
+        checkOut: '',
+        adults: 1,
+        children: 0,
+        note: '',
+        customerId: null
+      },
+      customerFound: false,
+      loadingSearch: false,
     };
   },
   computed: {
@@ -230,6 +307,119 @@ export default {
     },
     filterRooms() {
       // Trigger computed property
+    },
+    handleRoomClick(room) {
+      // Nếu phòng trống thì mở modal đặt phòng, ngược lại mở modal cập nhật
+      if (room.trangThai?.toLowerCase() === 'trống' || room.trangThai?.toLowerCase() === 'trống') {
+        this.openBookingModal(room);
+      } else {
+        this.openUpdateModal(room);
+      }
+    },
+    openBookingModal(room) {
+      this.selectedRoom = { ...room };
+      this.bookingForm = {
+        phone: '',
+        name: '',
+        cccd: '',
+        checkIn: '',
+        checkOut: '',
+        adults: 1,
+        children: 0,
+        note: '',
+        customerId: null
+      };
+      this.customerFound = false;
+      this.showBookingModal = true;
+    },
+    closeBookingModal() {
+      this.showBookingModal = false;
+      this.selectedRoom = null;
+    },
+    async searchCustomer() {
+      if (!this.bookingForm.phone) return;
+      this.loadingSearch = true;
+      try {
+        const result = await userService.searchCustomersByPhone(this.bookingForm.phone);
+        if (result && result.length > 0) {
+          const customer = result[0];
+          this.bookingForm.name = customer.hoTen || customer.HoTen || '';
+          this.bookingForm.cccd = customer.cccd || customer.Cccd || '';
+          this.customerFound = true;
+          this.bookingForm.customerId = customer.idKhachHang || customer.IdKhachHang;
+        } else {
+          this.customerFound = false;
+          this.$toast?.info?.('Không tìm thấy khách hàng, vui lòng nhập tên để tạo mới.');
+        }
+      } catch (error) {
+        console.error('searchCustomer error:', error);
+        this.$toast?.error?.('Lỗi khi tìm khách hàng');
+      } finally {
+        this.loadingSearch = false;
+      }
+    },
+    async confirmBooking() {
+      // Kiểm tra dữ liệu bắt buộc
+      if (!this.bookingForm.phone || !this.bookingForm.name || !this.bookingForm.checkIn || !this.bookingForm.checkOut) {
+        alert('Vui lòng nhập đầy đủ thông tin bắt buộc');
+        return;
+      }
+      this.loading = true;
+      try {
+        // B1: Lấy hoặc tạo khách hàng
+        let customerId = this.bookingForm.customerId;
+        if (!customerId) {
+          const newCustomer = await userService.createCustomer({
+            hoTen: this.bookingForm.name,
+            dienThoai: parseInt(this.bookingForm.phone, 10),
+            cccd: this.bookingForm.cccd || ''
+          });
+          customerId = newCustomer.idKhachHang || newCustomer.IdKhachHang;
+        }
+
+        // B2: Tạo đặt phòng
+        const booking = await bookingService.createBooking({ idKhachHang: customerId });
+        const bookingId = booking.idDatPhong || booking.IdDatPhong;
+
+        // B3: Tạo chi tiết đặt phòng
+        const totalGuests = parseInt(this.bookingForm.adults) + parseInt(this.bookingForm.children);
+        await bookingService.createBookingDetail({
+          idPhong: this.selectedRoom.idPhong,
+          idDatPhong: bookingId,
+          idKhachHang: customerId,
+          ngayDatPhong: this.bookingForm.checkIn,
+          ngayTraPhong: this.bookingForm.checkOut,
+          soLuongNguoi: totalGuests,
+          phuongThucThanhToan: JSON.stringify({ note: this.bookingForm.note, adults: this.bookingForm.adults, children: this.bookingForm.children }),
+          thanhTien: null
+        });
+
+        // B4: Cập nhật trạng thái phòng sang "Đã đặt"
+        await roomService.updateRoom(this.selectedRoom.idPhong, {
+          trangThai: 'Đã đặt',
+          sucChua: this.selectedRoom.sucChua,
+          soPhong: this.selectedRoom.soPhong,
+          idLoaiPhong: this.selectedRoom.idLoaiPhong
+        });
+
+        this.$toast?.success?.('Đặt phòng thành công!');
+        await this.fetchRooms();
+        this.closeBookingModal();
+      } catch (err) {
+        console.error(err);
+        this.$toast?.error?.('Không thể đặt phòng');
+      } finally {
+        this.loading = false;
+      }
+    },
+    statusClass(trangThai) {
+      if (!trangThai) return '';
+      const key = trangThai.toLowerCase();
+      if (key.includes('đã đặt')) return 'booked';
+      if (key.includes('đang thuê')) return 'rented';
+      if (key.includes('đang dọn')) return 'cleaning';
+      if (key.includes('đang bảo trì')) return 'maintenance';
+      return '';
     },
   },
   async created() {
@@ -519,5 +709,42 @@ export default {
 
 .readonly-input:focus {
   border-color: #ddd;
+}
+
+.room-card.booked {
+  border: 2px solid #ef6c00;
+  background-color: #fff3e0;
+}
+
+.room-card.rented {
+  border: 2px solid #1976d2;
+  background-color: #e3f2fd;
+}
+
+.room-card.cleaning {
+  border: 2px solid #fdd835;
+  background-color: #fffde7;
+}
+
+.room-card.maintenance {
+  border: 2px solid #c62828;
+  background-color: #ffebee;
+}
+
+/* Header border color */
+.room-card.booked .room-header { border-bottom-color: #ef6c00; }
+.room-card.rented .room-header { border-bottom-color: #1976d2; }
+.room-card.cleaning .room-header { border-bottom-color: #fdd835; }
+.room-card.maintenance .room-header { border-bottom-color: #c62828; }
+
+/* Status pill colors already exist; bổ sung thêm */
+.room-status.đang-dọn {
+  background-color: #fffde7;
+  color: #fbc02d;
+}
+
+.room-status.đang-bảo-trì {
+  background-color: #ffebee;
+  color: #c62828;
 }
 </style>

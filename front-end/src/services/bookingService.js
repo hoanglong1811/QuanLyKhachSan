@@ -19,5 +19,17 @@ export const bookingService = {
     async createBooking(bookingData) {
         const response = await apiClient.post('/api/DatPhong', bookingData);
         return response.data;
+    },
+
+    // Tạo chi tiết đặt phòng mới
+    async createBookingDetail(bookingDetailData) {
+        const response = await apiClient.post('/api/ChiTietDatPhong', bookingDetailData);
+        return response.data;
+    },
+
+    // Lấy tất cả chi tiết đặt phòng
+    async getAllBookingDetails() {
+        const response = await apiClient.get('/api/ChiTietDatPhong');
+        return response.data;
     }
 }; 
