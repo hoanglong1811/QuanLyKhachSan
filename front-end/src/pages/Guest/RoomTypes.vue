@@ -26,54 +26,68 @@
       <!-- Room Types Section -->
       <div class="room-types-section" ref="roomsSection">
         <div class="room-grid">
+          <!-- Standard Room -->
+          <div class="room-item" @mouseover="activeRoom = 'standard'" @mouseleave="activeRoom = null">
+            <div class="room-image">
+              <img src="https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg" alt="Standard Room">
+              <div class="room-label">Standard</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-name">Phòng Standard</h3>
+              <div class="room-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.5/5)</span>
+              </div>
+              <p class="room-price">Từ 100,000 VND/đêm</p>
+              <p class="room-desc">Phòng tiêu chuẩn.</p>
+              <button class="room-btn" @click="viewDetails('standard')">Xem Thêm</button>
+            </div>
+          </div>
+          <!-- Superior Room -->
+          <div class="room-item" @mouseover="activeRoom = 'superior'" @mouseleave="activeRoom = null">
+            <div class="room-image">
+              <img src="https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg" alt="Superior Room">
+              <div class="room-label">Superior</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-name">Phòng Superior</h3>
+              <div class="room-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.8/5)</span>
+              </div>
+              <p class="room-price">Từ 150,000 VND/đêm</p>
+              <p class="room-desc">Phòng nâng cao.</p>
+              <button class="room-btn" @click="viewDetails('superior')">Xem Thêm</button>
+            </div>
+          </div>
           <!-- Deluxe Room -->
           <div class="room-item" @mouseover="activeRoom = 'deluxe'" @mouseleave="activeRoom = null">
             <div class="room-image">
-              <img src="https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg" alt="Deluxe Room">
+              <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Deluxe Room">
               <div class="room-label">Deluxe</div>
             </div>
             <div class="room-details">
               <h3 class="room-name">Phòng Deluxe</h3>
               <div class="room-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.5/5)</span>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(5.0/5)</span>
               </div>
-              <p class="room-price">Từ 2,500,000 VND/đêm</p>
-              <p class="room-desc">Thiết kế hiện đại, view đẹp, lý tưởng cho cặp đôi.</p>
+              <p class="room-price">Từ 200,000 VND/đêm</p>
+              <p class="room-desc">Phòng sang trọng.</p>
               <button class="room-btn" @click="viewDetails('deluxe')">Xem Thêm</button>
             </div>
           </div>
-
           <!-- Suite Room -->
           <div class="room-item" @mouseover="activeRoom = 'suite'" @mouseleave="activeRoom = null">
             <div class="room-image">
-              <img src="https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg" alt="Suite Room">
+              <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Suite Room">
               <div class="room-label">Suite</div>
             </div>
             <div class="room-details">
               <h3 class="room-name">Phòng Suite</h3>
               <div class="room-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.8/5)</span>
-              </div>
-              <p class="room-price">Từ 3,500,000 VND/đêm</p>
-              <p class="room-desc">Rộng rãi, view biển, tiện nghi cao cấp.</p>
-              <button class="room-btn" @click="viewDetails('suite')">Xem Thêm</button>
-            </div>
-          </div>
-
-          <!-- Beach Villa -->
-          <div class="room-item" @mouseover="activeRoom = 'villa'" @mouseleave="activeRoom = null">
-            <div class="room-image">
-              <img src="https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg" alt="Beach Villa">
-              <div class="room-label luxury">Villa</div>
-            </div>
-            <div class="room-details">
-              <h3 class="room-name">Beach Villa</h3>
-              <div class="room-rating">
                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(5.0/5)</span>
               </div>
-              <p class="room-price">Từ 5,500,000 VND/đêm</p>
-              <p class="room-desc">Hồ bơi riêng, view biển tuyệt đẹp.</p>
-              <button class="room-btn" @click="viewDetails('villa')">Xem Thêm</button>
+              <p class="room-price">Từ 500,000 VND/đêm</p>
+              <p class="room-desc">Phòng thượng hạng.</p>
+              <button class="room-btn" @click="viewDetails('suite')">Xem Thêm</button>
             </div>
           </div>
         </div>

@@ -217,44 +217,58 @@ export default {
       selectedRoom: null,
       availableRooms: [
         {
+          name: 'Phòng Standard',
+          type: 'standard',
+          image: 'https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg',
+          price: 100000,
+          rating: 4.5,
+          description: 'Phòng tiêu chuẩn.',
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar'],
+          rooms: Array.from({ length: 5 }, (_, i) => ({
+            id: `standard-D${101 + i}`,
+            number: `D${101 + i}`,
+            status: Math.random() > 0.3 ? 'available' : 'booked',
+          }))
+        },
+        {
+          name: 'Phòng Superior',
+          type: 'superior',
+          image: 'https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg',
+          price: 150000,
+          rating: 4.8,
+          description: 'Phòng nâng cao.',
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar'],
+          rooms: Array.from({ length: 5 }, (_, i) => ({
+            id: `superior-S${201 + i}`,
+            number: `S${201 + i}`,
+            status: Math.random() > 0.3 ? 'available' : 'booked',
+          }))
+        },
+        {
           name: 'Phòng Deluxe',
           type: 'deluxe',
-          image: 'https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg',
-          price: 2500000,
-          rating: 4.5,
-          description: 'Thiết kế hiện đại, view đẹp, lý tưởng cho cặp đôi.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar'],
-          rooms: Array.from({ length: 18 }, (_, i) => ({
-            id: `deluxe-D${101 + i}`,
-            number: `D${101 + i}`,
+          image: 'https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg',
+          price: 200000,
+          rating: 5.0,
+          description: 'Phòng sang trọng.',
+          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar'],
+          rooms: Array.from({ length: 5 }, (_, i) => ({
+            id: `deluxe-D${301 + i}`,
+            number: `D${301 + i}`,
             status: Math.random() > 0.3 ? 'available' : 'booked',
           }))
         },
         {
           name: 'Phòng Suite',
           type: 'suite',
-          image: 'https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg',
-          price: 3500000,
-          rating: 4.8,
-          description: 'Rộng rãi, view biển, tiện nghi cao cấp.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar'],
-          rooms: Array.from({ length: 18 }, (_, i) => ({
-            id: `suite-S${201 + i}`,
-            number: `S${201 + i}`,
-            status: Math.random() > 0.3 ? 'available' : 'booked',
-          }))
-        },
-        {
-          name: 'Beach Villa',
-          type: 'villa',
           image: 'https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg',
-          price: 5500000,
+          price: 500000,
           rating: 5.0,
-          description: 'Hồ bơi riêng, view biển tuyệt đẹp.',
+          description: 'Phòng thượng hạng.',
           amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar'],
-          rooms: Array.from({ length: 18 }, (_, i) => ({
-            id: `villa-V${301 + i}`,
-            number: `V${301 + i}`,
+          rooms: Array.from({ length: 5 }, (_, i) => ({
+            id: `suite-S${401 + i}`,
+            number: `S${401 + i}`,
             status: Math.random() > 0.3 ? 'available' : 'booked',
           }))
         }
