@@ -371,37 +371,48 @@ export default {
         }
 
         const serviceData = {
-          idDichVu: this.formData.id,
           tenDichVu: this.formData.name.trim(),
           moTa: this.formData.description.trim(),
-          gia: this.formData.price,
-          donViTinh: this.formData.unit.trim()
+          gia: parseInt(this.formData.price),
+          donViTinh: this.formData.unit.trim(),
+          trangThai: 'Hoạt động'
         };
 
         if (this.isEditing) {
-          await axios.put(`http://localhost:5012/api/DichVu/${this.formData.id}`, serviceData, {
+          // Cập nhật dịch vụ
+          const updateData = {
+            ...serviceData,
+            idDichVu: this.formData.id
+          };
+          
+          await axios.put(`http://localhost:5012/api/DichVu/${this.formData.id}`, updateData, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           });
           alert('Cập nhật dịch vụ thành công!');
         } else {
-          await axios.post('http://localhost:5012/api/DichVu', serviceData, {
+          // Thêm dịch vụ mới
+          const response = await axios.post('http://localhost:5012/api/DichVu', serviceData, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           });
+
+          if (!response.data || !response.data.idDichVu) {
+            throw new Error('Không thể tạo dịch vụ mới');
+          }
           alert('Thêm dịch vụ mới thành công!');
         }
 
         this.closeModal();
-        this.fetchServices();
+        await this.fetchServices(); // Refresh danh sách dịch vụ
       } catch (error) {
         console.error('Error saving service:', error);
         if (error.response) {
           alert(error.response.data || 'Có lỗi xảy ra. Vui lòng thử lại sau.');
         } else {
-          alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+          alert(error.message || 'Có lỗi xảy ra. Vui lòng thử lại sau.');
         }
       }
     },
@@ -505,29 +516,62 @@ export default {
           }
         });
 
+        if (!datPhongResponse.data || !datPhongResponse.data.idDatPhong) {
+          throw new Error('Không tìm thấy thông tin đặt phòng');
+        }
+
         // 2. Tạo chi tiết dịch vụ
-        const chiTietDichVu = await axios.post('http://localhost:5012/api/ChiTietDichVu', {
+        const chiTietDichVuData = {
           idDatPhong: datPhongResponse.data.idDatPhong,
-          idDichVu: this.serviceToRoomForm.serviceId,
-          soLuong: this.serviceToRoomForm.quantity,
-          donGia: this.selectedService.price,
-          thanhTien: this.calculateTotalPrice(),
-          ghiChu: this.serviceToRoomForm.note,
+          idDichVu: parseInt(this.serviceToRoomForm.serviceId),
+          soLuong: parseInt(this.serviceToRoomForm.quantity),
+          donGia: parseInt(this.selectedService.price),
+          thanhTien: parseInt(this.calculateTotalPrice()),
+          ghiChu: this.serviceToRoomForm.note || '',
           ngaySuDung: new Date().toISOString(),
           trangThai: 'Chưa thanh toán'
-        }, {
+        };
+
+        const chiTietDichVu = await axios.post('http://localhost:5012/api/ChiTietDichVu', chiTietDichVuData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
 
-        // 3. Tạo chi tiết hóa đơn
-        await axios.post('http://localhost:5012/api/ChiTietHoaDon', {
+        if (!chiTietDichVu.data || !chiTietDichVu.data.idChiTietDichVu) {
+          throw new Error('Không thể tạo chi tiết dịch vụ');
+        }
+
+        // 3. Tạo hóa đơn mới
+        const hoaDonData = {
+          idDatPhong: datPhongResponse.data.idDatPhong,
+          ngayTao: new Date().toISOString(),
+          tongTien: parseInt(this.calculateTotalPrice()),
+          trangThai: 'Chưa thanh toán',
+          ghiChu: this.serviceToRoomForm.note || ''
+        };
+
+        const hoaDon = await axios.post('http://localhost:5012/api/HoaDon', hoaDonData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!hoaDon.data || !hoaDon.data.idHoaDon) {
+          throw new Error('Không thể tạo hóa đơn');
+        }
+
+        // 4. Tạo chi tiết hóa đơn
+        const chiTietHoaDonData = {
+          idHoaDon: hoaDon.data.idHoaDon,
           idDatPhong: datPhongResponse.data.idDatPhong,
           idChiTietDichVu: chiTietDichVu.data.idChiTietDichVu,
-          thanhTien: this.calculateTotalPrice(),
-          ghiChu: this.serviceToRoomForm.note
-        }, {
+          thanhTien: parseInt(this.calculateTotalPrice()),
+          ghiChu: this.serviceToRoomForm.note || '',
+          ngayTao: new Date().toISOString()
+        };
+
+        await axios.post('http://localhost:5012/api/ChiTietHoaDon', chiTietHoaDonData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -537,7 +581,7 @@ export default {
         this.closeAddServiceToRoomModal();
       } catch (error) {
         console.error('Error adding service to room:', error);
-        alert('Không thể thêm dịch vụ. Vui lòng thử lại sau.');
+        alert(error.message || 'Không thể thêm dịch vụ. Vui lòng thử lại sau.');
       } finally {
         this.loading = false;
       }
