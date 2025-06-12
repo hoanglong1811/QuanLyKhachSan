@@ -89,11 +89,9 @@ export default {
   },
   computed: {
     filteredBookings() {
-      if (!this.searchPhone) {
-        return this.bookings;
-      }
+      const query = this.searchPhone.trim().toLowerCase();
       return this.bookings.filter(booking =>
-        booking.phone.toLowerCase().includes(this.searchPhone.toLowerCase())
+        String(booking.phone).toLowerCase().includes(query)
       );
     },
   },
@@ -123,7 +121,13 @@ export default {
           const checkOut = new Date(d.ngayTraPhong);
           let status = 'Đã đặt';
           if (now >= checkIn && now <= checkOut) status = 'Đang thuê';
-          const meta = d.meta ? JSON.parse(d.meta) : {};
+          const metaStr = d.phuongThucThanhToan || d.PhuongThucThanhToan || null;
+          let meta = {};
+          if (metaStr) {
+            try {
+              meta = JSON.parse(metaStr);
+            } catch (e) { console.warn('Invalid meta JSON', metaStr); }
+          }
           return {
             id: d.idChiTietDatPhong,
             customerName: cust?.hoTen || cust?.HoTen || 'N/A',
@@ -134,8 +138,8 @@ export default {
             checkOutDate: checkOut.toLocaleDateString('vi-VN'),
             status,
             note: meta.note || '',
-            adults: meta.adults || 0,
-            children: meta.children || 0
+            adults: meta.adults ?? d.soLuongNguoi ?? 0,
+            children: meta.children ?? 0
           };
         });
 
@@ -147,8 +151,8 @@ export default {
         this.loading = false;
       }
     },
-    async filterBookings() {
-      await this.fetchBookings();
+    filterBookings() {
+      /* Với computed property đã sửa, chỉ cần giữ hàm trống để tránh lỗi. */
     },
     openDetailModal(booking) {
       this.selectedBooking = booking;
@@ -171,6 +175,12 @@ export default {
 </script>
 
 <style>
+:root {
+  --primary-dark: #2c3e50;
+  --primary-light: #3498db;
+  --accent-green: #5bb790;
+}
+
 .user-booking-container {
   display: flex;
   flex-direction: column;
@@ -192,8 +202,8 @@ export default {
   align-items: center;
   gap: 1rem;
   font-size: 1rem;
-  color: #333;
-  font-weight: 500;
+  color: var(--primary-dark);
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 .search-input {

@@ -144,7 +144,17 @@
           </div>
 
           <div class="form-group">
-            <label for="specialRequests">Yêu cầu đặc biệt</label>
+            <label for="cccd">CCCD</label>
+            <input 
+              type="text" 
+              id="cccd" 
+              v-model="bookingData.cccd"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="specialRequests">Yêu cầu</label>
             <textarea 
               id="specialRequests" 
               v-model="bookingData.specialRequests"
@@ -182,7 +192,7 @@
 
           <div class="form-actions">
             <button type="button" @click="currentStep = 2" class="back-btn">Quay lại</button>
-            <button type="submit" class="submit-btn">Xác nhận đặt phòng</button>
+            <button type="submit" class="submit-btn" :disabled="loading">Xác nhận đặt phòng</button>
           </div>
         </form>
       </div>
@@ -194,6 +204,9 @@
 <script>
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import { roomService } from '@/services/roomService';
+import { bookingService } from '@/services/bookingService';
+import { userService } from '@/services/userService';
 
 export default {
   name: 'GuestBooking',
@@ -212,67 +225,32 @@ export default {
         name: '',
         email: '',
         phone: '',
+        cccd: '',
         specialRequests: ''
       },
       selectedRoom: null,
-      availableRooms: [
-        {
-          name: 'Phòng Standard',
-          type: 'standard',
-          image: 'https://i.pinimg.com/736x/38/27/b4/3827b4f58756dff744206adcdc6bb118.jpg',
-          price: 100000,
-          rating: 4.5,
-          description: 'Phòng tiêu chuẩn.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Mini bar'],
-          rooms: Array.from({ length: 5 }, (_, i) => ({
-            id: `standard-D${101 + i}`,
-            number: `D${101 + i}`,
-            status: Math.random() > 0.3 ? 'available' : 'booked',
-          }))
+      availableRooms: [],
+      roomTypesMap: {},
+      loading: false,
+      error: '',
+      MANUAL_ROOM_DATA: {
+        standard: {
+          image: 'https://static03-cdn.oneinventory.com/images/2025/04/4986bbf14ff54c4eae67f7f35b6d3d6f.jpg',
+          price: 100000
         },
-        {
-          name: 'Phòng Superior',
-          type: 'superior',
-          image: 'https://i.pinimg.com/736x/2b/0e/12/2b0e123b86c4b2448a4c52b6111cc5a4.jpg',
-          price: 150000,
-          rating: 4.8,
-          description: 'Phòng nâng cao.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Mini bar'],
-          rooms: Array.from({ length: 5 }, (_, i) => ({
-            id: `superior-S${201 + i}`,
-            number: `S${201 + i}`,
-            status: Math.random() > 0.3 ? 'available' : 'booked',
-          }))
+        deluxe: {
+          image: 'https://static03-cdn.oneinventory.com/images/2024/07/145fe1acd6be4305b1082625865629c7.jpg',
+          price: 200000
         },
-        {
-          name: 'Phòng Deluxe',
-          type: 'deluxe',
-          image: 'https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg',
-          price: 200000,
-          rating: 5.0,
-          description: 'Phòng sang trọng.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar'],
-          rooms: Array.from({ length: 5 }, (_, i) => ({
-            id: `deluxe-D${301 + i}`,
-            number: `D${301 + i}`,
-            status: Math.random() > 0.3 ? 'available' : 'booked',
-          }))
+        superior: {
+          image: 'https://static03-cdn.oneinventory.com/images/2025/04/38dcc78100bd46e5a6e9d7e3af2aefbc.jpg',
+          price: 150000
         },
-        {
-          name: 'Phòng Suite',
-          type: 'suite',
-          image: 'https://i.pinimg.com/736x/f5/46/03/f54603d14ea4377ad3e6c15e1fa3fa24.jpg',
-          price: 500000,
-          rating: 5.0,
-          description: 'Phòng thượng hạng.',
-          amenities: ['Wifi miễn phí', 'Điều hòa', 'Smart TV', 'Bồn tắm', 'Hồ bơi riêng', 'Mini bar'],
-          rooms: Array.from({ length: 5 }, (_, i) => ({
-            id: `suite-S${401 + i}`,
-            number: `S${401 + i}`,
-            status: Math.random() > 0.3 ? 'available' : 'booked',
-          }))
+        suite: {
+          image: 'https://static03-cdn.oneinventory.com/images/2025/05/1aac1f9a1d074b2293aa1498e837cb47.jpg',
+          price: 500000
         }
-      ]
+      }
     }
   },
   computed: {
@@ -292,35 +270,74 @@ export default {
         this.bookingData[type]--
       }
     },
+    async buildAvailableRooms(totalGuests) {
+      try {
+        const [rooms, roomTypes] = await Promise.all([
+          roomService.getAllRooms(),
+          roomService.getRoomTypes()
+        ]);
+        this.roomTypesMap = Object.fromEntries(roomTypes.map(rt => [rt.idLoaiPhong, rt]));
+        const filtered = rooms.filter(r => r.trangThai.toLowerCase() === 'trống' && r.sucChua >= totalGuests);
+        // group by idLoaiPhong
+        const groups = {};
+        filtered.forEach(r => {
+          if (!groups[r.idLoaiPhong]) groups[r.idLoaiPhong] = [];
+          groups[r.idLoaiPhong].push(r);
+        });
+        this.availableRooms = Object.entries(groups).map(([idLoaiPhong, list]) => {
+          const rt = this.roomTypesMap[idLoaiPhong] || {};
+          const key = this.normalizeKey(rt.tenLoaiPhong);
+          const manual = this.MANUAL_ROOM_DATA[key] || {};
+          const price = manual.price ?? rt.giaPhong ?? 0;
+          const image = manual.image ?? rt.hinhAnh ?? 'https://via.placeholder.com/180x120';
+          return {
+            name: rt.tenLoaiPhong || `Loại phòng ${idLoaiPhong}`,
+            type: idLoaiPhong,
+            image,
+            price,
+            rating: 4.5,
+            description: rt.moTa || '',
+            amenities: [],
+            rooms: list.map(r => ({ id: r.idPhong, number: r.soPhong, status: 'available', price }))
+          };
+        });
+      } catch (err) {
+        console.error('Error fetching rooms:', err);
+        alert('Không thể tải danh sách phòng, vui lòng thử lại sau.');
+      }
+    },
     searchRooms() {
       // Validate dates
       if (!this.bookingData.checkIn || !this.bookingData.checkOut) {
-        alert('Vui lòng chọn ngày nhận phòng và trả phòng')
-        return
+        alert('Vui lòng chọn ngày nhận phòng và trả phòng');
+        return;
       }
 
-      const checkIn = new Date(this.bookingData.checkIn)
-      const checkOut = new Date(this.bookingData.checkOut)
-      
+      const checkIn = new Date(this.bookingData.checkIn);
+      const checkOut = new Date(this.bookingData.checkOut);
       if (checkOut <= checkIn) {
-        alert('Ngày trả phòng phải sau ngày nhận phòng')
-        return
+        alert('Ngày trả phòng phải sau ngày nhận phòng');
+        return;
       }
 
-      // Calculate total guests
-      const totalGuests = this.bookingData.adults + this.bookingData.children
+      const totalGuests = this.bookingData.adults + this.bookingData.children;
       if (totalGuests > 4) {
-        alert('Tổng số khách không được vượt quá 4 người')
-        return
+        alert('Tổng số khách không được vượt quá 4 người');
+        return;
       }
 
-      // TODO: Implement API call to search available rooms
-      // For now, just move to next step
-      this.currentStep = 2
+      // Fetch real rooms
+      this.buildAvailableRooms(totalGuests).then(() => {
+        if (this.availableRooms.length === 0) {
+          alert('Không còn phòng trống phù hợp.');
+          return;
+        }
+        this.currentStep = 2;
+      });
     },
     selectRoom(room) {
-      this.selectedRoom = room
-      this.currentStep = 3
+      this.selectedRoom = room;
+      this.currentStep = 3;
     },
     formatPrice(price) {
       return new Intl.NumberFormat('vi-VN').format(price)
@@ -331,15 +348,70 @@ export default {
     calculateTotalPrice() {
       if (!this.selectedRoom || !this.bookingData.checkIn || !this.bookingData.checkOut) return 0
       const nights = Math.ceil((new Date(this.bookingData.checkOut) - new Date(this.bookingData.checkIn)) / (1000 * 60 * 60 * 24))
-      return this.selectedRoom.price * nights
+      let pricePerNight = this.selectedRoom?.price;
+      if (!pricePerNight) {
+        const key = this.normalizeKey(this.roomTypesMap[this.selectedRoom?.type]?.tenLoaiPhong);
+        pricePerNight = this.MANUAL_ROOM_DATA[key]?.price ?? this.roomTypesMap[this.selectedRoom?.type]?.giaPhong ?? 0;
+      }
+      return pricePerNight * nights;
     },
-    handleSubmit() {
-      // TODO: Implement booking submission logic
-      console.log('Booking submitted:', {
-        ...this.bookingData,
-        room: this.selectedRoom,
-        totalPrice: this.calculateTotalPrice()
-      })
+    async handleSubmit() {
+      if (!this.selectedRoom) {
+        alert('Vui lòng chọn phòng');
+        return;
+      }
+      this.loading = true;
+      try {
+        // B1: tìm hoặc tạo khách hàng
+        let customers = await userService.searchCustomersByPhone(this.bookingData.phone);
+        let customerId = null;
+        if (customers && customers.length) {
+          customerId = customers[0].idKhachHang || customers[0].IdKhachHang;
+        } else {
+          const newCust = await userService.createCustomer({
+            hoTen: this.bookingData.name,
+            dienThoai: parseInt(this.bookingData.phone, 10),
+            cccd: this.bookingData.cccd
+          });
+          customerId = newCust.idKhachHang || newCust.IdKhachHang;
+        }
+
+        // B2: tạo DatPhong
+        const booking = await bookingService.createBooking({ idKhachHang: customerId });
+        const bookingId = booking.idDatPhong || booking.IdDatPhong;
+
+        // B3: tạo ChiTietDatPhong
+        const totalGuests = this.bookingData.adults + this.bookingData.children;
+        await bookingService.createBookingDetail({
+          idPhong: this.selectedRoom.id,
+          idDatPhong: bookingId,
+          idKhachHang: customerId,
+          ngayDatPhong: this.bookingData.checkIn,
+          ngayTraPhong: this.bookingData.checkOut,
+          soLuongNguoi: totalGuests,
+          phuongThucThanhToan: JSON.stringify({ note: this.bookingData.specialRequests, adults: this.bookingData.adults, children: this.bookingData.children }),
+          thanhTien: this.calculateTotalPrice()
+        });
+
+        // B4: cập nhật trạng thái phòng
+        await roomService.updateRoom(this.selectedRoom.id, {
+          trangThai: 'Đã đặt',
+          sucChua: totalGuests,
+          soPhong: this.selectedRoom.number,
+          idLoaiPhong: this.selectedRoom.type
+        });
+
+        alert('Đặt phòng thành công!');
+        this.$router.push('/');
+      } catch (err) {
+        console.error('Booking error:', err);
+        alert('Đặt phòng thất bại, vui lòng thử lại sau.');
+      } finally {
+        this.loading = false;
+      }
+    },
+    normalizeKey(str) {
+      return str?.toString().trim().toLowerCase() || '';
     }
   }
 }

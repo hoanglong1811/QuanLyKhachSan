@@ -247,14 +247,15 @@ export default {
       this.error = '';
       try {
         const response = await roomService.getAllRooms();
-        // Lấy thông tin đặt phòng cho mỗi phòng
         this.rooms = await Promise.all(response.map(async room => {
-          const bookingInfo = await roomService.getRoomBookingInfo(room.idPhong);
-          // Đảm bảo số phòng luôn được giữ
+          let bookingInfo = null;
+          if (room.trangThai && room.trangThai.toLowerCase() !== 'trống') {
+            bookingInfo = await roomService.getRoomBookingInfo(room.idPhong);
+          }
           return {
             ...room,
             soPhong: room.soPhong || '',
-            bookingInfo: bookingInfo
+            bookingInfo
           };
         }));
       } catch (err) {
@@ -296,7 +297,10 @@ export default {
           idLoaiPhong: this.selectedRoom.idLoaiPhong
         };
         await roomService.updateRoom(this.selectedRoom.idPhong, updateData);
-        await this.fetchRooms(); // Refresh data
+        if (updateData.trangThai.toLowerCase() === 'trống') {
+          this.selectedRoom.bookingInfo = null;
+        }
+        await this.fetchRooms();
         this.closeUpdateModal();
       } catch (err) {
         this.error = 'Không thể cập nhật thông tin phòng';

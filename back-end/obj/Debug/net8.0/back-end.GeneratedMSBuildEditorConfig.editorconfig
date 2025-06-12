@@ -9,19 +9,11 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = back_end
 build_property.RootNamespace = back_end
-<<<<<<< HEAD
 build_property.ProjectDir = D:\New folder\QuanLyKhachSan\back-end\
-=======
-build_property.ProjectDir = c:\Users\Dell\Desktop\QuanLyKhachSan\back-end\
->>>>>>> 0a38dccde2c0d996b2d6dcf2c49906e0eb0bca17
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-<<<<<<< HEAD
 build_property.MSBuildProjectDirectory = D:\New folder\QuanLyKhachSan\back-end
-=======
-build_property.MSBuildProjectDirectory = c:\Users\Dell\Desktop\QuanLyKhachSan\back-end
->>>>>>> 0a38dccde2c0d996b2d6dcf2c49906e0eb0bca17
 build_property._RazorSourceGeneratorDebug = 
