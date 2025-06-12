@@ -72,6 +72,22 @@
             </div>
             <div class="form-group">
               <label>
+                <i class="fas fa-door-open"></i>
+                Phòng
+              </label>
+              <select
+                v-model="deviceForm.idPhong"
+                class="form-input"
+                required
+              >
+                <option value="">Chọn phòng</option>
+                <option v-for="room in rooms" :key="room.idPhong" :value="room.idPhong">
+                  Phòng {{ room.soPhong }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>
                 <i class="fas fa-money-bill-wave"></i>
                 Giá
               </label>
@@ -93,6 +109,7 @@
               type="button"
               @click="closeModal"
               class="cancel-btn"
+              :disabled="isSubmitting"
             >
               Hủy
             </button>
@@ -101,8 +118,8 @@
               class="submit-btn"
               :disabled="isSubmitting"
             >
-              <span v-if="isSubmitting" class="spinner"></span>
-              {{ isSubmitting ? 'Đang lưu...' : 'Lưu' }}
+              <div v-if="isSubmitting" class="button-spinner"></div>
+              <span v-else>{{ showEditModal ? 'Cập nhật' : 'Thêm mới' }}</span>
             </button>
           </div>
         </form>
@@ -277,7 +294,8 @@ export default {
         loaiThietBi: '',
         tinhTrang: 'Mới',
         soLuong: 1,
-        gia: 0
+        gia: 0,
+        idPhong: ''
       },
       maintenanceForm: {
         moTa: '',
@@ -503,7 +521,8 @@ export default {
         loaiThietBi: '',
         tinhTrang: 'Mới',
         soLuong: 1,
-        gia: 0
+        gia: 0,
+        idPhong: ''
       };
       this.editingDeviceId = null;
     },
@@ -928,9 +947,14 @@ export default {
   cursor: pointer;
 }
 
-.cancel-btn:hover {
+.cancel-btn:hover:not(:disabled) {
   background-color: #d1d5db;
   transform: translateY(-1px);
+}
+
+.cancel-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .submit-btn {
@@ -944,28 +968,36 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  min-width: 100px;
+  position: relative;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: #2563eb;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .submit-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.spinner {
-  width: 1rem;
-  height: 1rem;
+.button-spinner {
+  width: 20px;
+  height: 20px;
   border: 2px solid #ffffff;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
