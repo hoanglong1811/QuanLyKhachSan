@@ -33,8 +33,9 @@
             <div class="filter-box">
               <select v-model="roleFilter" @change="handleFilter">
                 <option value="">Tất cả vai trò</option>
-                <option value="admin">Quản trị viên</option>
-                <option value="employee">Nhân viên</option>
+                <option v-for="vaiTro in vaiTros" :key="vaiTro.idVaiTro" :value="vaiTro.idVaiTro">
+                  {{ vaiTro.tenVaiTro }}
+                </option>
               </select>
             </div>
           </div>
@@ -44,12 +45,12 @@
             <table class="accounts-table">
               <thead>
                 <tr>
-                  <th>Họ và tên</th>
+                  <th>Username</th>
                   <th>Email</th>
                   <th>Số điện thoại</th>
-                  <th>Vị trí</th>
+                  <th>Địa chỉ</th>
+                  <th>Giới tính</th>
                   <th>Vai trò</th>
-                  <th>Trạng thái</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -59,14 +60,10 @@
                   <td>{{ account.email }}</td>
                   <td>{{ account.phone }}</td>
                   <td>{{ account.position }}</td>
+                  <td>{{ account.gender }}</td>
                   <td>
                     <span class="role-badge" :class="account.role">
-                      {{ account.role === 'admin' ? 'Quản trị viên' : 'Nhân viên' }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="status-badge" :class="account.status">
-                      {{ account.status === 'active' ? 'Hoạt động' : 'Không hoạt động' }}
+                      {{ account.role }}
                     </span>
                   </td>
                   <td>
@@ -96,7 +93,7 @@
               <div class="modal-body">
                 <form @submit.prevent="handleSubmit">
                   <div class="form-group">
-                    <label>Họ và tên</label>
+                    <label>Username</label>
                     <input type="text" v-model="formData.fullName" required>
                   </div>
                   <div class="form-group">
@@ -108,26 +105,27 @@
                     <input type="tel" v-model="formData.phone" required>
                   </div>
                   <div class="form-group">
-                    <label>Vị trí</label>
+                    <label>Địa chỉ</label>
                     <input type="text" v-model="formData.position" required>
                   </div>
                   <div class="form-group">
+                    <label>Giới tính</label>
+                    <select v-model="formData.gender" required>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label>Vai trò</label>
-                    <select v-model="formData.role" required>
-                      <option value="employee">Nhân viên</option>
-                      <option value="admin">Quản trị viên</option>
+                    <select v-model="formData.roleId" required>
+                      <option v-for="vaiTro in vaiTros" :key="vaiTro.idVaiTro" :value="vaiTro.idVaiTro">
+                        {{ vaiTro.tenVaiTro }}
+                      </option>
                     </select>
                   </div>
                   <div class="form-group" v-if="!isEditing">
                     <label>Mật khẩu</label>
                     <input type="password" v-model="formData.password" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Trạng thái</label>
-                    <select v-model="formData.status" required>
-                      <option value="active">Hoạt động</option>
-                      <option value="inactive">Không hoạt động</option>
-                    </select>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="cancel-button" @click="closeModal">Hủy</button>
@@ -183,13 +181,14 @@ export default {
       showDeleteModal: false,
       isEditing: false,
       accountToDelete: null,
+      vaiTros: [],
       formData: {
         fullName: '',
         email: '',
         phone: '',
         position: '',
-        role: 'employee',
-        status: 'active',
+        gender: 'Nam',
+        roleId: 2,
         password: ''
       }
     };
@@ -210,16 +209,30 @@ export default {
       
       // Filter by role
       if (this.roleFilter) {
-        filtered = filtered.filter(account => account.role === this.roleFilter);
+        filtered = filtered.filter(account => account.roleId === this.roleFilter);
       }
       
       return filtered;
     }
   },
   created() {
+    this.fetchVaiTros();
     this.fetchAccounts();
   },
   methods: {
+    async fetchVaiTros() {
+      try {
+        const response = await axios.get('http://localhost:5012/api/VaiTro', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.vaiTros = response.data;
+        console.log('Vai trò từ API:', this.vaiTros);
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    },
     async fetchAccounts() {
       try {
         const response = await axios.get('http://localhost:5012/api/TaiKhoan', {
@@ -227,16 +240,48 @@ export default {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
+        
         // Transform the data to match our component's structure
-        this.accounts = response.data.map(account => ({
-          id: account.idTaiKhoan,
-          fullName: account.tenDangNhap,
-          email: account.email,
-          phone: account.soDienThoai || '',
-          position: account.viTri || '',
-          role: account.idVaiTro === 1 ? 'admin' : 'employee',
-          status: account.trangThai || 'active'
+        const accounts = await Promise.all(response.data.map(async account => {
+          try {
+            // Fetch employee information for each account
+            const employeeResponse = await axios.get(`http://localhost:5012/api/NhanVien/account/${account.idTaiKhoan}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            
+            // Get role name from vaiTros array
+            const role = this.vaiTros.find(vt => vt.idVaiTro === account.idVaiTro);
+            
+            return {
+              id: account.idTaiKhoan,
+              fullName: account.tenDangNhap,
+              email: account.email,
+              phone: employeeResponse.data.dienThoai?.toString() || '',
+              position: employeeResponse.data.diaChi || '',
+              gender: employeeResponse.data.gioiTinh || 'Nam',
+              role: role?.tenVaiTro || 'Nhân viên',
+              roleId: account.idVaiTro
+            };
+          } catch (error) {
+            console.error('Lỗi khi lấy thông tin nhân viên:', error);
+            // If employee info not found, return account without employee details
+            const role = this.vaiTros.find(vt => vt.idVaiTro === account.idVaiTro);
+            return {
+              id: account.idTaiKhoan,
+              fullName: account.tenDangNhap,
+              email: account.email,
+              phone: '',
+              position: '',
+              gender: 'Nam',
+              role: role?.tenVaiTro || 'Nhân viên',
+              roleId: account.idVaiTro
+            };
+          }
         }));
+
+        this.accounts = accounts;
       } catch (error) {
         console.error('Error fetching accounts:', error);
         alert('Không thể tải danh sách tài khoản. Vui lòng thử lại sau.');
@@ -249,15 +294,24 @@ export default {
         email: '',
         phone: '',
         position: '',
-        role: 'employee',
-        status: 'active',
+        gender: 'Nam',
+        roleId: 2,
         password: ''
       };
       this.showModal = true;
     },
     openEditModal(account) {
       this.isEditing = true;
-      this.formData = { ...account };
+      this.formData = {
+        id: account.id,
+        fullName: account.fullName,
+        email: account.email,
+        phone: account.phone,
+        position: account.position,
+        gender: account.gender,
+        roleId: account.roleId,
+        password: ''
+      };
       this.showModal = true;
     },
     closeModal() {
@@ -267,26 +321,74 @@ export default {
         email: '',
         phone: '',
         position: '',
-        role: 'employee',
-        status: 'active',
+        gender: 'Nam',
+        roleId: 2,
         password: ''
       };
     },
     async handleSubmit() {
       try {
         if (this.isEditing) {
-          await axios.put(`http://localhost:3000/api/accounts/${this.formData.id}`, this.formData, {
+          // Cập nhật tài khoản
+          await axios.put(`http://localhost:5012/api/TaiKhoan/${this.formData.id}`, {
+            tenDangNhap: this.formData.fullName,
+            email: this.formData.email,
+            idVaiTro: this.formData.roleId
+          }, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           });
+
+          // Lấy thông tin nhân viên hiện tại
+          const nhanVienResponse = await axios.get(`http://localhost:5012/api/NhanVien/account/${this.formData.id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+
+          if (nhanVienResponse.data) {
+            // Cập nhật thông tin nhân viên
+            await axios.put(`http://localhost:5012/api/NhanVien/${nhanVienResponse.data.idNhanVien}`, {
+              hoTen: this.formData.fullName,
+              diaChi: this.formData.position,
+              gioiTinh: this.formData.gender,
+              dienThoai: this.formData.phone,
+              idTaiKhoan: this.formData.id
+            }, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+          }
+
           alert('Cập nhật tài khoản thành công!');
         } else {
-          await axios.post('http://localhost:3000/api/accounts', this.formData, {
+          // Thêm tài khoản mới
+          const taiKhoanResponse = await axios.post('http://localhost:5012/api/TaiKhoan', {
+            tenDangNhap: this.formData.fullName,
+            email: this.formData.email,
+            matKhau: this.formData.password,
+            idVaiTro: this.formData.roleId
+          }, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           });
+
+          // Thêm thông tin nhân viên
+          await axios.post('http://localhost:5012/api/NhanVien', {
+            hoTen: this.formData.fullName,
+            diaChi: this.formData.position,
+            gioiTinh: this.formData.gender,
+            dienThoai: this.formData.phone,
+            idTaiKhoan: taiKhoanResponse.data.idTaiKhoan
+          }, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+
           alert('Thêm tài khoản mới thành công!');
         }
         this.closeModal();
@@ -306,11 +408,29 @@ export default {
     },
     async handleDelete() {
       try {
-        await axios.delete(`http://localhost:3000/api/accounts/${this.accountToDelete.id}`, {
+        // Lấy thông tin nhân viên trước khi xóa tài khoản
+        const nhanVienResponse = await axios.get(`http://localhost:5012/api/NhanVien/account/${this.accountToDelete.id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
+
+        if (nhanVienResponse.data) {
+          // Xóa thông tin nhân viên trước
+          await axios.delete(`http://localhost:5012/api/NhanVien/${nhanVienResponse.data.idNhanVien}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+        }
+
+        // Sau đó xóa tài khoản
+        await axios.delete(`http://localhost:5012/api/TaiKhoan/${this.accountToDelete.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
         alert('Xóa tài khoản thành công!');
         this.closeDeleteModal();
         this.fetchAccounts();

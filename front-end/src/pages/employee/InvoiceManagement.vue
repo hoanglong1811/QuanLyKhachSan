@@ -18,22 +18,42 @@
           </button>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-state">
+          <p>Đang tải danh sách hóa đơn...</p>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="error-state">
+          <p>{{ error }}</p>
+        </div>
+
         <!-- Table Section -->
-        <div class="table-container">
+        <div v-else class="table-container">
           <div class="table-wrapper">
             <table class="invoice-table">
               <thead>
                 <tr>
                   <th>Mã hóa đơn</th>
                   <th>Thông tin khách hàng</th>
+                  <th>Mã đặt phòng</th>
+                  <th>Mã nhân viên</th>
+                  <th>Phương thức thanh toán</th>
+                  <th>Ngày lập</th>
+                  <th>Tổng tiền</th>
                   <th>Trạng thái thanh toán</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(invoice, index) in invoices" :key="index" class="invoice-row">
+                <tr v-for="invoice in invoices" :key="invoice.invoiceId" class="invoice-row">
                   <td class="invoice-id">{{ invoice.invoiceId }}</td>
                   <td class="customer-info">{{ invoice.customerInfo }}</td>
+                  <td>{{ invoice.idDatPhong }}</td>
+                  <td>{{ invoice.idNhanVien }}</td>
+                  <td>{{ invoice.phuongThucThanhToan }}</td>
+                  <td>{{ invoice.ngayLap }}</td>
+                  <td class="total-amount">{{ invoice.tongTien }}</td>
                   <td>
                     <span :class="getStatusClass(invoice.status)" class="status-badge">
                       {{ invoice.status }}
@@ -66,7 +86,7 @@
 
 <script>
 import NavBar from '@/components/navbar.vue';
-import apiClient from '@/services/api';
+import axios from 'axios';
 
 export default {
   name: 'InvoiceManagement',
@@ -85,16 +105,24 @@ export default {
       this.loading = true;
       this.error = '';
       try {
-        const response = await apiClient.get('/api/HoaDon');
-        // Map dữ liệu trả về cho phù hợp với bảng
-        this.invoices = response.data.map(item => ({
-          invoiceId: item.idHoaDon,
-          customerInfo: `${item.hoTen || ''} - ${item.dienThoai || ''} - ${item.cccd || ''}`,
-          status: item.trangThaiThanhToan,
+        const response = await axios.get('http://localhost:5012/api/HoaDon', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.invoices = response.data.map(invoice => ({
+          invoiceId: invoice.idHoaDon,
+          customerInfo: `${invoice.hoTen || ''} - ${invoice.dienThoai || ''} - ${invoice.cccd || ''}`,
+          status: invoice.trangThaiThanhToan ? 'ĐÃ THANH TOÁN' : 'CHƯA THANH TOÁN',
+          ngayLap: new Date(invoice.ngayLap).toLocaleDateString('vi-VN'),
+          tongTien: invoice.tongTien?.toLocaleString('vi-VN') + ' VND',
+          idDatPhong: invoice.idDatPhong,
+          idNhanVien: invoice.idNhanVien,
+          phuongThucThanhToan: invoice.phuongThucThanhToan
         }));
       } catch (err) {
         this.error = 'Không thể tải danh sách hóa đơn';
-        console.error(err);
+        console.error('Error fetching invoices:', err);
       } finally {
         this.loading = false;
       }
@@ -291,6 +319,26 @@ export default {
   color: #6b7280;
   text-align: center;
   font-size: 1rem;
+}
+
+.loading-state,
+.error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.error-state {
+  color: #dc2626;
+}
+
+.total-amount {
+  font-family: monospace;
+  font-weight: 600;
+  color: #059669;
 }
 
 /* Responsive Design */

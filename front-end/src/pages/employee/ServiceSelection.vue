@@ -9,280 +9,223 @@
           <div class="header-section">
             <div class="header-left">
               <h1 class="page-title">Quản lý dịch vụ</h1>
-              <p class="subtitle">Thêm và quản lý dịch vụ cho khách hàng</p>
+              <p class="subtitle">Thêm, sửa và xóa dịch vụ</p>
             </div>
-            <button class="back-button" @click="goBack">
-              Quay lại
-            </button>
-          </div>
-
-          <!-- Customer Selection Section -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Thông tin khách hàng</h2>
-              <button
-                v-if="!selectedCustomer"
-                @click="showCustomerModal = true"
-                class="primary-button"
-              >
-                Chọn khách hàng
+            <div class="header-actions">
+              <button class="add-service-button" @click="openAddModal">
+                <i class="fas fa-plus"></i>
+                Thêm dịch vụ mới
               </button>
-            </div>
-
-            <!-- Selected Customer Info -->
-            <div v-if="selectedCustomer" class="customer-info-card">
-              <div class="customer-info-content">
-                <div class="customer-details">
-                  <h3 class="customer-name">{{ selectedCustomer.name }}</h3>
-                  <p class="customer-data">SĐT: {{ selectedCustomer.phone }}</p>
-                  <p class="customer-data">CCCD: {{ selectedCustomer.idNumber }}</p>
-                </div>
-                <button
-                  @click="clearSelectedCustomer"
-                  class="icon-button"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            <!-- No Customer Selected Message -->
-            <div v-else class="empty-state">
-              <p>Vui lòng chọn khách hàng để thêm dịch vụ</p>
-            </div>
-          </div>
-
-          <!-- Service List with Expandable Tables -->
-          <div v-if="selectedCustomer" class="services-container">
-            <!-- Giặt ủi -->
-            <div class="service-section">
-              <button class="service-header" @click="toggleSection('laundry')">
-                <span class="service-title">Giặt ủi</span>
-                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.laundry }">▼</span>
-              </button>
-              <div v-if="expandedSections.laundry" class="service-content">
-                <div class="table-responsive">
-                  <table class="service-table">
-                    <thead>
-                      <tr>
-                        <th>Tên dịch vụ</th>
-                        <th>Giá (VND)</th>
-                        <th>Số lượng</th>
-                        <th>Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in laundryServices" :key="index">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.price }}</td>
-                        <td>
-                          <input 
-                            v-model.number="laundryServices[index].quantity" 
-                            type="number" 
-                            min="0" 
-                            class="quantity-input" 
-                            placeholder="0" 
-                          />
-                        </td>
-                        <td>
-                          <button 
-                            class="add-button"
-                            @click="addService({ ...laundryServices[index] }, 'laundry', index)"
-                          >
-                            Thêm
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- Ăn uống -->
-            <div class="service-section">
-              <button class="service-header" @click="toggleSection('food')">
-                <span class="service-title">Ăn uống</span>
-                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.food }">▼</span>
-              </button>
-              <div v-if="expandedSections.food" class="service-content">
-                <div class="table-responsive">
-                  <table class="service-table">
-                    <thead>
-                      <tr>
-                        <th>Tên dịch vụ</th>
-                        <th>Giá (VND)</th>
-                        <th>Số lượng</th>
-                        <th>Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in foodServices" :key="index">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.price }}</td>
-                        <td>
-                          <input 
-                            v-model.number="foodServices[index].quantity" 
-                            type="number" 
-                            min="0" 
-                            class="quantity-input" 
-                            placeholder="0" 
-                          />
-                        </td>
-                        <td>
-                          <button 
-                            class="add-button"
-                            @click="addService({ ...foodServices[index] }, 'food', index)"
-                          >
-                            Thêm
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- Spa -->
-            <div class="service-section">
-              <button class="service-header" @click="toggleSection('spa')">
-                <span class="service-title">Spa</span>
-                <span class="toggle-indicator" :class="{ 'rotate-180': expandedSections.spa }">▼</span>
-              </button>
-              <div v-if="expandedSections.spa" class="service-content">
-                <div class="table-responsive">
-                  <table class="service-table">
-                    <thead>
-                      <tr>
-                        <th>Tên dịch vụ</th>
-                        <th>Giá (VND)</th>
-                        <th>Số lượng</th>
-                        <th>Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in spaServices" :key="index">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.price }}</td>
-                        <td>
-                          <input 
-                            v-model.number="spaServices[index].quantity" 
-                            type="number" 
-                            min="0" 
-                            class="quantity-input" 
-                            placeholder="0" 
-                          />
-                        </td>
-                        <td>
-                          <button 
-                            class="add-button"
-                            @click="addService({ ...spaServices[index] }, 'spa', index)"
-                          >
-                            Thêm
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Selected Services Section -->
-          <div v-if="selectedCustomer" class="selected-services-section">
-            <div class="section-header">
-              <h2 class="section-title">Dịch vụ đã chọn</h2>
-            </div>
-            
-            <div v-if="selectedServices.length" class="selected-services-table-container">
-              <div class="table-responsive">
-                <table class="selected-services-table">
-                  <thead>
-                    <tr>
-                      <th>Tên dịch vụ</th>
-                      <th>Giá (VND)</th>
-                      <th>Số lượng</th>
-                      <th>Thành tiền (VND)</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(service, index) in selectedServices" :key="index">
-                      <td class="service-name">{{ service.name }}</td>
-                      <td class="service-price">{{ service.price }}</td>
-                      <td class="service-quantity">{{ service.quantity }}</td>
-                      <td class="service-total">
-                        {{ (parseInt(service.price.replace(/[^0-9]/g, '')) * service.quantity).toLocaleString() }}
-                      </td>
-                      <td>
-                        <button class="delete-button" @click="removeService(service, index)">
-                          Xóa
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div v-else class="empty-services">
-              <p>Chưa có dịch vụ nào được chọn.</p>
-            </div>
-
-            <!-- Total and Confirm Button -->
-            <div class="footer-section">
-              <div class="total-price">
-                <span class="total-label">Tổng tiền dự kiến:</span>
-                <span class="total-amount">{{ totalPrice }} VND</span>
-              </div>
-              <button class="confirm-button" @click="confirmServices">
-                Xác nhận
+              <button class="add-service-to-room-button" @click="openAddServiceToRoomModal">
+                <i class="fas fa-concierge-bell"></i>
+                Thêm dịch vụ cho phòng
               </button>
             </div>
           </div>
 
-          <!-- Customer Selection Modal -->
-          <div v-if="showCustomerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-xl p-8 w-full max-w-2xl">
-              <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Chọn khách hàng</h2>
-                <button @click="closeCustomerModal" class="text-gray-500 hover:text-gray-700">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+          <!-- Services Table -->
+          <div class="services-table-container">
+            <div class="table-responsive">
+              <table class="services-table">
+                <thead>
+                  <tr>
+                    <th>Tên dịch vụ</th>
+                    <th>Mô tả</th>
+                    <th>Giá (VND)</th>
+                    <th>Đơn vị tính</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="service in services" :key="service.id">
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ formatPrice(service.price) }}</td>
+                    <td>{{ service.unit }}</td>
+                    <td class="actions-cell">
+                      <button class="edit-button" @click="openEditModal(service)">
+                        <i class="fas fa-edit"></i>
+                        Sửa
+                      </button>
+                      <button class="delete-button" @click="confirmDelete(service)">
+                        <i class="fas fa-trash"></i>
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                  <tr v-if="services.length === 0">
+                    <td colspan="6" class="no-data">
+                      <i class="fas fa-box-open"></i>
+                      <p>Chưa có dịch vụ nào</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Add/Edit Service Modal -->
+          <div v-if="showModal" class="modal-overlay">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title">
+                  <i class="fas" :class="isEditing ? 'fa-edit' : 'fa-plus'"></i>
+                  {{ isEditing ? 'Sửa dịch vụ' : 'Thêm dịch vụ mới' }}
+                </h2>
+                <button @click="closeModal" class="close-button">
+                  <i class="fas fa-times"></i>
                 </button>
               </div>
 
-              <!-- Search Input -->
-              <div class="mb-6">
-                <input
-                  type="text"
-                  v-model="searchQuery"
-                  placeholder="Tìm kiếm khách hàng..."
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <!-- Customer List -->
-              <div class="max-h-96 overflow-y-auto">
-                <div
-                  v-for="customer in filteredCustomers"
-                  :key="customer.id"
-                  @click="selectCustomer(customer)"
-                  class="p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
-                >
-                  <div class="flex justify-between items-center">
-                    <div>
-                      <h3 class="font-medium text-gray-900">{{ customer.name }}</h3>
-                      <p class="text-sm text-gray-500">{{ customer.phone }}</p>
-                    </div>
-                    <div class="text-sm text-gray-500">
-                      CCCD: {{ customer.idNumber }}
-                    </div>
+              <div class="modal-body">
+                <form @submit.prevent="handleSubmit" class="service-form">
+                  <div class="form-group">
+                    <label for="name">Tên dịch vụ</label>
+                    <input
+                      type="text"
+                      id="name"
+                      v-model="formData.name"
+                      required
+                      placeholder="Nhập tên dịch vụ"
+                    />
                   </div>
-                </div>
+
+                  <div class="form-group">
+                    <label for="description">Mô tả</label>
+                    <textarea
+                      id="description"
+                      v-model="formData.description"
+                      required
+                      placeholder="Nhập mô tả dịch vụ"
+                      rows="3"
+                    ></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="price">Giá (VND)</label>
+                    <input
+                      type="number"
+                      id="price"
+                      v-model.number="formData.price"
+                      required
+                      min="0"
+                      placeholder="Nhập giá dịch vụ"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="unit">Đơn vị tính</label>
+                    <input
+                      type="text"
+                      id="unit"
+                      v-model="formData.unit"
+                      required
+                      placeholder="Nhập đơn vị tính"
+                    />
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="cancel-button" @click="closeModal">
+                      Hủy
+                    </button>
+                    <button type="submit" class="submit-button">
+                      {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Service to Room Modal -->
+          <div v-if="showAddServiceToRoomModal" class="modal-overlay">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title">
+                  <i class="fas fa-concierge-bell"></i>
+                  Thêm dịch vụ cho phòng
+                </h2>
+                <button @click="closeAddServiceToRoomModal" class="close-button">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form @submit.prevent="handleAddServiceToRoom" class="service-form">
+                  <div class="form-group">
+                    <label for="roomNumber">Chọn phòng</label>
+                    <select 
+                      id="roomNumber" 
+                      v-model="serviceToRoomForm.roomId"
+                      required
+                      @change="handleRoomSelect"
+                    >
+                      <option value="">Chọn phòng</option>
+                      <option 
+                        v-for="room in bookedRooms" 
+                        :key="room.idPhong" 
+                        :value="room.idPhong"
+                      >
+                        Phòng {{ room.soPhong }} - {{ room.bookingInfo?.tenKhachHang }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="service">Chọn dịch vụ</label>
+                    <select 
+                      id="service" 
+                      v-model="serviceToRoomForm.serviceId"
+                      required
+                      @change="handleServiceSelect"
+                    >
+                      <option value="">Chọn dịch vụ</option>
+                      <option 
+                        v-for="service in services" 
+                        :key="service.id" 
+                        :value="service.id"
+                      >
+                        {{ service.name }} - {{ formatPrice(service.price) }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="quantity">Số lượng</label>
+                    <input 
+                      type="number" 
+                      id="quantity"
+                      v-model.number="serviceToRoomForm.quantity"
+                      required
+                      min="1"
+                      :max="selectedService?.maxQuantity || 999"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="note">Ghi chú</label>
+                    <textarea
+                      id="note"
+                      v-model="serviceToRoomForm.note"
+                      rows="2"
+                      placeholder="Ghi chú (tuỳ chọn)"
+                    ></textarea>
+                  </div>
+
+                  <div class="total-price" v-if="serviceToRoomForm.serviceId && serviceToRoomForm.quantity">
+                    <span>Tổng tiền:</span>
+                    <span class="price">{{ formatPrice(calculateTotalPrice()) }}</span>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="cancel-button" @click="closeAddServiceToRoomModal">
+                      Hủy
+                    </button>
+                    <button type="submit" class="submit-button" :disabled="loading">
+                      {{ loading ? 'Đang thêm...' : 'Thêm dịch vụ' }}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -294,6 +237,7 @@
 
 <script>
 import Navbar from '@/components/navbar.vue';
+import axios from 'axios';
 
 export default {
   name: 'ServiceSelection',
@@ -302,279 +246,620 @@ export default {
   },
   data() {
     return {
-      // Customer selection
-      showCustomerModal: false,
-      searchQuery: '',
-      selectedCustomer: null,
-      customers: [
-        { id: 1, name: 'Nguyễn Văn A', phone: '0123456789', idNumber: '001234567890' },
-        { id: 2, name: 'Trần Thị B', phone: '0987654321', idNumber: '098765432100' },
-        { id: 3, name: 'Lê Văn C', phone: '0369852147', idNumber: '036985214700' },
-      ],
-
-      // Existing data
-      expandedSections: {
-        laundry: false,
-        food: false,
-        spa: false,
+      services: [],
+      showModal: false,
+      isEditing: false,
+      formData: {
+        id: null,
+        name: '',
+        description: '',
+        price: 0,
+        unit: ''
       },
-      laundryServices: [
-        { name: 'Giặt sấy dưới 5kg', price: '10,000/kg', quantity: 0 },
-        { name: 'Giặt trên 7kg', price: '8,000/kg', quantity: 0 },
-        { name: 'Ủi quần - áo', price: '10,000/cái', quantity: 0 },
-      ],
-      foodServices: [
-        { name: 'Phở bò', price: '80,000/suất', quantity: 0 },
-        { name: 'Cơm tấm sườn nướng', price: '70,000/suất', quantity: 0 },
-        { name: 'Nước ép', price: '45,000/ly', quantity: 0 },
-      ],
-      spaServices: [
-        { name: 'Massage toàn thân', price: '300,000/lần', quantity: 0 },
-        { name: 'Gội đầu dưỡng sinh', price: '100,000/lần', quantity: 0 },
-        { name: 'Xông hơi', price: '150,000/lần', quantity: 0 },
-      ],
-      selectedServices: [],
+      showAddServiceToRoomModal: false,
+      bookedRooms: [],
+      serviceToRoomForm: {
+        roomId: '',
+        serviceId: '',
+        quantity: 1,
+        note: ''
+      },
+      loading: false
     };
   },
   computed: {
-    filteredCustomers() {
-      const query = this.searchQuery.toLowerCase();
-      return this.customers.filter(customer => 
-        customer.name.toLowerCase().includes(query) ||
-        customer.phone.includes(query) ||
-        customer.idNumber.includes(query)
-      );
-    },
-    totalPrice() {
-      let total = 0;
-      this.selectedServices.forEach(service => {
-        const pricePerUnit = parseInt(service.price.replace(/[^0-9]/g, '')) || 0;
-        total += pricePerUnit * (service.quantity || 0);
-      });
-      return total.toLocaleString();
-    },
+    selectedService() {
+      return this.services.find(s => s.id === this.serviceToRoomForm.serviceId);
+    }
+  },
+  created() {
+    this.fetchServices();
   },
   methods: {
-    goBack() {
-      this.$router ? this.$router.go(-1) : window.history.back();
+    async fetchServices() {
+      try {
+        const response = await axios.get('http://localhost:5012/api/DichVu', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.services = response.data.map(service => ({
+          id: service.idDichVu,
+          name: service.tenDichVu,
+          description: service.moTa,
+          price: service.gia,
+          unit: service.donViTinh
+        }));
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        alert('Không thể tải danh sách dịch vụ. Vui lòng thử lại sau.');
+      }
     },
-    // Customer selection methods
-    closeCustomerModal() {
-      this.showCustomerModal = false;
-      this.searchQuery = '';
+
+    openAddModal() {
+      this.isEditing = false;
+      this.formData = {
+        id: null,
+        name: '',
+        description: '',
+        price: 0,
+        unit: ''
+      };
+      this.showModal = true;
     },
-    selectCustomer(customer) {
-      this.selectedCustomer = customer;
-      this.closeCustomerModal();
+
+    openEditModal(service) {
+      this.isEditing = true;
+      this.formData = {
+        id: service.id,
+        name: service.name,
+        description: service.description,
+        price: service.price,
+        unit: service.unit
+      };
+      this.showModal = true;
     },
-    clearSelectedCustomer() {
-      this.selectedCustomer = null;
-      this.selectedServices = [];
-      this.expandedSections = {
-        laundry: false,
-        food: false,
-        spa: false,
+
+    closeModal() {
+      if (this.isEditing && this.hasUnsavedChanges()) {
+        if (!confirm('Bạn có chưa lưu thay đổi. Bạn có chắc chắn muốn đóng?')) {
+          return;
+        }
+      }
+      this.showModal = false;
+      this.isEditing = false;
+      this.formData = {
+        id: null,
+        name: '',
+        description: '',
+        price: 0,
+        unit: ''
       };
     },
 
-    // Existing methods
-    toggleSection(section) {
-      this.expandedSections[section] = !this.expandedSections[section];
+    hasUnsavedChanges() {
+      if (!this.isEditing) return false;
+      const originalService = this.services.find(s => s.id === this.formData.id);
+      if (!originalService) return false;
+
+      return (
+        originalService.name !== this.formData.name ||
+        originalService.description !== this.formData.description ||
+        originalService.price !== this.formData.price ||
+        originalService.unit !== this.formData.unit
+      );
     },
-    addService(item, section, index) {
-      if (!item.quantity || item.quantity <= 0) {
-        alert('Chưa nhập số lượng');
-        return;
+
+    async handleSubmit() {
+      try {
+        // Validate form data
+        if (!this.formData.name.trim()) {
+          alert('Vui lòng nhập tên dịch vụ');
+          return;
+        }
+        if (!this.formData.description.trim()) {
+          alert('Vui lòng nhập mô tả dịch vụ');
+          return;
+        }
+        if (this.formData.price <= 0) {
+          alert('Giá dịch vụ phải lớn hơn 0');
+          return;
+        }
+        if (!this.formData.unit.trim()) {
+          alert('Vui lòng nhập đơn vị tính');
+          return;
+        }
+
+        const serviceData = {
+          idDichVu: this.formData.id,
+          tenDichVu: this.formData.name.trim(),
+          moTa: this.formData.description.trim(),
+          gia: this.formData.price,
+          donViTinh: this.formData.unit.trim()
+        };
+
+        if (this.isEditing) {
+          await axios.put(`http://localhost:5012/api/DichVu/${this.formData.id}`, serviceData, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          alert('Cập nhật dịch vụ thành công!');
+        } else {
+          await axios.post('http://localhost:5012/api/DichVu', serviceData, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          alert('Thêm dịch vụ mới thành công!');
+        }
+
+        this.closeModal();
+        this.fetchServices();
+      } catch (error) {
+        console.error('Error saving service:', error);
+        if (error.response) {
+          alert(error.response.data || 'Có lỗi xảy ra. Vui lòng thử lại sau.');
+        } else {
+          alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+        }
       }
-      const existingService = this.selectedServices.find(s => s.name === item.name);
-      if (existingService) {
-        existingService.quantity = Number(item.quantity);
-      } else {
-        this.selectedServices.push({ ...item, quantity: Number(item.quantity) });
-      }
-      if (section === 'laundry') this.laundryServices[index].quantity = 0;
-      if (section === 'food') this.foodServices[index].quantity = 0;
-      if (section === 'spa') this.spaServices[index].quantity = 0;
     },
-    removeService(service, index) {
+
+    async confirmDelete(service) {
       if (confirm(`Bạn có chắc chắn muốn xóa dịch vụ "${service.name}" không?`)) {
-        this.selectedServices.splice(index, 1);
-        alert('Dịch vụ đã được xóa khỏi danh sách');
+        try {
+          await axios.delete(`http://localhost:5012/api/DichVu/${service.id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          alert('Xóa dịch vụ thành công!');
+          this.fetchServices();
+        } catch (error) {
+          console.error('Error deleting service:', error);
+          if (error.response) {
+            alert(error.response.data || 'Không thể xóa dịch vụ. Vui lòng thử lại sau.');
+          } else {
+            alert('Không thể xóa dịch vụ. Vui lòng thử lại sau.');
+          }
+        }
       }
     },
-    confirmServices() {
-      if (this.selectedServices.length === 0) {
-        alert('Vui lòng chọn ít nhất một dịch vụ');
+
+    formatPrice(price) {
+      return price.toLocaleString('vi-VN') + ' VND';
+    },
+
+    async fetchBookedRooms() {
+      try {
+        const response = await axios.get('http://localhost:5012/api/ChiTietDatPhong', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        // Lọc các phòng đã đặt và đang thuê
+        this.bookedRooms = response.data.filter(booking => 
+          booking.trangThaiDatPhong === 'Đã xác nhận' || 
+          booking.trangThaiDatPhong === 'Đang thuê'
+        ).map(booking => ({
+          idPhong: booking.idPhong,
+          soPhong: booking.soPhong,
+          bookingInfo: {
+            tenKhachHang: booking.tenKhachHang,
+            ngayDatPhong: booking.ngayDatPhong,
+            ngayTraPhong: booking.ngayTraPhong,
+            trangThaiDatPhong: booking.trangThaiDatPhong
+          }
+        }));
+      } catch (error) {
+        console.error('Error fetching booked rooms:', error);
+        alert('Không thể tải danh sách phòng đã đặt. Vui lòng thử lại sau.');
+      }
+    },
+
+    openAddServiceToRoomModal() {
+      // Chuyển về trang Dashboard
+      this.$router.push('/dashboard');
+    },
+
+    closeAddServiceToRoomModal() {
+      this.showAddServiceToRoomModal = false;
+      this.serviceToRoomForm = {
+        roomId: '',
+        serviceId: '',
+        quantity: 1,
+        note: ''
+      };
+    },
+
+    handleRoomSelect() {
+      // Reset service selection when room changes
+      this.serviceToRoomForm.serviceId = '';
+      this.serviceToRoomForm.quantity = 1;
+    },
+
+    handleServiceSelect() {
+      // Reset quantity when service changes
+      this.serviceToRoomForm.quantity = 1;
+    },
+
+    calculateTotalPrice() {
+      if (!this.selectedService) return 0;
+      return this.selectedService.price * this.serviceToRoomForm.quantity;
+    },
+
+    async handleAddServiceToRoom() {
+      if (!this.serviceToRoomForm.roomId || !this.serviceToRoomForm.serviceId || !this.serviceToRoomForm.quantity) {
+        alert('Vui lòng điền đầy đủ thông tin');
         return;
       }
-      alert('Đã thêm dịch vụ thành công');
-      this.$router.push('/employee/invoice-management');
-    },
-  },
+
+      this.loading = true;
+      try {
+        // 1. Lấy thông tin đặt phòng từ ChiTietDatPhongController
+        const datPhongResponse = await axios.get(`http://localhost:5012/api/ChiTietDatPhong/room/${this.serviceToRoomForm.roomId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        // 2. Tạo chi tiết dịch vụ
+        const chiTietDichVu = await axios.post('http://localhost:5012/api/ChiTietDichVu', {
+          idDatPhong: datPhongResponse.data.idDatPhong,
+          idDichVu: this.serviceToRoomForm.serviceId,
+          soLuong: this.serviceToRoomForm.quantity,
+          donGia: this.selectedService.price,
+          thanhTien: this.calculateTotalPrice(),
+          ghiChu: this.serviceToRoomForm.note,
+          ngaySuDung: new Date().toISOString(),
+          trangThai: 'Chưa thanh toán'
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        // 3. Tạo chi tiết hóa đơn
+        await axios.post('http://localhost:5012/api/ChiTietHoaDon', {
+          idDatPhong: datPhongResponse.data.idDatPhong,
+          idChiTietDichVu: chiTietDichVu.data.idChiTietDichVu,
+          thanhTien: this.calculateTotalPrice(),
+          ghiChu: this.serviceToRoomForm.note
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        alert('Thêm dịch vụ thành công!');
+        this.closeAddServiceToRoomModal();
+      } catch (error) {
+        console.error('Error adding service to room:', error);
+        alert('Không thể thêm dịch vụ. Vui lòng thử lại sau.');
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
 .page-container {
   min-height: 100vh;
-  background-color: #f3f4f6;
-  padding: 2rem;
+  background-color: #f7f9fc;
+  padding-top: 64px;
 }
 
 .content-wrapper {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem;
 }
 
 .content-container {
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
 }
 
 .header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e0e6ed;
 }
 
-.header-left {
+.header-left .page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.header-left .subtitle {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.header-actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
-.page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #111827;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.subtitle {
-  color: #6b7280;
-  font-size: 0.975rem;
-}
-
-.back-button {
+.add-service-button {
+  background-color: #2ecc71;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-service-button:hover {
+  background-color: #27ae60;
+}
+
+.add-service-to-room-button {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-service-to-room-button:hover {
+  background-color: #2980b9;
+}
+
+.services-table-container {
+  background-color: #fbfdff;
+  border: 1px solid #e0e6ed;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.services-table th,
+.services-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e0e6ed;
+  text-align: left;
+}
+
+.services-table th {
+  background-color: #f5f8fa;
+  font-weight: 600;
+  color: #5d6d7e;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.services-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button,
+.delete-button {
   padding: 0.5rem 1rem;
-  color: #4b5563;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  transition: all 0.2s;
-}
-
-.back-button:hover {
-  background-color: #f3f4f6;
-  color: #111827;
-  border-color: #d1d5db;
-}
-
-.section-container {
-  margin-bottom: 2rem;
-  background-color: white;
-  border-radius: 0.75rem;
-}
-
-.section-header {
+  border-radius: 6px;
+  font-weight: 500;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #2980b9;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #95a5a6;
+}
+
+.no-data i {
+  font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-.section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0;
-}
-
-.primary-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: #3b82f6;
-  color: white;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.primary-button:hover {
-  background-color: #2563eb;
-}
-
-.customer-info-card {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-}
-
-.customer-info-content {
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.customer-details {
-  flex: 1;
-}
-
-.customer-name {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 0.5rem 0;
-}
-
-.customer-data {
-  color: #6b7280;
-  margin: 0.25rem 0;
-  font-size: 0.975rem;
-}
-
-.icon-button {
-  padding: 0.5rem;
-  color: #6b7280;
-  border-radius: 0.5rem;
-  transition: all 0.2s;
-  font-size: 1rem;
-  line-height: 1;
-  font-weight: bold;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 2rem;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  color: #6b7280;
-  text-align: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .page-container {
-    padding: 1rem;
-  }
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
 
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: #f8f9fa;
+  color: #343a40;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.service-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-button {
+  background-color: #ecf0f1;
+  color: #34495e;
+}
+
+.cancel-button:hover {
+  background-color: #dfe6e9;
+}
+
+.submit-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #2980b9;
+}
+
+.total-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
+.total-price .price {
+  color: #2ecc71;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
   .content-container {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .header-section {
@@ -583,556 +868,45 @@ export default {
     gap: 1rem;
   }
 
-  .back-button {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .section-header {
+  .header-actions {
     flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+    width: 100%;
   }
 
-  .primary-button {
+  .add-service-button,
+  .add-service-to-room-button {
     width: 100%;
     justify-content: center;
   }
-}
 
-.min-h-screen {
-  min-height: 100vh;
-}
-
-.bg-gray-100 {
-  background-color: #f7fafc;
-}
-
-.bg-white {
-  background-color: #ffffff;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.max-w-6xl {
-  max-width: 80rem; /* Chiều rộng tối đa 1280px */
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.p-8 {
-  padding: 2rem;
-}
-
-.p-10 {
-  padding: 2.5rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.text-base {
-  font-size: 1rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.text-gray-800 {
-  color: #2d3748;
-}
-
-.text-gray-500 {
-  color: #a0aec0;
-}
-
-.text-gray-700 {
-  color: #4a5568;
-}
-
-.hover\:text-gray-700:hover {
-  color: #4a5568;
-}
-
-.hover\:text-gray-600:hover {
-  color: #718096;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.space-y-8 > * + * {
-  margin-top: 2rem;
-}
-
-.block {
-  display: block;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-collapse {
-  border-collapse: collapse;
-}
-
-.rounded-md {
-  border-radius: 0.375rem;
-}
-
-.p-4 {
-  padding: 1rem;
-}
-
-.p-3 {
-  padding: 0.75rem;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.bg-gray-100 {
-  background-color: #edf2f7;
-}
-
-.focus\:outline-none:focus {
-  outline: none;
-}
-
-.focus\:ring-2:focus {
-  box-shadow: 0 0 0 2px #48bb78;
-}
-
-.focus\:ring-green-500:focus {
-  box-shadow: 0 0 0 2px #48bb78;
-}
-
-.bg-green-500 {
-  background-color: #48bb78;
-}
-
-.bg-red-500 {
-  background-color: #e53e3e;
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.py-3 {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-}
-
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.hover\:bg-green-600:hover {
-  background-color: #38a169;
-}
-
-.hover\:bg-red-600:hover {
-  background-color: #c53030;
-}
-
-.w-7 {
-  width: 1.75rem;
-}
-
-.h-7 {
-  height: 1.75rem;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.transform {
-  transform: rotate(0deg);
-}
-
-.transition-transform {
-  transition: transform 0.2s ease-in-out;
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-
-table th,
-table td {
-  border-color: #e2e8f0;
-}
-
-input[type="number"] {
-  appearance: textfield;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* New styles for customer selection */
-.bg-blue-600 {
-  background-color: #2563eb;
-}
-
-.hover\:bg-blue-700:hover {
-  background-color: #1d4ed8;
-}
-
-.bg-opacity-50 {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.max-h-96 {
-  max-height: 24rem;
-}
-
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-/* Add new styles for delete confirmation modal */
-.text-red-500 {
-  color: #ef4444;
-}
-
-.text-red-600 {
-  color: #dc2626;
-}
-
-.hover\:bg-red-700:hover {
-  background-color: #b91c1c;
-}
-
-.bg-red-600 {
-  background-color: #dc2626;
-}
-
-.services-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.service-section {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.service-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 1rem 1.5rem;
-  background-color: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s;
-}
-
-.service-header:hover {
-  background-color: #f3f4f6;
-}
-
-.service-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #111827;
-}
-
-.toggle-indicator {
-  font-size: 0.875rem;
-  color: #6b7280;
-  transition: transform 0.2s;
-}
-
-.toggle-indicator.rotate-180 {
-  transform: rotate(180deg);
-  display: inline-block;
-}
-
-.service-content {
-  padding: 1rem;
-}
-
-.table-responsive {
-  overflow-x: auto;
-  margin: 0 -1rem;
-}
-
-.service-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 600px;
-}
-
-.service-table th {
-  padding: 0.75rem 1rem;
-  background-color: #f9fafb;
-  color: #374151;
-  font-weight: 600;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;
-}
-
-.service-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  color: #4b5563;
-}
-
-.service-table tr:last-child td {
-  border-bottom: none;
-}
-
-.quantity-input {
-  width: 100%;
-  max-width: 120px;
-  padding: 0.5rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  background-color: white;
-  color: #111827;
-  transition: all 0.2s;
-}
-
-.quantity-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-.add-button {
-  padding: 0.375rem 0.75rem;
-  background-color: #10b981;
-  color: white;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.add-button:hover {
-  background-color: #059669;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .service-header {
-    padding: 0.75rem 1rem;
-  }
-
-  .service-content {
+  .services-table th,
+  .services-table td {
     padding: 0.75rem;
+    font-size: 0.9rem;
   }
 
-  .table-responsive {
-    margin: 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
+  .actions-cell {
+    flex-direction: column;
   }
 
-  .service-table th,
-  .service-table td {
-    padding: 0.625rem 0.75rem;
+  .edit-button,
+  .delete-button {
+    width: 100%;
+    justify-content: center;
   }
 
-  .quantity-input {
-    max-width: 100%;
+  .modal-content {
+    margin: 1rem;
+    width: calc(100% - 2rem);
   }
 
-  .add-button {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-button,
+  .submit-button {
     width: 100%;
   }
-}
-
-.selected-services-section {
-  margin-top: 2rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.selected-services-table-container {
-  padding: 1rem;
-}
-
-.selected-services-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 800px;
-}
-
-.selected-services-table th {
-  padding: 0.75rem 1rem;
-  background-color: #f9fafb;
-  color: #374151;
-  font-weight: 600;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;
-}
-
-.selected-services-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  color: #4b5563;
-}
-
-.service-name {
-  font-weight: 500;
-  color: #111827;
-}
-
-.service-price,
-.service-quantity {
-  font-family: monospace;
-  color: #4b5563;
-}
-
-.service-total {
-  font-family: monospace;
-  font-weight: 600;
-  color: #059669;
-}
-
-.delete-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.375rem 0.75rem;
-  background-color: #fee2e2;
-  color: #dc2626;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.delete-button:hover {
-  background-color: #fecaca;
-}
-
-.empty-services {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  color: #6b7280;
-  text-align: center;
-}
-
-.footer-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  background-color: #f9fafb;
-  border-top: 1px solid #e5e7eb;
-}
-
-.total-price {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.total-label {
-  font-size: 1.125rem;
-  color: #374151;
-}
-
-.total-amount {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #059669;
-}
-
-.confirm-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.625rem 1.25rem;
-  background-color: #059669;
-  color: white;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.confirm-button:hover {
-  background-color: #047857;
 }
 </style>

@@ -165,6 +165,47 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal thêm dịch vụ -->
+    <div v-if="showServiceModal" class="modal-overlay" @click="closeServiceModal">
+      <div class="modal-content" @click.stop>
+        <h2>Thêm dịch vụ cho phòng {{ selectedRoom?.soPhong }}</h2>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Dịch vụ:</label>
+            <select v-model="serviceForm.serviceId" @change="handleServiceSelect">
+              <option value="">Chọn dịch vụ</option>
+              <option v-for="service in services" :key="service.id" :value="service.id">
+                {{ service.name }} - {{ formatPrice(service.price) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Số lượng:</label>
+            <input type="number" v-model="serviceForm.quantity" min="1" />
+          </div>
+
+          <div class="form-group">
+            <label>Ghi chú:</label>
+            <textarea v-model="serviceForm.note" rows="2" placeholder="Ghi chú (tuỳ chọn)"></textarea>
+          </div>
+
+          <div class="total-price" v-if="serviceForm.serviceId && serviceForm.quantity">
+            <span>Tổng tiền:</span>
+            <span class="price">{{ formatPrice(calculateTotalPrice()) }}</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" @click="closeServiceModal">Hủy</button>
+          <button class="btn-save" @click="handleAddService" :disabled="loading">
+            {{ loading ? 'Đang lưu...' : 'Thêm dịch vụ' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -174,6 +215,7 @@ import { roomService } from '@/services/roomService';
 import { authService } from '@/services/authService';
 import { userService } from '@/services/userService';
 import { bookingService } from '@/services/bookingService';
+import axios from 'axios';
 
 export default {
   components: {
@@ -209,6 +251,14 @@ export default {
       },
       customerFound: false,
       loadingSearch: false,
+      showServiceModal: false,
+      serviceForm: {
+        serviceId: '',
+        quantity: 1,
+        note: ''
+      },
+      services: [],
+      roomServices: []
     };
   },
   computed: {
@@ -218,6 +268,9 @@ export default {
       }
       return this.rooms.filter(room => room.idLoaiPhong === this.selectedRoomType);
     },
+    selectedService() {
+      return this.services.find(s => s.id === this.serviceForm.serviceId);
+    }
   },
   methods: {
     formatDate(date) {
@@ -309,10 +362,17 @@ export default {
       // Trigger computed property
     },
     handleRoomClick(room) {
-      // Nếu phòng trống thì mở modal đặt phòng, ngược lại mở modal cập nhật
-      if (room.trangThai?.toLowerCase() === 'trống' || room.trangThai?.toLowerCase() === 'trống') {
+      // Nếu phòng trống thì mở modal đặt phòng
+      if (room.trangThai?.toLowerCase() === 'trống') {
         this.openBookingModal(room);
-      } else {
+      } 
+      // Nếu phòng đã đặt hoặc đang thuê thì mở modal thêm dịch vụ
+      else if (room.trangThai?.toLowerCase() === 'đã đặt' || room.trangThai?.toLowerCase() === 'đang thuê') {
+        this.selectedRoom = { ...room };
+        this.openServiceModal();
+      }
+      // Các trường hợp khác mở modal cập nhật thông tin
+      else {
         this.openUpdateModal(room);
       }
     },
@@ -421,6 +481,104 @@ export default {
       if (key.includes('đang bảo trì')) return 'maintenance';
       return '';
     },
+    openServiceModal() {
+      this.showServiceModal = true;
+      this.fetchServices();
+    },
+    closeServiceModal() {
+      this.showServiceModal = false;
+      this.serviceForm = {
+        serviceId: '',
+        quantity: 1,
+        note: ''
+      };
+    },
+    async fetchServices() {
+      try {
+        const response = await axios.get('http://localhost:5012/api/DichVu', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.services = response.data.map(service => ({
+          id: service.idDichVu,
+          name: service.tenDichVu,
+          price: service.gia,
+          description: service.moTa,
+          unit: service.donViTinh
+        }));
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        alert('Không thể tải danh sách dịch vụ. Vui lòng thử lại sau.');
+      }
+    },
+    handleServiceSelect() {
+      this.serviceForm.quantity = 1;
+    },
+    calculateTotalPrice() {
+      if (!this.selectedService) return 0;
+      return this.selectedService.price * this.serviceForm.quantity;
+    },
+    async handleAddService() {
+      if (!this.serviceForm.serviceId || !this.serviceForm.quantity) {
+        alert('Vui lòng điền đầy đủ thông tin');
+        return;
+      }
+
+      this.loading = true;
+      try {
+        // 1. Lấy thông tin đặt phòng từ ChiTietDatPhongController
+        const datPhongResponse = await axios.get(`http://localhost:5012/api/ChiTietDatPhong/room/${this.selectedRoom.idPhong}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        // 2. Tạo chi tiết dịch vụ
+        const chiTietDichVu = await axios.post('http://localhost:5012/api/ChiTietDichVu', {
+          idDatPhong: datPhongResponse.data.idDatPhong,
+          idDichVu: this.serviceForm.serviceId,
+          soLuong: this.serviceForm.quantity,
+          donGia: this.selectedService.price,
+          thanhTien: this.calculateTotalPrice(),
+          ghiChu: this.serviceForm.note,
+          ngaySuDung: new Date().toISOString(),
+          trangThai: 'Chưa thanh toán'
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        // 3. Tạo chi tiết hóa đơn
+        await axios.post('http://localhost:5012/api/ChiTietHoaDon', {
+          idDatPhong: datPhongResponse.data.idDatPhong,
+          idChiTietDichVu: chiTietDichVu.data.idChiTietDichVu,
+          thanhTien: this.calculateTotalPrice(),
+          ghiChu: this.serviceForm.note
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        alert('Thêm dịch vụ thành công!');
+        this.serviceForm = {
+          serviceId: '',
+          quantity: 1,
+          note: ''
+        };
+        this.closeServiceModal();
+      } catch (error) {
+        console.error('Error adding service:', error);
+        alert('Không thể thêm dịch vụ. Vui lòng thử lại sau.');
+      } finally {
+        this.loading = false;
+      }
+    },
+    formatPrice(price) {
+      return price.toLocaleString('vi-VN') + ' VND';
+    }
   },
   async created() {
     this.user = authService.getCurrentUser();
@@ -746,5 +904,19 @@ export default {
 .room-status.đang-bảo-trì {
   background-color: #ffebee;
   color: #c62828;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .status-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 </style>
