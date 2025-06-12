@@ -4256,11 +4256,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\New folder (2)\\QuanLyKhachSan\\back-end\\back-end.csproj",
+      "projectUniqueName": "D:\\New folder\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "projectName": "back-end",
-      "projectPath": "D:\\New folder (2)\\QuanLyKhachSan\\back-end\\back-end.csproj",
+      "projectPath": "D:\\New folder\\QuanLyKhachSan\\back-end\\back-end.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\New folder (2)\\QuanLyKhachSan\\back-end\\obj\\",
+      "outputPath": "D:\\New folder\\QuanLyKhachSan\\back-end\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config"

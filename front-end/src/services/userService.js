@@ -102,5 +102,16 @@ export const userService = {
             });
             throw new Error('Không thể tìm kiếm khách hàng: ' + (error.response?.data?.message || error.message));
         }
+    },
+
+    // Tạo khách hàng mới
+    async createCustomer(customerData) {
+        try {
+            const response = await apiClient.post('/api/KhachHang', customerData);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating customer:', error);
+            throw error;
+        }
     }
 }; 
